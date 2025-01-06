@@ -1,11 +1,14 @@
-const typeUser = (requiredType) => {
-    return (request, response, next) => {
+import { Request, Response, NextFunction } from "express";
+import HttpError from "../errors/HttpError";
+
+const typeUser = (requiredType: string) => {
+    return (request: Request, response: Response, next: NextFunction) => {
         if (!request.user) {
-            return response.status(401).json({ message: 'Usuário não autenticado.' });
+            throw new HttpError('Usuário não autenticado.', 401);
         }
 
         if (request.user.tipo !== requiredType) {
-            return response.status(403).json({ message: `Acesso negado! Tipo de usuário necessário: ${requiredType}` });
+            throw new HttpError(`Acesso negado! Tipo de usuário necessário: ${requiredType}`, 403);
         }
 
         next();

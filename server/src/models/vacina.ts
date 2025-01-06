@@ -1,4 +1,7 @@
-import { Sequelize, DataTypes, Model, CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
+import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize';
+import db from "../config/sequelize";
+import Service from './service';
+
 
 class Vacina extends Model<InferAttributes<Vacina>, InferCreationAttributes<Vacina>> {
     declare id: string;
@@ -9,48 +12,45 @@ class Vacina extends Model<InferAttributes<Vacina>, InferCreationAttributes<Vaci
     declare serviceId: string;
 }
 
-const vacinaModel = (sequelize: Sequelize) => {
-    Vacina.init({
-        id: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
-            primaryKey: true,
+Vacina.init({
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+    },
+    nome: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    validade: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        validate: {
+            isAfter: new Date().toISOString(),
         },
-        nome: {
-            type: DataTypes.STRING,
-            allowNull: false,
+    },
+    fabricante: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+    },
+    lote: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+    },
+    serviceId: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        references: {
+            model: 'services',
+            key: 'id',
         },
-        validade: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            validate: {
-                isAfter: new Date().toISOString(),
-            },
-        },
-        fabricante: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-        },
-        lote: {
-            type: DataTypes.STRING(50),
-            allowNull: false,
-        },
-        serviceId: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
-            allowNull: false,
-            references: {
-                model: 'services',
-                key: 'id',
-            },
-        },
-    }, {
-        sequelize,
-        tableName: 'vacinas',
-        timestamps: false,
-    });
+    },
+}, {
+    sequelize: db,
+    tableName: 'vacinas',
+    timestamps: false,
+});
 
-    return Vacina;
-};
 
-export default vacinaModel;
+export default Vacina;

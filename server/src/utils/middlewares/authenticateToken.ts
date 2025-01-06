@@ -1,24 +1,27 @@
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
+import { Request, Response, NextFunction } from "express";
+import HttpError from "../errors/HttpError";
 
 dotenv.config();
+const SECRET_KEY = process.env.SECRET_KEY || 'default_secret_key';
 
 
-const authenticateToken = (request, response, next) => {
+const authenticateToken = (request: Request, response: Response, next: NextFunction) => {
     const authHeader = request.headers.authorization;
 
     if (!authHeader) {
-        return response.status(401).json({ message: "Token não fornecido." });
+        throw next(new HttpError("Token não fornecido.", 401));
     }
 
     const token = authHeader.split(" ")[1];
 
     try {
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const decoded = jwt.verify(token, SECRET_KEY);
         request.user = decoded;
         next();
     } catch (error) {
-        return response.status(403).json({ message: "Token inválido ou expirado." });
+        return next(new HttpError("Token inválido ou expirado.", 403));
     }
 };
 

@@ -1,4 +1,5 @@
-import { Sequelize, DataTypes, Model, Optional, CreationOptional, ForeignKey } from 'sequelize';
+import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
+import db from "../config/sequelize";
 
 
 class Avaliacoes extends Model {
@@ -8,42 +9,39 @@ class Avaliacoes extends Model {
     declare nota: number;
 }
 
-const avaliacoesModel = (sequelize: Sequelize) => {
-    Avaliacoes.init({
-        userId: {
-            type: DataTypes.UUID,
-            references: {
-                model: 'users',
-                key: 'id',
-            },
-            primaryKey: true,
+Avaliacoes.init({
+    userId: {
+        type: DataTypes.UUID,
+        references: {
+            model: 'users',
+            key: 'id',
         },
-        serviceId: {
-            type: DataTypes.UUID,
-            references: {
-                model: 'services',
-                key: 'id',
-            },
-            primaryKey: true,
+        primaryKey: true,
+    },
+    serviceId: {
+        type: DataTypes.UUID,
+        references: {
+            model: 'services',
+            key: 'id',
         },
-        comentario: {
-            type: DataTypes.TEXT,
-            allowNull: false,
+        primaryKey: true,
+    },
+    comentario: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    nota: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+            min: 1,
+            max: 5,
         },
-        nota: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                min: 1,
-                max: 5,
-            },
-        },
-    }, {
-        sequelize,
-        tableName: 'avaliacoes',
-    });
+    },
+}, {
+    sequelize: db,
+    tableName: 'avaliacoes',
+});
 
-    return Avaliacoes;
-};
 
-export default avaliacoesModel;
+export default Avaliacoes;

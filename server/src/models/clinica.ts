@@ -1,4 +1,11 @@
-import { Sequelize, DataTypes, Model, CreationOptional, ForeignKey } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
+import db from "../config/sequelize";
+import User from './user';
+import TrabalhaClinica from './TrabalhaClinica';
+import Service from './service';
+import Horario from './horario';
+import Agendamento from './agendamento';
+import sequelize from 'sequelize';
 
 
 class Clinica extends Model {
@@ -7,27 +14,48 @@ class Clinica extends Model {
     declare telefone: string;
 };
 
-const clinicaModel = (sequelize: Sequelize) => {
-    Clinica.init({
-        id: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
-            primaryKey: true,
-        },
-        nome: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-        },
-        telefone: {
-            type: DataTypes.STRING(15),
-            allowNull: false,
-        },
-    }, {
-        sequelize,
-        tableName: 'clinicas',
-    });
+Clinica.init({
+    id: {
+        type: sequelize.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+    },
+    nome: {
+        type: sequelize.STRING(100),
+        allowNull: false,
+    },
+    telefone: {
+        type: sequelize.STRING(15),
+        allowNull: false,
+    },
+}, {
+    tableName: 'clinicas',
+    sequelize: db
+});
 
-    return Clinica;
-};
+Clinica.hasMany(Service, {
+    foreignKey: 'clinicaId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+});
+  
+Service.belongsTo(Clinica, {
+foreignKey: 'clinicaId',
+onDelete: 'CASCADE',
+onUpdate: 'CASCADE',
+});
 
-export default clinicaModel;
+Clinica.hasMany(Horario, {
+    foreignKey: 'clinicaId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+});
+  
+Horario.belongsTo(Clinica, {
+foreignKey: 'clinicaId',
+onDelete: 'CASCADE',
+onUpdate: 'CASCADE',
+});
+
+
+export default Clinica;

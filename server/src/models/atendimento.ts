@@ -1,4 +1,8 @@
-import { Sequelize, DataTypes, Model, Optional, CreationOptional, ForeignKey } from "sequelize";
+import { DataTypes, Model, CreationOptional, ForeignKey } from "sequelize";
+import db from "../config/sequelize";
+import User from "./user";
+import Pet from "./pet";
+import Service from "./service";
 
 
 class Atendimento extends Model {
@@ -9,51 +13,48 @@ class Atendimento extends Model {
     declare observacao: CreationOptional<string>;
 }
 
-const atendimentoModel = (sequelize: Sequelize) => {
-    Atendimento.init({
-        profissionalId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: 'users',
-                key: 'id',
-            },
-            primaryKey: true
+Atendimento.init({
+    profissionalId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: 'users',
+            key: 'id',
         },
-        petId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: 'pets',
-                key: 'id',
-            },
-            primaryKey: true
+        primaryKey: true
+    },
+    petId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: 'pets',
+            key: 'id',
         },
-        serviceId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: 'services',
-                key: 'id',
-            },
-            primaryKey: true
+        primaryKey: true
+    },
+    serviceId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: 'services',
+            key: 'id',
         },
-        dataAtendimento: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            primaryKey: true,
-        },
-        observacao: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-        },
-    }, {
-        sequelize,
-        tableName: 'atendimentos',
-        timestamps: false
-    });
+        primaryKey: true
+    },
+    dataAtendimento: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        primaryKey: true,
+    },
+    observacao: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+}, {
+    sequelize: db,
+    tableName: 'atendimentos',
+    timestamps: false
+});
 
-    return Atendimento;
-};
 
-export default atendimentoModel;
+export default Atendimento;

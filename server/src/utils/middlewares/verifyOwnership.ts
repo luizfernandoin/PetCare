@@ -1,31 +1,31 @@
-import { user } from "../../models/index";
-import User from "../../service/user";
+import { NextFunction, Request, Response } from "express";
+import User from "../../models/user";
+import UserService from "../../service/userService";
+import ClinicaService from "../../service/clinicaService";
+import HttpError from "../errors/HttpError";
 
-const userService = new User(user);
+const userService = new UserService(User);
 
-const verifyOwnership = (service) => {
-    return async(request, response, next) => {
+const verifyOwnership = (service: ClinicaService) => {
+    return async(request: Request, response: Response, next: NextFunction) => {
         try {
             const { id } = request.params;
             const emailUser = request.user.email;
             const user = await userService.getUserByEmail(emailUser);
-            console.log(service, id, user.id);
-            console.log(user)
 
             const ownerId = await service.getOwnerId(id);
-            console.log(ownerId)
 
             if (!ownerId) {
-                return response.status(404).json({ message: "Objeto não encontrado!" });
+                throw new HttpError("Serviço não encontrado!", 404);
             }
 
             if (ownerId !== user.id) {
-                return response.status(403).json({ message: "Usuário não autorizado." });
+                throw new HttpError("Usuário não autorizado.", 403);
             }
             
             next();
         } catch (error) {
-            return response.status(500).json({ message: "Erro interno ao verificar propriedade." });
+            next(error);
         }
     };
 };

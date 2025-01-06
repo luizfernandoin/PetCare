@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build",
-    "start:dev": "nodemon ./src/server.ts",
+    "start:dev": "nodemon --exec tsx ./src/server.ts",
     "start": "node ./dist/server.js"
   },
   "keywords": [],
@@ -34,6 +34,7 @@
     "prisma": "^6.0.1",
     "sequelize-cli": "^6.6.2",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   },
   "type": "commonjs"

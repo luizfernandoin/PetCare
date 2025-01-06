@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-const dbConfig = require('./database');
+import dbConfig from "./database";
 
 const sequelize = new Sequelize(dbConfig)
 

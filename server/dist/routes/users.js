@@ -13,91 +13,120 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const index_1 = require("../models/index");
-const pet_1 = __importDefault(require("../service/pet"));
-const user_1 = __importDefault(require("../service/user"));
+const petService_1 = __importDefault(require("../service/petService"));
+const userService_1 = __importDefault(require("../service/userService"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const authenticateToken_1 = __importDefault(require("../utils/middlewares/authenticateToken"));
-const authentication_1 = __importDefault(require("../service/authentication"));
+const authenticationService_1 = __importDefault(require("../service/authenticationService"));
+const user_1 = __importDefault(require("../models/user"));
+const pet_1 = __importDefault(require("../models/pet"));
+const HttpError_1 = __importDefault(require("../utils/errors/HttpError"));
 dotenv_1.default.config();
-const SECRET_KEY = process.env.SECRET_KEY;
+const SECRET_KEY = process.env.SECRET_KEY || 'default_secret_key';
 const router = (0, express_1.Router)();
-const userService = new user_1.default(index_1.user);
-const petService = new pet_1.default(index_1.pet);
-const authenticationService = new authentication_1.default(index_1.user, SECRET_KEY);
+const userService = new userService_1.default(user_1.default);
+const petService = new petService_1.default(pet_1.default);
+const authenticationService = new authenticationService_1.default(user_1.default, SECRET_KEY);
 router.get("/api/users", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield userService.get();
-    if (result.error) {
-        return response.status(result.status).json({
-            message: result.message,
-            error: result.error,
-        });
-    }
-    return response.status(result.status).json({
-        message: result.message,
-        data: result.data,
-    });
-}));
-router.post("/api/users", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield userService.createUser(request.body);
-    if (!result) {
-        return response.status(500).json({
-            message: "Erro interno: resultado indefinido.",
-        });
-    }
-    return response.status(result.status).json({
-        message: result.message,
-        data: result.data,
-        errors: result.errors,
-    });
-}));
-router.post("/api/login", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, senha } = request.body;
-    const result = yield authenticationService.login(email, senha);
-    return response.status(result.status).json({
-        message: result.message,
-        token: result.token,
-    });
-}));
-router.delete('/api/users/', authenticateToken_1.default, (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userAuth = request.user;
-        const user = userService.getUserByEmail(userAuth.email);
-        const petsDeletados = yield petService.deletePets(user);
-        if (petsDeletados.error) {
-            return response.status(petsDeletados.status).json({ message: petsDeletados.message, error: petsDeletados.error });
-        }
-        const result = yield userService.deleteUser(userAuth);
-        return response.status(result.status).json({
-            message: result.message
+        const users = yield userService.get();
+        response.status(200).json({
+            message: "Usuários encontrados com sucesso.",
+            data: users,
         });
     }
     catch (error) {
-        console.error('Erro ao deletar user:', error);
-        return response.status(500).json({ message: 'Erro ao deletar user.', error: error.message });
+        if (error instanceof Error) {
+            response.status(500).json({ message: 'Erro ao buscar usuários.', error: error.message });
+        }
+        response.status(500).json({ message: 'Erro ao buscar usuários.', error: 'Erro desconhecido' });
     }
 }));
-router.delete('/api/users/:id', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/api/users", (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userDTO = request.body;
+        console.log(userDTO);
+        const newUser = yield userService.createUser(userDTO);
+        response.status(201).json({
+            message: "Usuário criado com sucesso.",
+            data: newUser,
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+    ;
+}));
+router.post("/api/login", (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, senha } = request.body;
+        const token = yield authenticationService.login(email, senha);
+        response.status(200).json({
+            message: "Usuário logado com sucesso.",
+            token: token,
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+    ;
+}));
+router.delete('/api/users/', authenticateToken_1.default, (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userAuth = request.user;
+        if (!userAuth) {
+            throw new HttpError_1.default("Usuário não encontrado.", 404);
+        }
+        const user = yield userService.getUserByEmail(userAuth.email);
+        yield petService.deletePets(user);
+        const result = yield userService.deleteUser(userAuth);
+        response.status(200).json({
+            message: "Usuário deletado com sucesso."
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+/*
+router.delete('/api/users/:id', async(request, response) => {
     const { id } = request.params;
-    const result = yield userService.deleteUserById(id);
+
+    const result = await userService.deleteUserById(id);
+
     if (result.error) {
         return response.status(result.status).json({ message: result.error });
     }
+
     return response.status(result.status).json({ message: result.message });
-}));
-router.delete('/api/users', authenticateToken_1.default, (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+})
+
+router.delete('/api/users', authenticateToken, async(request, response) => {
     const userEmail = request.user.email;
-    const result = yield userService.deleteUserByEmail(userEmail);
+
+    const result = await userService.deleteUserByEmail(userEmail);
+
     return response.status(result.status).json({ message: result.message });
-}));
-router.put('/api/users/profile', authenticateToken_1.default, (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+})
+
+router.put('/api/users/profile', authenticateToken, async(request, response) => {
     const userAuth = request.user;
-    const { nome, telefone, uf, cidade, rua, bairro, num, } = request.body;
+    const {
+        nome,
+        telefone,
+        uf,
+        cidade,
+        rua,
+        bairro,
+        num,
+    } = request.body;
+
     if (!nome || !telefone || !uf || !cidade || !rua || !bairro || !num) {
         return response.status(400).json({ message: "Todos os campos obrigatórios devem ser preenchidos." });
     }
+
     try {
-        const result = yield userService.updateUser(userAuth, {
+        const result = await userService.updateUser(userAuth, {
             nome,
             telefone,
             uf,
@@ -106,53 +135,59 @@ router.put('/api/users/profile', authenticateToken_1.default, (request, response
             bairro,
             num,
         });
+
         if (result.error) {
             return response.status(result.status).json({
                 message: result.message,
                 error: result.error,
             });
         }
+
         return response.status(result.status).json({
             message: result.message,
             data: result.data,
         });
-    }
-    catch (error) {
+    } catch (error) {
         console.error("Erro ao atualizar perfil:", error);
         return response.status(500).json({
             message: "Erro interno do servidor ao atualizar perfil.",
             error: error.message,
         });
     }
-}));
-router.patch("/api/users/profile", authenticateToken_1.default, (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+})
+
+router.patch("/api/users/profile", authenticateToken, async (request, response) => {
     const userEmail = request.user.email;
     const updates = request.body;
+
     if (Object.keys(updates).length === 0) {
         return response.status(400).json({
             message: "Nenhum campo foi enviado para atualização.",
         });
     }
+
     try {
-        const result = yield userService.patchUser(userEmail, updates);
+        const result = await userService.patchUser(userEmail, updates);
         console.log("Resultado do patchUser:", result);
+
         if (result.error) {
             return response.status(result.status).json({
                 message: result.message,
                 error: result.error,
             });
         }
+
         return response.status(result.status).json({
             message: result.message,
             data: result.data,
         });
-    }
-    catch (error) {
+    } catch (error) {
         console.error("Erro ao atualizar perfil:", error);
         return response.status(500).json({
             message: "Erro interno do servidor ao atualizar perfil.",
             error: error.message,
         });
     }
-}));
+});
+*/
 exports.default = router;

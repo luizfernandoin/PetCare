@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-module.exports = {
+const dbConfig = {
     database: process.env.DB_NAME,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -13,3 +13,4 @@ module.exports = {
     port: parseInt(process.env.DB_PORT, 10),
     dialect: 'postgres',
 };
+exports.default = dbConfig;

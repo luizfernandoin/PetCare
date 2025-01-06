@@ -1,30 +1,115 @@
-import { Router } from "express";
-import { user, pet as petModel } from "../models/index";
-import Pet from '../service/pet';
-import User from '../service/user';
+import { Router, Request, Response, NextFunction } from "express";
+import PetService from "../service/petService";
+import UserService from "../service/userService";
 import dotenv from 'dotenv';
 import authenticateToken from "../utils/middlewares/authenticateToken";
-import Authentication from "../service/authentication";
+import User from "../models/user";
+import Pet from "../models/pet";
+import HttpError from "../utils/errors/HttpError";
 
-
-dotenv.config();
-const SECRET_KEY = process.env.SECRET_KEY;
 
 const router = Router();
-const userService = new User(user);
-const petService = new Pet(petModel);
-const authenticationService = new Authentication(user, SECRET_KEY)
+const userService = new UserService(User);
+const petService = new PetService(Pet);
 
-router.get("/api/users", async (request: Request, response: Response) => {
+router.get("/", async (request: Request, response: Response) => {
     try {
-        const result = await userService.get();
-        return response.status(200).json(result);
-    } catch (error: unknown) {
-        console.error('Erro ao buscar usuários:', error);
+        const users = await userService.get();
+        response.status(200).json({
+            message: "Usuários encontrados com sucesso.",
+            data: users,
+        });
+    } catch (error) {
         if (error instanceof Error) {
-            return response.status(500).json({ message: 'Erro ao buscar usuários.', error: error.message });
+            response.status(500).json({ message: 'Erro ao buscar usuários.', error: error.message });
         }
-        return response.status(500).json({ message: 'Erro ao buscar usuários.', error: 'Erro desconhecido' });
+
+        response.status(500).json({ message: 'Erro ao buscar usuários.', error: 'Erro desconhecido' });
+    }
+});
+
+router.delete('/', authenticateToken, async (request: Request, response: Response, next: Function) => {
+    try {
+        const userAuth = request.user;
+
+        if (!userAuth) {
+            throw new HttpError("Usuário não encontrado.", 404);
+        }
+
+        const user = await userService.getUserByEmail(userAuth.email);
+
+        const petDeletionResult = await petService.deletePets(user);
+
+        const result = await userService.deleteUser(userAuth);
+
+        response.status(200).json({
+            message: "Usuário deletado com sucesso."
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.delete('/:id', async(request: Request, response: Response, next: Function) => {
+    try {
+        const { id } = request.params;
+        const result = await userService.deleteUserById(id);
+
+        response.status(200).json({"message": "Usuário deletado com sucesso."});
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.delete('/', authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
+    try {
+        const userEmail = request.user.email;
+    
+        const user = await userService.deleteUserByEmail(userEmail);
+
+        response.status(200).json({ 
+            message: "Usuário deletado com sucesso.",
+            data: user
+        });
+    } catch(error) {
+        next(error);
+    }
+})
+
+router.put('/profile', authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
+    const userAuth = request.user;
+    const userDTO = request.body;
+    
+    try {
+        const user = await userService.updateUser(userAuth, userDTO);
+        
+        response.status(200).json({
+            message: "Perfil atualizado com sucesso.",
+            data: user,
+        })
+    } catch (error) {
+        next(error);
+    }
+})
+
+router.patch("/profile", authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
+    const userEmail = request.user.email;
+    const updates = request.body;
+
+    if (Object.keys(updates).length === 0) {
+        throw new HttpError("Nenhum campo foi enviado para atualização.", 400);
+    }
+
+    try {
+        const user = await userService.patchUser(userEmail, updates);
+
+        
+        response.status(200).json({
+            message: "Perfil atualizado parcialmente com sucesso.",
+            data: user,
+        });
+    } catch (error) {
+        next(error);
     }
 });
 

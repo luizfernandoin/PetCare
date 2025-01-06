@@ -1,61 +1,46 @@
-import { Router } from "express";
+import { NextFunction, Router } from "express";
 import authenticateToken from "../utils/middlewares/authenticateToken";
 import typeUser from "../utils/middlewares/typeUser";
-import { user, service, clinica } from "../models/index";
-import User from "../service/user";
-import Service from "../service/service"
-import Clinica from "../service/clinica";
+import UserService from "../service/userService";
+import ServiceService from "../service/serviceService";
+import ClinicaService from "../service/clinicaService";
+
+import User from "../models/user";
+import Service from "../models/service"
+import Clinica from "../models/clinica";
 
 const router = Router();
-const userService = new User(user);
-const serviceService = new Service(service);
-const clinicaService = new Clinica(clinica);
+const userService = new UserService(User);
+const serviceService = new ServiceService(Service);
+const clinicaService = new ClinicaService(Clinica);
 
-router.post("/api/:clinicaId/services", authenticateToken, typeUser("Profissional"), async(request, response) => {
+router.post("/:clinicaId/services", authenticateToken, typeUser("Profissional"), async(request, response, next: NextFunction) => {
     try {
+        const serviceDTO = request.body;
         const { clinicaId } = request.params;
 
         const clinica = await clinicaService.getClinicaById(clinicaId);
-        if (!clinica) {
-            response.status(404).json({ message: "Clínica não encontrada." });
-        }
+        const newService = await serviceService.createService(serviceDTO, clinica);
 
-        const resultService = await serviceService.createService(request.body, clinica);
-        if (!resultService) {
-            response.status(500).json({
-                message: "Erro interno: resultado indefinido.",
-            });
-        }
-
-        response.status(resultService.status).json({
-            message: resultService.message,
-            data: resultService.data,
-            errors: resultService.errors,
+        response.status(201).json({ 
+            message: `Serviço adicionado a clinica ${clinica.nome} com sucesso!`, 
+            data: newService 
         });
     } catch (error) {
-        console.error("Erro interno na rota:", error);
-        response.status(500).json({
-            message: "Erro interno ao processar a solicitação.",
-            error: error.message,
-        });
+        next(error);
     }
 })
 
-router.get("/api/:clinicaId/services", async(request, response) => {
+router.get("/:clinicaId/services", async(request, response, next: NextFunction) => {
     const { clinicaId } = request.params;
-    const services = await serviceService.getServicesByClinicaId(clinicaId);
+    
+    try {
+        const services = await serviceService.getServicesByClinicaId(clinicaId);
 
-    if (services.error) {
-        response.status(services.status).json({
-            message: services.message,
-            error: services.error,
-        });
+        response.status(200).json({ message: "Serviços encontrados com sucesso.", data: services });
+    } catch (error) {
+        next(error);
     }
-
-    response.status(services.status).json({
-        message: services.message,
-        data: services.data,
-    });
 })
 
 export default router;

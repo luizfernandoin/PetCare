@@ -3,13 +3,16 @@ import userRouter from './users';
 import petRouter from './pet';
 import clinicaRouter from './clinica';
 import serviceRouter from './service';
+import authRouter from "./authentication";
 
 
 const router = Router();
 
-router.use(userRouter);
-router.use(petRouter);
-router.use(clinicaRouter);
-router.use(serviceRouter);
+router.use("/users", userRouter);
+router.use("/pets", petRouter);
+router.use("/clinicas", clinicaRouter);
+router.use("/services", serviceRouter);
+router.use("/auth", authRouter);
+
 
 export default router;

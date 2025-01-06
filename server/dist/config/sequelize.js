@@ -8,10 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
-const dbConfig = require('./database');
-const sequelize = new sequelize_1.Sequelize(dbConfig);
+const database_1 = __importDefault(require("./database"));
+const sequelize = new sequelize_1.Sequelize(database_1.default);
 function testConnection() {
     return __awaiter(this, void 0, void 0, function* () {
         try {

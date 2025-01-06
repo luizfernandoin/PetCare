@@ -1,6 +1,5 @@
-import sequelize, { CreationOptional, ForeignKey } from "sequelize";
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
-import petModel from "./pet";
+import { DataTypes, Model, ForeignKey } from "sequelize";
+import db from "../config/sequelize";
 
 
 class DonoPet extends Model {
@@ -8,34 +7,31 @@ class DonoPet extends Model {
     declare petId: ForeignKey<string>;
 };
 
-const DonoPetModel = (sequelize: Sequelize) => {
-    DonoPet.init({
-        userId: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
-            references: {
-                model: 'users',
-                key: 'id',
-            },
-            primaryKey: true,
+DonoPet.init({
+    userId: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        references: {
+            model: 'users',
+            key: 'id',
         },
-        petId: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
-            references: {
-                model: 'pets',
-                key: 'id',
-            },
-            primaryKey: true,
-        }
+        primaryKey: true,
     },
-    {
-        sequelize,
-        tableName: 'DonoPet',
-        timestamps: false
-    });
+    petId: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        references: {
+            model: 'pets',
+            key: 'id',
+        },
+        primaryKey: true,
+    }
+},
+{
+    sequelize: db,
+    tableName: 'DonoPet',
+    timestamps: false
+});
 
-    return DonoPet;
-};
 
-export default DonoPetModel;
+export default DonoPet;
