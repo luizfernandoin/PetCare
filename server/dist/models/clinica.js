@@ -5,11 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const sequelize_2 = __importDefault(require("../config/sequelize"));
-const user_1 = __importDefault(require("./user"));
-const TrabalhaClinica_1 = __importDefault(require("./TrabalhaClinica"));
 const service_1 = __importDefault(require("./service"));
 const horario_1 = __importDefault(require("./horario"));
-const agendamento_1 = __importDefault(require("./agendamento"));
 const sequelize_3 = __importDefault(require("sequelize"));
 class Clinica extends sequelize_1.Model {
 }
@@ -32,14 +29,12 @@ Clinica.init({
     tableName: 'clinicas',
     sequelize: sequelize_2.default
 });
-Clinica.belongsToMany(user_1.default, {
-    through: TrabalhaClinica_1.default,
-    foreignKey: 'clinicaId',
-    otherKey: 'userId',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
 Clinica.hasMany(service_1.default, {
+    foreignKey: 'clinicaId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+});
+service_1.default.belongsTo(Clinica, {
     foreignKey: 'clinicaId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
@@ -49,5 +44,9 @@ Clinica.hasMany(horario_1.default, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
-Clinica.hasMany(agendamento_1.default, { foreignKey: 'clinicaId' });
+horario_1.default.belongsTo(Clinica, {
+    foreignKey: 'clinicaId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+});
 exports.default = Clinica;

@@ -5,9 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const sequelize_2 = __importDefault(require("../config/sequelize"));
-const user_1 = __importDefault(require("./user"));
-const pet_1 = __importDefault(require("./pet"));
-const service_1 = __importDefault(require("./service"));
 class Atendimento extends sequelize_1.Model {
 }
 Atendimento.init({
@@ -51,20 +48,5 @@ Atendimento.init({
     sequelize: sequelize_2.default,
     tableName: 'atendimentos',
     timestamps: false
-});
-Atendimento.belongsTo(user_1.default, {
-    foreignKey: 'profissionalId',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-});
-Atendimento.belongsTo(pet_1.default, {
-    foreignKey: 'petId',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-});
-Atendimento.belongsTo(service_1.default, {
-    foreignKey: 'serviceId',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
 });
 exports.default = Atendimento;

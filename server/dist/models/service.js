@@ -17,9 +17,6 @@ const sequelize_2 = __importDefault(require("../config/sequelize"));
 const clinica_1 = __importDefault(require("./clinica"));
 const vacina_1 = __importDefault(require("./vacina"));
 const atendimento_1 = __importDefault(require("./atendimento"));
-const agendamento_1 = __importDefault(require("./agendamento"));
-const user_1 = __importDefault(require("./user"));
-const avaliacoes_1 = __importDefault(require("./avaliacoes"));
 class Service extends sequelize_1.Model {
     getOwnerId(id) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -57,12 +54,12 @@ Service.init({
     tableName: 'services',
     timestamps: false
 });
-Service.belongsTo(clinica_1.default, {
-    foreignKey: 'clinicaId',
+Service.hasMany(vacina_1.default, {
+    foreignKey: 'serviceId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
-Service.hasMany(vacina_1.default, {
+vacina_1.default.belongsTo(Service, {
     foreignKey: 'serviceId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
@@ -72,10 +69,9 @@ Service.hasMany(atendimento_1.default, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
-Service.hasMany(agendamento_1.default, { foreignKey: 'serviceId' });
-Service.belongsToMany(user_1.default, {
-    through: avaliacoes_1.default,
+atendimento_1.default.belongsTo(Service, {
     foreignKey: 'serviceId',
-    otherKey: 'userId'
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
 });
 exports.default = Service;

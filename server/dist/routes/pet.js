@@ -1,112 +1,84 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const petService_1 = __importDefault(require("../service/petService"));
+const userService_1 = __importDefault(require("../service/userService"));
+const authenticateToken_1 = __importDefault(require("../utils/middlewares/authenticateToken"));
+const pet_1 = __importDefault(require("../models/pet"));
+const user_1 = __importDefault(require("../models/user"));
 const router = (0, express_1.Router)();
-//const petService = new Pet(pet);
-//const userService = new User(user);
-/*
-router.post('/api/pets', authenticateToken, async(request, response) => {
-    const user = await userService.getUserByEmail(request.user.email);
-    const resultPet = await petService.createPet(request.body, user);
-    
-    if (!resultPet) {
-        response.status(500).json({
-            message: "Erro interno: resultado indefinido.",
-        });
-    }
-
-    response.status(resultPet.status).json({
-        message: resultPet.message,
-        data: resultPet.data,
-        errors: resultPet.errors,
-    });
-});
-
-router.get('/api/pets', async (request, response) => {
-    const pets = await petService.getAllPets();
-
-    if (pets.error) {
-        response.status(pets.status).json({
-            message: pets.message,
-            error: pets.error,
-        });
-    }
-
-    response.status(pets.status).json({
-        message: pets.message,
-        data: pets.data,
-    });
-});
-
-router.get('/api/pets/:id', async (request, response) => {
-    const { id } = request.params;
-    const pet = await petService.getPetById(id);
-
-    if (pet.error || !pet) {
-        response.status(pet.status).send(pet.error)
-    }
-
-    response.send(pet);
-});
-
-router.put('/api/pets/:id', authenticateToken, async (request, response) => {
-    const { id } = request.params;
-    const {
-        nome,
-        raca,
-        idade,
-        porte,
-        foto,
-        caracteristicas,
-    } = request.body;
-    const user = await userService.getUserByEmail(request.user.email)
-
-    if (!nome || !porte) {
-        response.status(400).json({
-            message: "Nome e porte são obrigatórios."
-        });
-    }
-
+const petService = new petService_1.default(pet_1.default);
+const userService = new userService_1.default(user_1.default);
+router.post('/', authenticateToken_1.default, (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updates = { nome, raca, idade, porte, foto, caracteristicas };
-
-        const pet = await petService.updatePet(id, user, updates);
-
-        const result = {
-            message: pet.message,
-            data: pet.data,
-        };
-
-        if (pet.errors) {
-            result.errors = pet.errors;
-        }
-
-        response.status(pet.status).json(result);
-    } catch (error) {
-        console.error("Erro ao atualizar pet:", error);
-        response.status(500).json({
-            message: "Erro interno ao atualizar o pet.",
-            error: error.message,
+        const { email } = request.user;
+        const petDTO = request.body;
+        const user = yield userService.getUserByEmail(email);
+        const resultPet = yield petService.createPet(petDTO, user);
+        response.status(201).json({ "message": "Pet criado com sucesso.", "data": resultPet });
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+router.get('/', (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const pets = yield petService.getAllPets();
+    try {
+        const pets = yield petService.getAllPets();
+        response.status(200).json({ "message": "Pets encontrados com sucesso.", "data": pets });
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+router.get('/:id', (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = request.params;
+        const pet = yield petService.getPetById(id);
+        response.status(200).json({ "message": "Pet encontrado com sucesso.", "data": pet });
+    }
+    catch (error) {
+        next(error);
+    }
+    ;
+}));
+router.put('/:id', authenticateToken_1.default, (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = request.params;
+    const petDTO = request.body;
+    try {
+        const user = yield userService.getUserByEmail(request.user.email);
+        const pet = yield petService.updatePet(id, user, petDTO);
+        response.status(200).json({
+            message: "Pet atualizado com sucesso.",
+            data: pet,
         });
     }
-});
-
-router.delete('/api/pets/:id', authenticateToken, async (request, response) => {
+    catch (error) {
+        next(error);
+    }
+}));
+router.delete('/:id', authenticateToken_1.default, (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const petId = request.params.id;
+        const { id } = request.params;
         const userAuth = request.user;
-        const user = await userService.getUserByEmail(userAuth.email)
-
-        const result = await petService.deletePet(petId, user);
-
-        response.status(result.status).json({
-            message: result.message,
-            ...(result.data && { data: result.data })
-        });
-    } catch (error) {
-        console.error('Erro ao deletar pet:', error);
-        response.status(500).json({ message: 'Erro ao deletar pet.', error: error.message });
+        const user = yield userService.getUserByEmail(userAuth.email);
+        const result = yield petService.deletePet(id, user);
+        response.status(200).json({ message: 'Pet deletado com sucesso.' });
     }
-});
-*/
+    catch (error) {
+        next(error);
+    }
+}));
 exports.default = router;

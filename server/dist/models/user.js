@@ -11,7 +11,6 @@ const clinica_1 = __importDefault(require("./clinica"));
 const TrabalhaClinica_1 = __importDefault(require("./TrabalhaClinica"));
 const atendimento_1 = __importDefault(require("./atendimento"));
 const service_1 = __importDefault(require("./service"));
-const agendamento_1 = __importDefault(require("./agendamento"));
 const avaliacoes_1 = __importDefault(require("./avaliacoes"));
 class User extends sequelize_1.Model {
 }
@@ -76,10 +75,24 @@ User.belongsToMany(pet_1.default, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
 });
+pet_1.default.belongsToMany(User, {
+    through: DonoPet_1.default,
+    foreignKey: 'petId',
+    otherKey: 'userId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+});
 User.belongsToMany(clinica_1.default, {
     through: TrabalhaClinica_1.default,
     foreignKey: 'userId',
     otherKey: 'clinicaId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
+clinica_1.default.belongsToMany(User, {
+    through: TrabalhaClinica_1.default,
+    foreignKey: 'clinicaId',
+    otherKey: 'userId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
 });
@@ -88,10 +101,19 @@ User.hasMany(atendimento_1.default, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
-User.hasMany(agendamento_1.default, { foreignKey: 'userId' });
+atendimento_1.default.belongsTo(User, {
+    foreignKey: 'profissionalId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+});
 User.belongsToMany(service_1.default, {
     through: avaliacoes_1.default,
     foreignKey: 'userId',
     otherKey: 'serviceId'
+});
+service_1.default.belongsToMany(User, {
+    through: avaliacoes_1.default,
+    foreignKey: 'serviceId',
+    otherKey: 'userId'
 });
 exports.default = User;

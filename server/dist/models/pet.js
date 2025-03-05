@@ -5,10 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const sequelize_2 = __importDefault(require("../config/sequelize"));
-const user_1 = __importDefault(require("./user"));
-const DonoPet_1 = __importDefault(require("./DonoPet"));
 const atendimento_1 = __importDefault(require("./atendimento"));
-const agendamento_1 = __importDefault(require("./agendamento"));
 class Pet extends sequelize_1.Model {
 }
 Pet.init({
@@ -54,17 +51,14 @@ Pet.init({
     sequelize: sequelize_2.default,
     tableName: 'pets',
 });
-Pet.belongsToMany(user_1.default, {
-    through: DonoPet_1.default,
-    foreignKey: 'petId',
-    otherKey: 'userId',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-});
 Pet.hasMany(atendimento_1.default, {
     foreignKey: 'petId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
-Pet.hasMany(agendamento_1.default, { foreignKey: 'petId' });
+atendimento_1.default.belongsTo(Pet, {
+    foreignKey: 'petId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+});
 exports.default = Pet;

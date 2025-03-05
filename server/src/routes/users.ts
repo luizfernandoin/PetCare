@@ -28,6 +28,49 @@ router.get("/", async (request: Request, response: Response) => {
     }
 });
 
+router.get("/profile", authenticateToken, async (request: Request, response: Response) => {
+    try {
+        const userAuth = request.user;
+        console.log(userAuth);
+
+        if (!userAuth) {
+            throw new HttpError("Usuário não encontrado", 404);
+        }
+
+        const user = await userService.getUserByEmail(userAuth.email);
+
+        response.status(200).json({
+            message: "Usuário encontrado com sucesso.",
+            data: user,
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            response.status(500).json({ message: 'Erro ao buscar usuário.', error: error.message });
+        }
+
+        response.status(500).json({ message: 'Erro ao buscar usuários.', error: 'Erro desconhecido' });
+    }
+})
+
+router.get("/:id", async(request: Request, response: Response) => {
+    try {
+        const { id } = request.params;
+
+        const user = await userService.getUserById(id);
+
+        response.status(200).json({
+            message: "Usuário encontrado com sucesso.",
+            data: user,
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            response.status(500).json({ message: 'Erro ao buscar usuário.', error: error.message });
+        }
+
+        response.status(500).json({ message: 'Erro ao buscar usuários.', error: 'Erro desconhecido' });
+    }
+})
+
 router.delete('/', authenticateToken, async (request: Request, response: Response, next: Function) => {
     try {
         const userAuth = request.user;

@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const sequelize_2 = __importDefault(require("../config/sequelize"));
-const service_1 = __importDefault(require("./service"));
 class Vacina extends sequelize_1.Model {
 }
 Vacina.init({
@@ -46,10 +45,5 @@ Vacina.init({
     sequelize: sequelize_2.default,
     tableName: 'vacinas',
     timestamps: false,
-});
-Vacina.belongsTo(service_1.default, {
-    foreignKey: 'serviceId',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
 });
 exports.default = Vacina;

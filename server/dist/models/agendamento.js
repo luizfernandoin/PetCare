@@ -74,4 +74,8 @@ Agendamento.belongsTo(user_1.default, { foreignKey: 'userId' });
 Agendamento.belongsTo(pet_1.default, { foreignKey: 'petId' });
 Agendamento.belongsTo(service_1.default, { foreignKey: 'serviceId' });
 Agendamento.belongsTo(clinica_1.default, { foreignKey: 'clinicaId' });
+user_1.default.hasMany(Agendamento, { foreignKey: 'userId' });
+pet_1.default.hasMany(Agendamento, { foreignKey: 'petId' });
+service_1.default.hasMany(Agendamento, { foreignKey: 'serviceId' });
+clinica_1.default.hasMany(Agendamento, { foreignKey: 'clinicaId' });
 exports.default = Agendamento;
