@@ -6,6 +6,7 @@ import verifyOwnership from "../utils/middlewares/verifyOwnership";
 import Clinica from "../models/clinica";
 import UserService from "../service/userService";
 import User from "../models/user";
+import HttpError from "../utils/errors/HttpError";
 
 const router = Router();
 const clinicaService = new ClinicaService(Clinica);
@@ -20,6 +21,24 @@ router.get("/", async (request: Request, response: Response, next: NextFunction)
             message: "Clínicas encontradas com sucesso!",
             data: clinicas
         });
+    } catch (error) {
+        next(error);
+    }
+})
+
+router.get("/clinicas-proximas", authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const userAuth = request.user;
+        const { radius } = request.query;
+
+        const user = await userService.getUserByEmail(userAuth.email);
+
+        const distancia = parseFloat(radius as string) || 5000;
+        const [longitude, latitude] = user.location.coordinates;
+
+        const nearbyClinicas = await clinicaService.getNearbyClinicas(longitude, latitude, distancia);
+
+        response.status(200).json(nearbyClinicas);
     } catch (error) {
         next(error);
     }

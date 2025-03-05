@@ -14,9 +14,10 @@ class AuthenticationService {
     }
 
     async createUser(userDTO: User) {
-        const { email, nome, senha, telefone, uf, cidade, rua, bairro, num, tipo } = userDTO;
+        const { email, nome, senha, telefone, location, tipo } = userDTO;
+        console.log(userDTO);
     
-        if (!email || !nome || !senha || !telefone || !uf || !cidade || !rua || !bairro || !num || !tipo) {
+        if (!email || !nome || !senha || !telefone || !location || !tipo) {
             throw new HttpError("Todos os campos são obrigatórios.", 400);
         }
     
@@ -39,11 +40,7 @@ class AuthenticationService {
                 nome,
                 senha: hashedPassword,
                 telefone,
-                uf,
-                cidade,
-                rua,
-                bairro,
-                num,
+                location,
                 tipo,
             });
     

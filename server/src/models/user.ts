@@ -16,11 +16,10 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare nome: string;
     declare senha: string;
     declare telefone: string;
-    declare uf: string;
-    declare cidade: string;
-    declare rua: string;
-    declare bairro: string;
-    declare num: string;
+    declare location: {
+        type: string;
+        coordinates: [number, number];
+    };
     declare tipo: 'Cliente' | 'Profissional';
 
     public getPets!: () => Promise<Pet[]>;
@@ -55,24 +54,8 @@ User.init({
         type: DataTypes.STRING(15),
         allowNull: false,
     },
-    uf: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-    },
-    cidade: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-    },
-    rua: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-    },
-    bairro: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-    },
-    num: {
-        type: DataTypes.STRING(10),
+    location: {
+        type: DataTypes.GEOMETRY("POINT"),
         allowNull: false,
     },
     tipo: {

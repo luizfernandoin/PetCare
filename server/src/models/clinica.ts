@@ -12,6 +12,10 @@ class Clinica extends Model {
     declare id: string;
     declare nome: string;
     declare telefone: string;
+    declare location: {
+        type: string;
+        coordinates: [number, number];
+    };
 };
 
 Clinica.init({
@@ -26,6 +30,10 @@ Clinica.init({
     },
     telefone: {
         type: sequelize.STRING(15),
+        allowNull: false,
+    },
+    location: {
+        type: DataTypes.GEOMETRY("POINT"),
         allowNull: false,
     },
 }, {

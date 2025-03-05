@@ -1,4 +1,4 @@
-import { ModelStatic, ValidationError, ValidationErrorItem } from "sequelize";
+import { ModelStatic, Sequelize, ValidationError, ValidationErrorItem } from "sequelize";
 import Clinica from "../models/clinica";
 import TrabalhaClinica from "../models/TrabalhaClinica";
 import HttpError from "../utils/errors/HttpError";
@@ -81,6 +81,21 @@ class ClinicaService {
             throw new HttpError("Erro interno ao buscar clinica", 500)
         }
     }
+
+    async getNearbyClinicas (longitude: number, latitude: number, distance: number) {
+        console.log(longitude, latitude);
+        return await Clinica.findAll({
+            where: Sequelize.where(
+                Sequelize.fn(
+                    'ST_DWithin',
+                    Sequelize.col('location'),
+                    Sequelize.fn('ST_SetSRID', Sequelize.fn('ST_MakePoint', longitude, latitude), 4326),
+                    distance / 111
+                ),
+                true
+            )
+        });
+    };
 
     async createClinica(clinicaDTO: any, user: any) {
         const { nome, telefone } = clinicaDTO;
