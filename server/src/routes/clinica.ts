@@ -44,6 +44,42 @@ router.get("/clinicas-proximas", authenticateToken, async (request: Request, res
     }
 })
 
+router.post("/:id/vincular-profissional/:profissionalId", 
+    authenticateToken,
+    typeUser("Profissional"), 
+    verifyOwnership(clinicaService),
+    async(request: Request, response: Response, next: NextFunction) => {
+        try {
+            const { id: clinicaId, profissionalId } = request.params;
+
+            const vinculo = await clinicaService.vincularProfissional(clinicaId, profissionalId);
+
+            response.status(201).json({
+                message: "Profissional vinculado com sucesso à clínica.",
+                vinculo
+            });
+        } catch (error) {
+            next(error);
+        }
+})
+
+router.delete("/:id/desvincular-profissional/:profissionalId",
+    authenticateToken,
+    typeUser("Profissional"), 
+    verifyOwnership(clinicaService),
+    async (request: Request, response: Response, next: NextFunction) => {
+        try {
+            const { id: clinicaId, profissionalId } = request.params;
+
+            const resultado = await clinicaService.desvincularProfissional(clinicaId, profissionalId);
+
+            response.status(200).json(resultado);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
 router.post('/', authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
     try {
         const user = await userService.getUserByEmail(request.user.email);

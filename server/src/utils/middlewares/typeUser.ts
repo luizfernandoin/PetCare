@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import HttpError from "../errors/HttpError";
 
 const typeUser = (requiredType: string) => {
+    console.log(requiredType);
     return (request: Request, response: Response, next: NextFunction) => {
+        console.log(request.user);
         if (!request.user) {
             throw new HttpError('Usuário não autenticado.', 401);
         }
