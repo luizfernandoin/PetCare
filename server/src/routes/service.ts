@@ -14,6 +14,19 @@ const userService = new UserService(User);
 const serviceService = new ServiceService(Service);
 const clinicaService = new ClinicaService(Clinica);
 
+
+router.get("/:clinicaId/services", async(request, response, next: NextFunction) => {
+    const { clinicaId } = request.params;
+    
+    try {
+        const services = await serviceService.getServicesByClinicaId(clinicaId);
+
+        response.status(200).json({ message: "Serviços encontrados com sucesso.", data: services });
+    } catch (error) {
+        next(error);
+    }
+})
+
 router.post("/:clinicaId/services", authenticateToken, typeUser("Profissional"), async(request, response, next: NextFunction) => {
     try {
         const serviceDTO = request.body;
@@ -29,18 +42,6 @@ router.post("/:clinicaId/services", authenticateToken, typeUser("Profissional"),
     } catch (error) {
         next(error);
     }
-})
-
-router.get("/:clinicaId/services", async(request, response, next: NextFunction) => {
-    const { clinicaId } = request.params;
-    
-    try {
-        const services = await serviceService.getServicesByClinicaId(clinicaId);
-
-        response.status(200).json({ message: "Serviços encontrados com sucesso.", data: services });
-    } catch (error) {
-        next(error);
-    }
-})
+});
 
 export default router;

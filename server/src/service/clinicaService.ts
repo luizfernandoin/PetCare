@@ -1,9 +1,21 @@
 import { ModelStatic, Sequelize, ValidationError, ValidationErrorItem } from "sequelize";
 import Clinica from "../models/clinica";
 import TrabalhaClinica from "../models/TrabalhaClinica";
+import Horario from "../models/horario";
 import HttpError from "../utils/errors/HttpError";
 import User from "../models/user";
 import { UUID } from "crypto";
+
+interface horario {
+    dia: string,
+    horaInicio: string,
+    horaFim: string
+}
+
+interface horariosDTO {
+    clinicaId: string,
+    horarios: horario
+}
 
 
 class ClinicaService {
@@ -172,7 +184,47 @@ class ClinicaService {
                 ? error
                 : new HttpError('Erro interno ao desvincular profissional.', 500);
         }
-    }    
+    }
+
+    async addHorarios(horariosDTO: horariosDTO, user: User) {
+        const { clinicaId, horarios } = horariosDTO;
+
+        if (!clinicaId || !horarios || !Array.isArray(horarios)) {
+            throw new HttpError("ID da clínica e horários são obrigatórios.", 400);
+        }
+
+        const clinica = await this.clinicaModel.findByPk(clinicaId);
+        if (!clinica) {
+            throw new HttpError("Clínica não encontrada.", 404);
+        }
+
+        if (!(await user.hasClinica(clinica))) {
+            throw new HttpError("Usuário não tem permissão para adicionar horários a esta clínica.", 403);
+        }
+
+        try {
+            const horariosCriados = await Promise.all(
+                horarios.map(async (horario) => {
+                    const { dia, horaInicio, horaFim } = horario;
+
+                    if (!dia || !horaInicio || !horaFim) {
+                        throw new HttpError("Todos os horários devem ter dia, hora de início e hora de fim.", 400);
+                    }
+
+                    return await Horario.create({
+                        clinicaId,
+                        dia,
+                        horaInicio,
+                        horaFim,
+                    });
+                })
+            );
+
+            return horariosCriados;
+        } catch (error) {
+            throw new HttpError("Erro ao adicionar horários.", 500);
+        }
+    };
 
     async deleteClinica(clinicaId: string, user: User) {
         try {

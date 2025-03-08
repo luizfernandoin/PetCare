@@ -7,6 +7,7 @@ import Clinica from "../models/clinica";
 import UserService from "../service/userService";
 import User from "../models/user";
 import HttpError from "../utils/errors/HttpError";
+import { STATUS_CODES } from "http";
 
 const router = Router();
 const clinicaService = new ClinicaService(Clinica);
@@ -94,6 +95,24 @@ router.post('/', authenticateToken, typeUser("Profissional"), async(request: Req
     };
 });
 
+router.post('/:id/horario', authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
+    try {
+        const { id: clinicaId } = request.params;
+        const { email } = request.user;
+        const horarioData = { ...request.body, clinicaId };
+
+        const user = await userService.getUserByEmail(email);
+        const horarios = await clinicaService.addHorarios(horarioData, user);
+
+        response.status(201).json({
+            message: "Horários de atendimento adicionados com sucesso!",
+            data: horarios,
+        });
+    } catch (error) {
+        next(error);
+    }
+})
+
 router.delete("/:id", authenticateToken, typeUser("Profissional"), verifyOwnership(clinicaService), async(request: Request, response: Response, next: NextFunction) => {
     const clinicaId = request.params.id;
     const { email } = request.user;
@@ -109,7 +128,6 @@ router.delete("/:id", authenticateToken, typeUser("Profissional"), verifyOwnersh
     } catch (error) {
         next(error);
     }
-
 })
 
 export default router;

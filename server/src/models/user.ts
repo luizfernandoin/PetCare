@@ -26,6 +26,15 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     public removePets!: (pets: Pet[]) => Promise<void>;
     public addPet!: (pet: Pet) => Promise<void>;
     public removeClinica!: (clinica: Clinica) => Promise<void>;
+    public async hasClinica(clinica: Clinica): Promise<boolean> {
+        const trabalha = await TrabalhaClinica.findOne({
+            where: {
+                userId: this.id,
+                clinicaId: clinica.id
+            }
+        });
+        return !!trabalha;
+    }
 }
 
 User.init({

@@ -104,21 +104,6 @@ router.delete('/:id', async(request: Request, response: Response, next: Function
     }
 })
 
-router.delete('/', authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
-    try {
-        const userEmail = request.user.email;
-    
-        const user = await userService.deleteUserByEmail(userEmail);
-
-        response.status(200).json({ 
-            message: "Usuário deletado com sucesso.",
-            data: user
-        });
-    } catch(error) {
-        next(error);
-    }
-})
-
 router.put('/profile', authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
     const userAuth = request.user;
     const userDTO = request.body;
@@ -140,7 +125,7 @@ router.patch("/profile", authenticateToken, async (request: Request, response: R
     const updates = request.body;
 
     if (Object.keys(updates).length === 0) {
-        throw new HttpError("Nenhum campo foi enviado para atualização.", 400);
+        next(new HttpError("Nenhum campo foi enviado para atualização.", 400));
     }
 
     try {

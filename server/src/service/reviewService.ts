@@ -13,6 +13,8 @@ class ReviewService {
     };
 
     async createReview(userID: string, serviceID: string, data: Partial<Avaliacoes>) {
+        console.log(userID, serviceID, data);
+
         const service = await this.serviceModel.findByPk(serviceID);
         if (!service) {
             throw new HttpError("Serviço não encontrado.", 404);
@@ -34,7 +36,7 @@ class ReviewService {
 
     async getReviewsForService(serviceID: string) {
         const reviews = await Avaliacoes.findAll({
-            where: { serviceID },
+            where: { serviceId: serviceID },
             order: [["createdAt", "DESC"]],
         });
 
@@ -55,8 +57,13 @@ class ReviewService {
         return review;
     }
 
-    async deleteReview(reviewID: string, userID: string) {
-        const review = await Avaliacoes.findByPk(reviewID);
+    async deleteReview(serviceId: string, userID: string) {
+        const review = await Avaliacoes.findOne({
+            where: {
+                userId: userID,
+                serviceId 
+            }
+        });
 
         if (!review) {
             throw new HttpError("Review não encontrado.", 404);

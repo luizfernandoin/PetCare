@@ -126,14 +126,10 @@ class UserService {
         const {
             nome,
             telefone,
-            uf,
-            cidade,
-            rua,
-            bairro,
-            num,
+            location
         } = updates;
     
-        if (!nome || !telefone || !uf || !cidade || !rua || !bairro || !num) {
+        if (!nome || !telefone || !location) {
             throw new HttpError("Todos os campos obrigatórios devem ser preenchidos.", 400);
         }
 
