@@ -11,6 +11,22 @@ const router = Router();
 const agendamentoService = new AgendamentoService(Agendamento)
 const userService = new UserService(User);
 
+
+router.get("/:clinicaId/agendamentos", async(request: Request, response: Response, next: NextFunction) => {
+    const { clinicaId } = request.params;
+
+    try {
+        const agendamentos = await agendamentoService.getAgenamentosForClinicaId(clinicaId);
+
+        response.status(201).json({
+            message: `Agendamentos encontrados com sucesso!`,
+            data: agendamentos,
+        });
+    } catch (error) {
+        next(error);
+    }
+})
+
 router.post("/:clinicaId/agendamentos", authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
     const { clinicaId } = request.params;
     const { email } = request.user;
@@ -29,9 +45,10 @@ router.post("/:clinicaId/agendamentos", authenticateToken, async (request: Reque
     try {
         const disponivel = await agendamentoService.verificarDisponibilidade(agendamentoData);
         if (!disponivel) {
-            next(new HttpError("Horário indisponível para agendamento.", 400));
+            return next(new HttpError("Horário indisponível para agendamento.", 400));
         }
 
+        console.log("O HttpError não interrompeu!")
         const agendamento = await agendamentoService.criarAgendamento(agendamentoData);
 
         response.status(201).json({
