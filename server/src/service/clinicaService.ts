@@ -110,6 +110,19 @@ class ClinicaService {
         });
     };
 
+    async getHorariosByClinicaId(clinicaId: string) {
+        try {
+            const horarios = await Horario.findAll({
+                where: { clinicaId },
+                order: [["dia", "ASC"], ["horaInicio", "ASC"]]
+            })
+
+            return horarios;
+        } catch(error) {
+            throw new HttpError("Erro ao buscar horários.", 500);
+        }
+    }
+
     async createClinica(clinicaDTO: any, user: any) {
         const { nome, telefone } = clinicaDTO;
 
@@ -173,6 +186,17 @@ class ClinicaService {
             if (!vinculo) {
                 throw new HttpError('O profissional não está vinculado a esta clínica.', 404);
             }
+
+            const profissionaisVinculados = await TrabalhaClinica.count({
+                where: { clinicaId },
+            });
+
+            if (profissionaisVinculados <= 1) {
+                throw new HttpError(
+                    'A clínica precisa ter pelo menos um profissional vinculado. Não é possível desvincular este profissional.',
+                    400
+                );
+            }
     
             await vinculo.destroy();
     
@@ -188,6 +212,7 @@ class ClinicaService {
 
     async addHorarios(horariosDTO: horariosDTO, user: User) {
         const { clinicaId, horarios } = horariosDTO;
+        console.log(horarios);
 
         if (!clinicaId || !horarios || !Array.isArray(horarios)) {
             throw new HttpError("ID da clínica e horários são obrigatórios.", 400);
@@ -205,17 +230,25 @@ class ClinicaService {
         try {
             const horariosCriados = await Promise.all(
                 horarios.map(async (horario) => {
+                    console.log("Chegou no map");
                     const { dia, horaInicio, horaFim } = horario;
 
                     if (!dia || !horaInicio || !horaFim) {
                         throw new HttpError("Todos os horários devem ter dia, hora de início e hora de fim.", 400);
                     }
+                    
+                    const formatarHora = (hora: string) => {
+                        return hora.length === 5 ? `${hora}:00` : hora;
+                    };
+
+                    const horaInicioFormatada = formatarHora(horaInicio);
+                    const horaFimFormatada = formatarHora(horaFim);
 
                     return await Horario.create({
                         clinicaId,
                         dia,
-                        horaInicio,
-                        horaFim,
+                        horaInicio: horaInicioFormatada,
+                        horaFim: horaFimFormatada,
                     });
                 })
             );

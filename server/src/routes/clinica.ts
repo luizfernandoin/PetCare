@@ -45,6 +45,21 @@ router.get("/clinicas-proximas", authenticateToken, async (request: Request, res
     }
 })
 
+router.get('/:id/horarios', async(request: Request, response: Response, next: NextFunction) => {
+    try {
+        const { id: clinicaId } = request.params;
+
+        const horarios = await clinicaService.getHorariosByClinicaId(clinicaId);
+
+        response.status(200).json({
+            message: "Horários de atendimento encontrados com sucesso!",
+            data: horarios,
+        });
+    } catch (error) {
+        next(error);
+    }
+})
+
 router.post("/:id/vincular-profissional/:profissionalId", 
     authenticateToken,
     typeUser("Profissional"), 
@@ -95,7 +110,7 @@ router.post('/', authenticateToken, typeUser("Profissional"), async(request: Req
     };
 });
 
-router.post('/:id/horario', authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
+router.post('/:id/horarios', authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
     try {
         const { id: clinicaId } = request.params;
         const { email } = request.user;

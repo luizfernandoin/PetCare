@@ -1,4 +1,4 @@
-import { DataTypes, Model, ForeignKey } from 'sequelize';
+import { DataTypes, Model, ForeignKey, CreationOptional } from 'sequelize';
 import db from "../config/sequelize";
 import User from './user';
 import Pet from './pet';
@@ -7,6 +7,7 @@ import Clinica from './clinica';
 
 
 class Agendamento extends Model {
+    declare id: CreationOptional<string>;
     declare userId: ForeignKey<string>;
     declare petId: ForeignKey<string>;
     declare serviceId: ForeignKey<string>;
@@ -18,6 +19,11 @@ class Agendamento extends Model {
 }
 
 Agendamento.init({
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+    },
     userId: {
         type: DataTypes.UUID,
         allowNull: false,
@@ -25,7 +31,6 @@ Agendamento.init({
             model: 'users',
             key: 'id',
         },
-        primaryKey: true
     },
     petId: {
         type: DataTypes.UUID,
@@ -34,7 +39,6 @@ Agendamento.init({
             model: 'pets',
             key: 'id',
         },
-        primaryKey: true
     },
     serviceId: {
         type: DataTypes.UUID,
@@ -43,7 +47,6 @@ Agendamento.init({
             model: 'services',
             key: 'id',
         },
-        primaryKey: true
     },
     clinicaId: {
         type: DataTypes.UUID,
@@ -52,12 +55,10 @@ Agendamento.init({
             model: 'clinicas',
             key: 'id',
         },
-        primaryKey: true
     },
     dataAgendamento: {
         type: DataTypes.DATE,
         allowNull: false,
-        primaryKey: true
     },
     horaInicio: {
         type: DataTypes.TIME,
