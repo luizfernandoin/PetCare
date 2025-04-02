@@ -15,7 +15,7 @@ class Agendamento extends Model {
     declare dataAgendamento: Date;
     declare horaInicio: string;
     declare horaFim: string;
-    declare status: string;
+    declare status: "pendente" | "confirmado" | "cancelado";
 }
 
 Agendamento.init({

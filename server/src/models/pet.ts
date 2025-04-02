@@ -14,6 +14,7 @@ class Pet extends Model<InferAttributes<Pet>, InferCreationAttributes<Pet>> {
     declare porte: 'pequeno' | 'medio' | 'grande';
     declare foto: CreationOptional<string>;
     declare caracteristicas: CreationOptional<string>;
+    declare image: CreationOptional<string>;
 
     public getPets!: () => Promise<Pet[]>;
 }
@@ -56,7 +57,11 @@ Pet.init({
     caracteristicas: {
         type: DataTypes.STRING,
         allowNull: true
-    }
+    },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 },
 {
     sequelize: db,

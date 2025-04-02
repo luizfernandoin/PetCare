@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { CreationOptional, DataTypes, Model } from 'sequelize';
 import db from "../config/sequelize";
 import User from './user';
 import TrabalhaClinica from './TrabalhaClinica';
@@ -16,6 +16,7 @@ class Clinica extends Model {
         type: string;
         coordinates: [number, number];
     };
+    declare image: CreationOptional<string>;
 };
 
 Clinica.init({
@@ -35,6 +36,10 @@ Clinica.init({
     location: {
         type: DataTypes.GEOMETRY("POINT"),
         allowNull: false,
+    },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
 }, {
     tableName: 'clinicas',
