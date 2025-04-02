@@ -5,13 +5,19 @@ import authenticateToken from "../utils/middlewares/authenticateToken";
 
 import Pet from "../models/pet";
 import User from "../models/user";
+import { validate, validateParams } from "../utils/middlewares/validate";
+import { petCreateSchema, petUpdateSchema } from "../utils/validators/petValidation";
+import { urlParamsSchema } from "../utils/validators/paramsValidation";
 
 const router = Router()
 const petService = new PetService(Pet);
 const userService = new UserService(User);
 
 
-router.post('/', authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
+router.post('/', 
+    validate(petCreateSchema),
+    authenticateToken, 
+    async(request: Request, response: Response, next: NextFunction) => {
     try {
         const { email } = request.user;
         const petDTO: Pet = request.body;
@@ -37,7 +43,7 @@ router.get('/', async (request: Request, response: Response, next: NextFunction)
     }
 });
 
-router.get('/:id', async (request: Request, response: Response, next: NextFunction) => {
+router.get('/:id', validateParams(urlParamsSchema), async (request: Request, response: Response, next: NextFunction) => {
     try {
         const { id } = request.params;
         const pet = await petService.getPetById(id);
@@ -48,7 +54,10 @@ router.get('/:id', async (request: Request, response: Response, next: NextFuncti
     };
 });
 
-router.put('/:id', authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
+router.put('/:id',
+    validateParams(urlParamsSchema),
+    validate(petUpdateSchema),
+    authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
     const { id } = request.params;
     const petDTO = request.body;
 
@@ -65,7 +74,7 @@ router.put('/:id', authenticateToken, async (request: Request, response: Respons
     }
 });
 
-router.delete('/:id', authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
+router.delete('/:id', validateParams(urlParamsSchema), authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const { id } = request.params;
         const userAuth = request.user;

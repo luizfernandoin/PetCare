@@ -5,6 +5,9 @@ import authenticateToken from "../utils/middlewares/authenticateToken";
 import UserService from "../service/userService";
 import User from "../models/user";
 import HttpError from "../utils/errors/HttpError";
+import { validate, validateParams } from "../utils/middlewares/validate";
+import { agendamentoSchema } from "../utils/validators/agendamentoValidation";
+import { urlParamsSchema } from "../utils/validators/paramsValidation";
 
 
 const router = Router();
@@ -12,7 +15,9 @@ const agendamentoService = new AgendamentoService(Agendamento)
 const userService = new UserService(User);
 
 
-router.get("/:clinicaId/agendamentos", async(request: Request, response: Response, next: NextFunction) => {
+router.get("/:clinicaId/agendamentos", 
+    validateParams(urlParamsSchema), 
+    async(request: Request, response: Response, next: NextFunction) => {
     const { clinicaId } = request.params;
 
     try {
@@ -27,7 +32,9 @@ router.get("/:clinicaId/agendamentos", async(request: Request, response: Respons
     }
 })
 
-router.post("/:clinicaId/agendamentos", authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
+router.post("/:clinicaId/agendamentos", 
+    validateParams(urlParamsSchema), validate(agendamentoSchema),
+    authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
     const { clinicaId } = request.params;
     const { email } = request.user;
     const user = await userService.getUserByEmail(email);
@@ -55,26 +62,6 @@ router.post("/:clinicaId/agendamentos", authenticateToken, async (request: Reque
             message: `Agendamento do pet ${agendamento.petId} realizado na clinia ${agendamento.clinicaId} com sucesso!`,
             data: agendamento,
         });
-    } catch (error) {
-        next(error);
-    }
-});
-
-router.get("/", authenticateToken, async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const filtros = req.query;
-        const agendamentos = await agendamentoService.listarAgendamentos(filtros);
-        res.status(200).json(agendamentos);
-    } catch (error) {
-        next(error);
-    }
-});
-
-router.delete("/:id", authenticateToken, async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { userId, dataAgendamento, clinicaId } = req.body;
-        const resultado = await agendamentoService.deletarAgendamento(userId, dataAgendamento, clinicaId);
-        res.status(200).json(resultado);
     } catch (error) {
         next(error);
     }

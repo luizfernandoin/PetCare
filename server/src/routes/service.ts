@@ -8,6 +8,9 @@ import ClinicaService from "../service/clinicaService";
 import User from "../models/user";
 import Service from "../models/service"
 import Clinica from "../models/clinica";
+import { validate, validateParams } from "../utils/middlewares/validate";
+import { urlParamsSchema } from "../utils/validators/paramsValidation";
+import { serviceSchema } from "../utils/validators/serviceValidation";
 
 const router = Router();
 const userService = new UserService(User);
@@ -15,7 +18,9 @@ const serviceService = new ServiceService(Service);
 const clinicaService = new ClinicaService(Clinica);
 
 
-router.get("/:clinicaId/services", async(request, response, next: NextFunction) => {
+router.get("/:clinicaId/services", 
+    validateParams(urlParamsSchema),
+    async(request, response, next: NextFunction) => {
     const { clinicaId } = request.params;
     
     try {
@@ -27,7 +32,9 @@ router.get("/:clinicaId/services", async(request, response, next: NextFunction) 
     }
 })
 
-router.post("/:clinicaId/services", authenticateToken, typeUser("Profissional"), async(request, response, next: NextFunction) => {
+router.post("/:clinicaId/services", 
+    validateParams(urlParamsSchema), validate(serviceSchema),
+    authenticateToken, typeUser("Profissional"), async(request, response, next: NextFunction) => {
     try {
         const serviceDTO = request.body;
         const { clinicaId } = request.params;
