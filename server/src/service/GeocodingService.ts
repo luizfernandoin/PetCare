@@ -2,21 +2,9 @@ import axios from "axios";
 import HttpError from "../utils/errors/HttpError";
 
 
-interface Address {
-    street: string;
-    number: string;
-    city: string;
-    state: string;
-    country: string;
-    postalcode: string;
-}
-
 class GeocodingService {
     async getCoordinates(address: Address): Promise<{ lat: number; lon: number }> {
-        const street = address.number === "S/N" ? `S/N/${address.street}` : `${address.number}/${address.street}`;
-        const { city, state, country, postalcode } = address;
-
-        console.log(street);
+        const { street, city, state, country, postalcode } = address;
         
         try {
             const response = await axios.get("https://nominatim.openstreetmap.org/search", {
@@ -36,6 +24,7 @@ class GeocodingService {
                 timeout: 10000,
             });
 
+            console.log("Response: " + response.data);
             if (!response.data || response.data.length === 0) {
                 throw new HttpError("Endereço não encontrado. Por favor, revise o endereço informado.", 404);
             }

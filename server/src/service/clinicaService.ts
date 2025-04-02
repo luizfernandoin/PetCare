@@ -123,13 +123,7 @@ class ClinicaService {
         }
     }
 
-    async createClinica(clinicaDTO: any, user: any) {
-        const { nome, telefone } = clinicaDTO;
-
-        if (!nome || !telefone) {
-            throw new HttpError("Nome e telefone são obrigatórios.", 400)
-        }
-
+    async createClinica(clinicaDTO: Partial<Clinica>, user: any) {
         try {
             const newClinica = await this.clinicaModel.create(clinicaDTO);
             await user.addClinica(newClinica);
@@ -212,6 +206,7 @@ class ClinicaService {
 
     async addHorarios(horariosDTO: horariosDTO, user: User) {
         const { clinicaId, horarios } = horariosDTO;
+        console.log(horariosDTO);
         console.log(horarios);
 
         if (!clinicaId || !horarios || !Array.isArray(horarios)) {

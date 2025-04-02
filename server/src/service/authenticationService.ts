@@ -13,46 +13,37 @@ class AuthenticationService {
         this.secretKey = secretKey;
     }
 
-    async createUser(userDTO: User) {
+    async createUser(userDTO: Partial<User>) {
         const { email, nome, senha, telefone, location, tipo } = userDTO;
-        console.log(userDTO);
-    
-        if (!email || !nome || !senha || !telefone || !location || !tipo) {
-            throw new HttpError("Todos os campos são obrigatórios.", 400);
-        }
-    
-        if (!["Cliente", "Profissional"].includes(tipo)) {
-            throw new HttpError("O campo 'tipo' deve ser 'Cliente' ou 'Profissional'.", 400);
-        }
 
         const usuarioExiste = await this.userModel.findOne({ where: { email } });
 
         if (usuarioExiste) {
             throw new HttpError("E-mail já cadastrado.", 400);
         }
-    
+
         try {
             const salt = await bcrypt.genSalt();
-            const hashedPassword = await bcrypt.hash(senha, salt);
-    
+            const hashedPassword = await bcrypt.hash(senha!, salt);
+
             const novoUsuario = await this.userModel.create({
-                email,
-                nome,
-                senha: hashedPassword,
-                telefone,
-                location,
-                tipo,
+                email: email!,
+                nome: nome!,
+                senha: hashedPassword!,
+                telefone: telefone!,
+                location: location!,
+                tipo: tipo!,
             });
-    
+
             return { status: 201, message: "Usuário criado com sucesso!", data: novoUsuario };
-        } catch (error) {    
+        } catch (error) {
             if (error instanceof ValidationError) {
                 const errors = error.errors.map((err: ValidationErrorItem) => err.message);
                 throw new HttpError(`Erro de validação: ${errors.join(", ")}`, 400);
             }
-    
+
             throw new HttpError("Erro interno ao criar usuário.", 500);
-        }    
+        }
     }
 
     async login(email: string, senha: string) {
