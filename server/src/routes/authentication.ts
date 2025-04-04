@@ -16,6 +16,7 @@ const authenticationService = new AuthenticationService(User, SECRET_KEY)
 const geocodingService = new GeocodingService();
 
 
+
 router.post("/register", validate(userSchema), async (request: Request, response: Response, next: NextFunction) => {
     try {
         const userDTO: IUserCreate = request.body;

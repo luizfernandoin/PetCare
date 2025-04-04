@@ -52,7 +52,7 @@ class ServiceService {
                 throw new HttpError("Erro ao buscar serviços.", 500, new Error(error.message));
             };
 
-            throw new HttpError("Erro interno ao buscar clinicas.", 500);
+            throw new HttpError("Erro interno ao buscar serviços.", 500);
         }
     }
 }
