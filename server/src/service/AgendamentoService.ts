@@ -10,6 +10,20 @@ class AgendamentoService {
         this.agendamentoModel = userModel;
     }
 
+    async getAgenamentosForClinicaId(clinicaId: string) {
+        try {
+            return await this.agendamentoModel.findAll({
+                where: { clinicaId }
+            })
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new HttpError("Erro ao buscar agendamentos.", 500, new Error(error.message))
+            }
+
+            throw new HttpError("Erro interno ao buscar agendamentos", 500)
+        }
+    }
+
     async getAgengamentosForDay(clinicaId: string, data: Date) {
         console.log(clinicaId, data);
         try {

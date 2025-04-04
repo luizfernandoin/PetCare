@@ -21,6 +21,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
         coordinates: [number, number];
     };
     declare tipo: 'Cliente' | 'Profissional';
+    declare image: CreationOptional<string>;
 
     public getPets!: () => Promise<Pet[]>;
     public removePets!: (pets: Pet[]) => Promise<void>;
@@ -70,6 +71,10 @@ User.init({
     tipo: {
         type: DataTypes.ENUM('Cliente', 'Profissional'),
         allowNull: false,
+    },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
 }, {
     sequelize: db,

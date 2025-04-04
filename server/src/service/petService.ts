@@ -1,4 +1,4 @@
-import { ModelStatic, ValidationError, ValidationErrorItem } from "sequelize";
+import { InferCreationAttributes, ModelStatic, ValidationError, ValidationErrorItem } from "sequelize";
 import Pet from "../models/pet";
 import User from "../models/user";
 import HttpError from "../utils/errors/HttpError";
@@ -11,13 +11,7 @@ class PetService {
         this.petModel = petModel;
     }
 
-    async createPet(petDTO: Pet, user: User) {
-        const { nome, porte } = petDTO;
-    
-        if (!nome || !porte) {
-            throw new HttpError("Nome e porte são obrigatórios.", 400);
-        }
-    
+    async createPet(petDTO: InferCreationAttributes<Pet>, user: User) {
         try {
             const newPet = await this.petModel.create(petDTO);
 
@@ -80,19 +74,6 @@ class PetService {
     }
     
     async updatePet(petId: string, user: User, updates: Pet) {
-        const {
-            nome,
-            raca,
-            idade,
-            porte,
-            foto,
-            caracteristicas,
-        } = updates;
-
-        if (!nome || !porte) {
-            throw new HttpError("Nome e porte são obrigatórios.", 400);
-        }
-
         try {
             const pet = await this.petModel.findOne({ where: { id: petId } });
             if (!pet) {

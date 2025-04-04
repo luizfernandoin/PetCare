@@ -2,6 +2,7 @@ import { Model, ModelStatic, ValidationError, ValidationErrorItem } from "sequel
 import User from "../models/user";
 import HttpError from "../utils/errors/HttpError";
 
+
 class UserService {
     private user: ModelStatic<User>;
 
@@ -123,16 +124,6 @@ class UserService {
     }
 
     async updateUser(userAuth: User, updates: Partial<User>) {
-        const {
-            nome,
-            telefone,
-            location
-        } = updates;
-    
-        if (!nome || !telefone || !location) {
-            throw new HttpError("Todos os campos obrigatórios devem ser preenchidos.", 400);
-        }
-
         try {
             const usuario = await this.getUserByEmail(userAuth.email);
 

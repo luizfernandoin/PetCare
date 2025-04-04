@@ -6,6 +6,9 @@ import TouristPlace from "../models/service";
 import HttpError from "../utils/errors/HttpError";
 import UserService from "../service/userService";
 import User from "../models/user";
+import { validate, validateParams } from "../utils/middlewares/validate";
+import { urlParamsSchema } from "../utils/validators/paramsValidation";
+import { reviewSchema } from "../utils/validators/reviewValidation";
 
 const router = Router();
 const reviewService = new ReviewService(Review, TouristPlace);
@@ -13,7 +16,9 @@ const userService = new UserService(User);
 
 
 
-router.post("/:serviceId/review", authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
+router.post("/:serviceId/review", 
+    validateParams(urlParamsSchema), validate(reviewSchema),
+    authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
     const { serviceId } = request.params;
     const data = request.body;
 
@@ -31,7 +36,9 @@ router.post("/:serviceId/review", authenticateToken, async(request: Request, res
     }
 })
 
-router.get("/:serviceId/reviews", async(request: Request, response: Response, next: NextFunction) => {
+router.get("/:serviceId/reviews", 
+    validateParams(urlParamsSchema),
+    async(request: Request, response: Response, next: NextFunction) => {
     const { serviceId } = request.params;
 
     try {
@@ -46,7 +53,9 @@ router.get("/:serviceId/reviews", async(request: Request, response: Response, ne
     }
 })
 
-router.delete("/:serviceId/reviews/", authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
+router.delete("/:serviceId/reviews/", 
+    validateParams(urlParamsSchema),
+    authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
     const { serviceId } = request.params;
 
     if (!request.user) {

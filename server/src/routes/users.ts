@@ -6,6 +6,9 @@ import authenticateToken from "../utils/middlewares/authenticateToken";
 import User from "../models/user";
 import Pet from "../models/pet";
 import HttpError from "../utils/errors/HttpError";
+import { validate, validateParams } from "../utils/middlewares/validate";
+import { userUpdateSchema } from "../utils/validators/userValidation";
+import { urlParamsSchema } from "../utils/validators/paramsValidation";
 
 
 const router = Router();
@@ -52,7 +55,7 @@ router.get("/profile", authenticateToken, async (request: Request, response: Res
     }
 })
 
-router.get("/:id", async(request: Request, response: Response) => {
+router.get("/:id", validateParams(urlParamsSchema), async(request: Request, response: Response) => {
     try {
         const { id } = request.params;
 
@@ -93,7 +96,7 @@ router.delete('/', authenticateToken, async (request: Request, response: Respons
     }
 });
 
-router.delete('/:id', async(request: Request, response: Response, next: Function) => {
+router.delete('/:id', validateParams(urlParamsSchema), async(request: Request, response: Response, next: Function) => {
     try {
         const { id } = request.params;
         const result = await userService.deleteUserById(id);
@@ -104,7 +107,7 @@ router.delete('/:id', async(request: Request, response: Response, next: Function
     }
 })
 
-router.put('/profile', authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
+router.put('/profile', validate(userUpdateSchema), authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
     const userAuth = request.user;
     const userDTO = request.body;
     
@@ -120,7 +123,7 @@ router.put('/profile', authenticateToken, async(request: Request, response: Resp
     }
 })
 
-router.patch("/profile", authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
+router.patch("/profile", validate(userUpdateSchema), authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
     const userEmail = request.user.email;
     const updates = request.body;
 

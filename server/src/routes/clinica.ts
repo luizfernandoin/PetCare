@@ -8,10 +8,15 @@ import UserService from "../service/userService";
 import User from "../models/user";
 import HttpError from "../utils/errors/HttpError";
 import { STATUS_CODES } from "http";
+import { validate, validateParams } from "../utils/middlewares/validate";
+import { clinicaCreateSchema } from "../utils/validators/clinicaValidation";
+import GeocodingService from "../service/GeocodingService";
+import { urlParamsSchema } from "../utils/validators/paramsValidation";
 
 const router = Router();
 const clinicaService = new ClinicaService(Clinica);
 const userService = new UserService(User);
+const geocodingService = new GeocodingService();
 
 
 router.get("/", async (request: Request, response: Response, next: NextFunction) => {
@@ -45,7 +50,7 @@ router.get("/clinicas-proximas", authenticateToken, async (request: Request, res
     }
 })
 
-router.get('/:id/horarios', async(request: Request, response: Response, next: NextFunction) => {
+router.get('/:id/horarios', validateParams(urlParamsSchema), async(request: Request, response: Response, next: NextFunction) => {
     try {
         const { id: clinicaId } = request.params;
 
@@ -60,10 +65,9 @@ router.get('/:id/horarios', async(request: Request, response: Response, next: Ne
     }
 })
 
-router.post("/:id/vincular-profissional/:profissionalId", 
-    authenticateToken,
-    typeUser("Profissional"), 
-    verifyOwnership(clinicaService),
+router.post("/:id/vincular-profissional/:profissionalId",
+    validateParams(urlParamsSchema),
+    authenticateToken, typeUser("Profissional"), verifyOwnership(clinicaService),
     async(request: Request, response: Response, next: NextFunction) => {
         try {
             const { id: clinicaId, profissionalId } = request.params;
@@ -80,9 +84,8 @@ router.post("/:id/vincular-profissional/:profissionalId",
 })
 
 router.delete("/:id/desvincular-profissional/:profissionalId",
-    authenticateToken,
-    typeUser("Profissional"), 
-    verifyOwnership(clinicaService),
+    validateParams(urlParamsSchema), 
+    authenticateToken, typeUser("Profissional"), verifyOwnership(clinicaService), 
     async (request: Request, response: Response, next: NextFunction) => {
         try {
             const { id: clinicaId, profissionalId } = request.params;
@@ -96,10 +99,24 @@ router.delete("/:id/desvincular-profissional/:profissionalId",
     }
 );
 
-router.post('/', authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
+router.post('/',
+    validate(clinicaCreateSchema),
+    authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
     try {
+        const { nome, telefone, location } = request.body;
+        const { lat, lon } = await geocodingService.getCoordinates(location);
+        
+        const clinicaToSave = {
+            nome,
+            telefone,
+            location: {
+                type: "Point",
+                coordinates: [lon, lat] as [number, number],
+            },
+        };
+
         const user = await userService.getUserByEmail(request.user.email);
-        const clinica = await clinicaService.createClinica(request.body, user);
+        const clinica = await clinicaService.createClinica(clinicaToSave, user);
 
         response.status(201).json({ 
             message: `Clínica ${clinica.nome} criada e associada ao usuário ${user.nome} com sucesso!`, 
@@ -110,7 +127,9 @@ router.post('/', authenticateToken, typeUser("Profissional"), async(request: Req
     };
 });
 
-router.post('/:id/horarios', authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
+router.post('/:id/horarios',
+    validateParams(urlParamsSchema),
+    authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
     try {
         const { id: clinicaId } = request.params;
         const { email } = request.user;
@@ -128,7 +147,7 @@ router.post('/:id/horarios', authenticateToken, typeUser("Profissional"), async(
     }
 })
 
-router.delete("/:id", authenticateToken, typeUser("Profissional"), verifyOwnership(clinicaService), async(request: Request, response: Response, next: NextFunction) => {
+router.delete("/:id", authenticateToken, validateParams(urlParamsSchema), typeUser("Profissional"), verifyOwnership(clinicaService), async(request: Request, response: Response, next: NextFunction) => {
     const clinicaId = request.params.id;
     const { email } = request.user;
 
