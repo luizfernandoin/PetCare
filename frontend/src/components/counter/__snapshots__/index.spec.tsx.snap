@@ -1,0 +1,57 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`<Contador/> > Renderiza o valor inicial do contador 1`] = `
+<DocumentFragment>
+  <div>
+    <h1>
+      Contador: 0
+    </h1>
+    <button
+      class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+      type="button"
+    >
+      Incrementar
+    </button>
+    <button
+      class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+      type="button"
+    >
+      Decrementar
+    </button>
+    <button
+      class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+      type="button"
+    >
+      Resetar
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Contador/> > Reseta o contador ao clicar em 'Resetar' 1`] = `
+<DocumentFragment>
+  <div>
+    <h1>
+      Contador: 0
+    </h1>
+    <button
+      class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+      type="button"
+    >
+      Incrementar
+    </button>
+    <button
+      class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+      type="button"
+    >
+      Decrementar
+    </button>
+    <button
+      class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+      type="button"
+    >
+      Resetar
+    </button>
+  </div>
+</DocumentFragment>
+`;
