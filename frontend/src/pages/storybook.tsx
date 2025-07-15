@@ -1,4 +1,5 @@
 import { Logo } from "@/components/atoms/logo";
+import CardPet from "@/components/molecules/card-pet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -16,6 +17,11 @@ export function Storybook() {
       </div>
       <div>
         <Logo />
+      </div>
+      <div>
+        <CardPet 
+          name="Scooby-Doo" 
+          image="https://images.pexels.com/photos/4681107/pexels-photo-4681107.jpeg"/> 
       </div>
 
     </div>
