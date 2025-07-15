@@ -4,12 +4,14 @@ import { Signup } from './pages/signup'
 import { SidebarLayoutWrapper } from '@/components/template/SidebarLayoutWrapper'
 import {Storybook} from './pages/storybook'
 import { NotFound } from './pages/not-found'
+import Dashboard from './pages/dashboard'
 
 export default function Router() {
   return (
     <Routes>
       <Route element={<SidebarLayoutWrapper />}>
           <Route path="/storybook" element={<Storybook />} />
+          <Route path='/dashboard' element={<Dashboard />}/>
           <Route path="*" element={<NotFound/>} />
       </Route>
 
