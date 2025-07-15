@@ -53,7 +53,7 @@ export const sidebarConfig = {
         },
         {
             title: "Serviços",
-            url: "/servicos",
+            url: "/services",
             icon: Stethoscope,
             roles: [],
         },
