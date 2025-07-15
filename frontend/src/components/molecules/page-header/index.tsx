@@ -14,7 +14,7 @@ export function PageHeader({
     onButtonClick
 }: PageHeaderProps) {
     return (
-        <div className=" flex items-center justify-between px-4 sm:px-6 lg:px-8 mt-4 mb-6">
+        <div className="flex items-center justify-between mt-4 mb-6">
             <div>
                 <h1 className="text-2xl font-bold tracking-tight mb-1">{title}</h1>
                 {description && (
