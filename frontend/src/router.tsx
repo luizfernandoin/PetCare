@@ -5,6 +5,7 @@ import { SidebarLayoutWrapper } from '@/components/template/SidebarLayoutWrapper
 import {Storybook} from './pages/storybook'
 import { NotFound } from './pages/not-found'
 import Dashboard from './pages/dashboard'
+import { Pets } from './pages/pets'
 
 export default function Router() {
   return (
@@ -12,6 +13,7 @@ export default function Router() {
       <Route element={<SidebarLayoutWrapper />}>
           <Route path="/storybook" element={<Storybook />} />
           <Route path='/dashboard' element={<Dashboard />}/>
+          <Route path='/pets' element={<Pets />}/>
           <Route path="*" element={<NotFound/>} />
       </Route>
 
