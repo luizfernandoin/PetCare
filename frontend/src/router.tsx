@@ -6,6 +6,7 @@ import {Storybook} from './pages/storybook'
 import { NotFound } from './pages/not-found'
 import Dashboard from './pages/dashboard'
 import Services from './pages/services'
+import Appointments from './pages/appointments'
 
 export default function Router() {
   return (
@@ -15,6 +16,7 @@ export default function Router() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path="*" element={<NotFound/>} />
           <Route path='/services' element={<Services />} />
+          <Route path='/appointments' element={<Appointments />} />
       </Route>
 
       <Route path="/auth/signin" element={<Signin />} />
