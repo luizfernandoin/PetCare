@@ -27,10 +27,10 @@ interface props {
   size: string,
   age: string,
   features: string,
-  imagem: string
+  image: string
 }
 
-export default function ModalEditPet({ open, setOpen, setPets, name: nm, breed : br, size: si, age: ag, features: fe, imagem : img }: props) {
+export default function ModalEditPet({ open, setOpen, setPets, name: nm, breed : br, size: si, age: ag, features: fe, image : img }: props) {
   const [name, setName] = useState(nm);
   const [breed, setBreed] = useState(br);
   const [size, setSize] = useState(si);

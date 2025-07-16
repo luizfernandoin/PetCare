@@ -7,7 +7,7 @@ export default function SinglePicker() {
     const [date, setDate] = React.useState<Date>();
 
     return (
-        <PickerCard title="Data única">
+        <PickerCard title="Mês">
             <CalendarWrapper mode="single" selected={date} onSelect={setDate} />
             <DateButton label={date ? date.toLocaleDateString() : "Selecione uma data"} disabled={!date} />
         </PickerCard>

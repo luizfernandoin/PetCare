@@ -1,7 +1,7 @@
 import { Logo } from "@/components/atoms/logo";
 import CardPet from "@/components/molecules/card-pet";
 import { CardService } from "@/components/molecules/card-service";
-import DatePickersGrid from "@/components/organisms/datePickersGrid";
+import DatePickersGrid from "@/components/organisms/calendar-date-pickers-grid";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 

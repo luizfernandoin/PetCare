@@ -15,8 +15,8 @@ import {
 
 export const sidebarConfig = {
     user: {
-        name: "shadcn",
-        email: "m@example.com",
+        name: "example",
+        email: "example@gmail.com",
         avatar: "/avatars/shadcn.jpg",
     },
 
@@ -61,11 +61,11 @@ export const sidebarConfig = {
             title: "Meus Pets",
             url: "/pets",
             icon: PawPrint,
-            items: [
-                { title: "Cachorros", url: "/pets/cachorros" },
-                { title: "Gatos", url: "/pets/gatos" },
-                { title: "Outros", url: "/pets/outros" },
-            ],
+            // items: [
+            //     { title: "Cachorros", url: "/pets/cachorros" },
+            //     { title: "Gatos", url: "/pets/gatos" },
+            //     { title: "Outros", url: "/pets/outros" },
+            // ],
             roles: [],
         },
         {
