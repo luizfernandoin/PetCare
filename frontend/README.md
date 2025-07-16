@@ -2,6 +2,7 @@
 
 ```
 npm install
+npx playwright install
 ```
 
 # Iniciar aplicação
