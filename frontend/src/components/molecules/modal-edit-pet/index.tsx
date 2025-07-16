@@ -15,24 +15,30 @@ type Pet = {
   size: string;
   age: number;
   features: string;
-  image: string
+  image: string;
 };
 
 interface props {
   open: boolean,
   setOpen: Dispatch<SetStateAction<boolean>>,
-  setPets: Dispatch<SetStateAction<Pet[]>>
+  setPets: React.Dispatch<React.SetStateAction<Pet[]>>,
+  name: string,
+  breed: string,
+  size: string,
+  age: string,
+  features: string,
+  imagem: string
 }
 
-export default function ModalAddPet({ open, setOpen, setPets }: props) {
-  const [name, setName] = useState("");
-  const [breed, setBreed] = useState("");
-  const [size, setSize] = useState("");
-  const [age, setAge] = useState("");
-  const [features, setFeatures] = useState("");
-  const [image, setImage] = useState("");
+export default function ModalEditPet({ open, setOpen, setPets, name: nm, breed : br, size: si, age: ag, features: fe, imagem : img }: props) {
+  const [name, setName] = useState(nm);
+  const [breed, setBreed] = useState(br);
+  const [size, setSize] = useState(si);
+  const [age, setAge] = useState(ag);
+  const [features, setFeatures] = useState(fe);
+  const [image, setImage] = useState(img);
 
-  const handleSave = () => {
+  const handleEdit = () => {
     const newPet: Pet = {
       name,
       breed,
@@ -41,13 +47,8 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
       features,
       image
     };
-    setPets(prevPets => [...prevPets, newPet]);
-    setName("");
-    setBreed("");
-    setSize("");
-    setAge("");
-    setFeatures("");
-    setImage("")
+
+    setPets(prevPets => prevPets.map(pet => pet.name === nm ? newPet : pet));
     setOpen(false);
   }
 
@@ -89,10 +90,10 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
           />
           <Input
             placeholder="Imagem URL"
-            value={image}
+            value={features}
             onChange={(e) => setImage(e.target.value)}
           />
-          <Button onClick={handleSave}>Salvar</Button>
+          <Button onClick={handleEdit}>Salvar</Button>
         </div>
       </DialogContent>
     </Dialog>

@@ -7,6 +7,7 @@ import { NotFound } from './pages/not-found'
 import Dashboard from './pages/dashboard'
 import { Pets } from './pages/pets'
 import Services from './pages/services'
+import Appointments from './pages/appointments'
 import Calendar from './pages/calendar'
 
 export default function Router() {
@@ -19,6 +20,7 @@ export default function Router() {
                 <Route path='/dashboard' element={<Dashboard />} />
                 <Route path="*" element={<NotFound/>} />
                 <Route path='/services' element={<Services />} />
+                <Route path='/appointments' element={<Appointments />} />
                 <Route path='/calendar' element={<Calendar />} />
             </Route>
 
