@@ -11,11 +11,11 @@ type Pet = {
 interface props {
   name: string,
   image: string,
-  setPets: React.Dispatch<React.SetStateAction<Pet[]>>
+  setPets?: React.Dispatch<React.SetStateAction<Pet[]>>
 }
 export default function CardPet({name, image, setPets}: props) {
   const handleDelete = () => {
-    setPets(prevPets => prevPets.filter(pet => pet.name !== name))
+    if (setPets) setPets(prevPets => prevPets.filter(pet => pet.name !== name))
   }
   
   return (
