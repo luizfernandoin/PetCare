@@ -81,7 +81,7 @@ export const sidebarConfig = {
         },
         {
             title: "Calendario",
-            url: "/calendario",
+            url: "/calendar",
             icon: CalendarDays,
             isActive: true,
             roles: [],

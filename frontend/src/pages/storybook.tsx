@@ -1,6 +1,7 @@
 import { Logo } from "@/components/atoms/logo";
 import CardPet from "@/components/molecules/card-pet";
 import { CardService } from "@/components/molecules/card-service";
+import DatePickersGrid from "@/components/organisms/datePickersGrid";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -23,6 +24,9 @@ export function Storybook() {
         <CardPet 
           name="Scooby-Doo" 
           image="https://images.pexels.com/photos/4681107/pexels-photo-4681107.jpeg"/> 
+      </div>
+      <div>
+        <DatePickersGrid />
       </div>
 
       <div className="flex gap-4">
