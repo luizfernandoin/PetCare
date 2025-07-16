@@ -3,10 +3,8 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { useState, type Dispatch, type SetStateAction } from "react"
@@ -55,7 +53,7 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Novo Pet</DialogTitle>
         </DialogHeader>
