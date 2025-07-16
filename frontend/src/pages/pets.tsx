@@ -59,10 +59,14 @@ export function Pets() {
             setPets={setPets}
             key={pet.name}
             name={pet.name}
+            breed={pet.breed}
+            size={pet.size}
+            age={pet.age}
+            features={pet.features}
             image="https://i.pinimg.com/736x/eb/a8/e8/eba8e8a51e9692156cadc66446672a49.jpg"
           />
         ))}
-        {pets.length === 0 && <p className="col-span-4">Nenhum pet registrado!</p>}
+        {pets.length === 0 && <p className="col-span-4">Nenhum pet registrado!  </p>}
       </div>
       <ModalAddPet open={open} setOpen={setOpen} setPets={setPets} />
     </>
