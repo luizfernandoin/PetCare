@@ -24,7 +24,7 @@ export default function CardPet({name, breed, size, age, features, image, setPet
   const [open, setOpen] = useState(false);
 
   const handleDelete = () => {
-    setPets(prevPets => prevPets.filter(pet => pet.name !== name))
+    if (setPets) setPets(prevPets => prevPets.filter(pet => pet.name !== name))
   }
 
   const handleEdit = () => {
