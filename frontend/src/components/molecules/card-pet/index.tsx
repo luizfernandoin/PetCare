@@ -8,6 +8,7 @@ type Pet = {
   size: string;
   age: number;
   features: string;
+  image: string
 };
 
 interface props {
@@ -36,11 +37,11 @@ export default function CardPet({name, breed, size, age, features, image, setPet
         <Trash onClick={handleDelete} size={30} color="white" className="bg-red-500 p-1.5 rounded cursor-pointer"/>
         <Edit onClick={handleEdit} size={30} color="white" className="bg-[#467C98] p-1.5 rounded cursor-pointer" />
       </div>
-      <img src={image} alt="Dog" />
+      <img className="object-cover h-full min-h-96" src={image} alt="Dog" />
       <div className="absolute w-full p-2 text-center bottom-0 bg-[#F0F0F0]">
         {name}
       </div>
-      <ModalEditPet open={open} setOpen={setOpen} name={name} breed={breed} size={size} age={String(age)} features={features} setPets={setPets}/>
+      <ModalEditPet open={open} setOpen={setOpen} name={name} breed={breed} size={size} age={String(age)} features={features} imagem={image} setPets={setPets}/>
     </div>
   )
 }

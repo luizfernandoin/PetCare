@@ -17,6 +17,7 @@ type Pet = {
   size: string;
   age: number;
   features: string;
+  image: string
 };
 
 interface props {
@@ -31,6 +32,7 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
   const [size, setSize] = useState("");
   const [age, setAge] = useState("");
   const [features, setFeatures] = useState("");
+  const [image, setImage] = useState("");
 
   const handleSave = () => {
     const newPet: Pet = {
@@ -39,6 +41,7 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
       size,
       age: Number(age),
       features,
+      image
     };
     setPets(prevPets => [...prevPets, newPet]);
     setName("");
@@ -46,6 +49,7 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
     setSize("");
     setAge("");
     setFeatures("");
+    setImage("")
     setOpen(false);
   }
 
@@ -84,6 +88,11 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
             placeholder="Características"
             value={features}
             onChange={(e) => setFeatures(e.target.value)}
+          />
+          <Input
+            placeholder="Imagem URL"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
           />
           <Button onClick={handleSave}>Salvar</Button>
         </div>
