@@ -1,12 +1,9 @@
 import CardPet from "@/components/molecules/card-pet";
 import ModalAddPet from "@/components/molecules/modal-add-pet";
 import { PageHeader } from "@/components/molecules/page-header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export function Pets() {
-  const [open, setOpen] = useState(false);
-
-  type Pet = {
+type Pet = {
   name: string;
   breed: string;
   size: string;
@@ -14,13 +11,13 @@ export function Pets() {
   features: string;
 };
 
-const [pets, setPets] = useState<Pet[]>([
+const petsMock: Pet[] = [
   {
     name: "Thor",
     breed: "Labrador",
     size: "Grande",
     age: 3,
-    features: "Brincalhão, dócil, adora água",
+    features: "Brincalhão,どcil, adora água",
   },
   {
     name: "Luna",
@@ -36,7 +33,16 @@ const [pets, setPets] = useState<Pet[]>([
     age: 2,
     features: "Tranquilo, dorminhoco, leal",
   },
-])
+];
+
+export function Pets() {
+  const [open, setOpen] = useState(false);
+  const [pets, setPets] = useState<Pet[]>([])
+
+  useEffect(() => {
+    setPets(petsMock)
+  }, [])
+
   return (
     <>
       <PageHeader
@@ -50,13 +56,15 @@ const [pets, setPets] = useState<Pet[]>([
       <div className="relative grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center">
         {pets.map((pet) => (
           <CardPet
+            setPets={setPets}
             key={pet.name}
             name={pet.name}
-            image="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+            image="https://i.pinimg.com/736x/eb/a8/e8/eba8e8a51e9692156cadc66446672a49.jpg"
           />
         ))}
+        {pets.length === 0 && <p className="col-span-4">Nenhum pet registrado!</p>}
       </div>
-      <ModalAddPet open={open} setOpen={setOpen} setPets={setPets}/>
+      <ModalAddPet open={open} setOpen={setOpen} setPets={setPets} />
     </>
   )
 }
