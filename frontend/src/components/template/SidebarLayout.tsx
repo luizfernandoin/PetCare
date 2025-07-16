@@ -16,7 +16,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
             <AppSidebar variant="inset" />
             <SidebarInset>
                 <SiteHeader pageTitle={pageTitle} />
-                <div className="flex-1 p-4 flex flex-col">
+                <div className="flex-1 p-4 flex flex-col sm:px-6 lg:px-8">
                     {children}
                 </div>
             </SidebarInset>
