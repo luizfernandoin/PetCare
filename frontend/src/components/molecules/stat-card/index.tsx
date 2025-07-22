@@ -1,5 +1,3 @@
-import { Description } from "@radix-ui/react-dialog";
-
 type StatCardProps = {
     title: string,
     value: string | number,

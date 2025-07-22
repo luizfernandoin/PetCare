@@ -15,9 +15,9 @@ import {
 
 export const sidebarConfig = {
     user: {
-        name: "shadcn",
+        name: "usuario",
         email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
+        avatar: "",
     },
 
     teams: [

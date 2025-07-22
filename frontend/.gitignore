@@ -26,3 +26,5 @@ dist-ssr
 
 # Testes
 /test-results
+
+package-lock.json
