@@ -8,22 +8,24 @@ import Dashboard from './pages/dashboard'
 import { Pets } from './pages/pets'
 import Services from './pages/services'
 import Appointments from './pages/appointments'
+import Calendar from './pages/calendar'
 
 export default function Router() {
-  return (
-    <Routes>
-      <Route element={<SidebarLayoutWrapper />}>
-          <Route path="/storybook" element={<Storybook />} />
-          <Route path='/dashboard' element={<Dashboard />}/>
-          <Route path='/pets' element={<Pets />}/>
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path="*" element={<NotFound/>} />
-          <Route path='/services' element={<Services />} />
-          <Route path='/appointments' element={<Appointments />} />
-      </Route>
+    return (
+        <Routes>
+            <Route element={<SidebarLayoutWrapper />}>
+                <Route path="/storybook" element={<Storybook />} />
+                <Route path='/dashboard' element={<Dashboard />}/>
+                <Route path='/pets' element={<Pets />}/>
+                <Route path='/dashboard' element={<Dashboard />} />
+                <Route path="*" element={<NotFound/>} />
+                <Route path='/services' element={<Services />} />
+                <Route path='/appointments' element={<Appointments />} />
+                <Route path='/calendar' element={<Calendar />} />
+            </Route>
 
-      <Route path="/auth/signin" element={<Signin />} />
-      <Route path="/auth/signup" element={<Signup />} />
-    </Routes>
+          <Route path="/auth/signin" element={<Signin />} />
+          <Route path="/auth/signup" element={<Signup />} />
+      </Routes>
   )
 }
