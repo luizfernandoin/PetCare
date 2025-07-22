@@ -9,25 +9,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { useState, type Dispatch, type SetStateAction } from "react"
 
-type Pet = {
-  name: string;
-  breed: string;
-  size: string;
-  age: number;
-  features: string;
-  image: string;
-};
+import { Pet } from "@/types/Pet";
 
-interface props {
+interface props extends Pet {
   open: boolean,
   setOpen: Dispatch<SetStateAction<boolean>>,
   setPets: React.Dispatch<React.SetStateAction<Pet[]>>,
-  name: string,
-  breed: string,
-  size: string,
-  age: string,
-  features: string,
-  image: string
+
 }
 
 export default function ModalEditPet({ open, setOpen, setPets, name: nm, breed : br, size: si, age: ag, features: fe, image : img }: props) {
@@ -79,8 +67,9 @@ export default function ModalEditPet({ open, setOpen, setPets, name: nm, breed :
 
           <Input
             placeholder="Idade"
+            type="number"
             value={age}
-            onChange={(e) => setAge(e.target.value)}
+            onChange={(e) => setAge(Number(e.target.value))}
           />
 
           <Input
