@@ -54,7 +54,7 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
-function swaggerDocsSetup(app: Express, port: number) {
+function swaggerDocsSetup(app: Express, port: number | string) {
     app.use("/api-docs", SwaggerUi.serve, SwaggerUi.setup(swaggerDocs, {
         explorer: true,
         swaggerOptions: {
