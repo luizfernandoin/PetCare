@@ -13,9 +13,14 @@ type PetShopCreate = Omit<PetShop, 'id'>;
 
 type PetShopUpdate = Partial<PetShopCreate>;
 
+type WorksPetshop = {
+    userId: string;
+    clinicaId: string;
+}
 
 export {
     PetShop,
     PetShopCreate,
     PetShopUpdate,
+    WorksPetshop,
 };
