@@ -8,15 +8,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { useState, type Dispatch, type SetStateAction } from "react"
-
-type Pet = {
-  name: string;
-  breed: string;
-  size: string;
-  age: number;
-  features: string;
-  image: string
-};
+import { Pet } from "@/types/Pet";
 
 interface props {
   open: boolean,

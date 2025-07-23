@@ -2,24 +2,12 @@ import { Edit, Trash } from "lucide-react";
 import ModalEditPet from "../modal-edit-pet";
 import { useState } from "react";
 
-type Pet = {
-    name: string;
-    breed: string;
-    size: string;
-    age: number;
-    features: string;
-    image: string
-};
+import { Pet } from "@/types/Pet";
 
-interface props {
-    image: string,
-    name: string;
-    breed?: string;
-    size?: string;
-    age?: number;
-    features?: string;
-    setPets?: React.Dispatch<React.SetStateAction<Pet[]>>
+interface props extends Pet{
+    setPets: React.Dispatch<React.SetStateAction<Pet[]>>
 }
+
 export default function CardPet({ name, breed, size, age, features, image, setPets }: props) {
     const [open, setOpen] = useState(false);
 
@@ -50,12 +38,12 @@ export default function CardPet({ name, breed, size, age, features, image, setPe
                     open={open} 
                     setOpen={setOpen} 
                     name={name} 
-                    breed={breed!} 
-                    size={size!} 
-                    age={String(age)} 
-                    features={features!} 
+                    breed={breed} 
+                    size={size} 
+                    age={age} 
+                    features={features} 
                     image={image} 
-                    setPets={setPets!} />
+                    setPets={setPets} />
             </div>
         </div>
     )
