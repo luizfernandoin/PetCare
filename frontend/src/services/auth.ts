@@ -10,8 +10,7 @@ export const registerUser = async (userDTO: UserRegistration): Promise<User|unde
     return response.data.data;
 }
 
-export const LoginUser = async (loginDTO: Login): Promise<string> => {
+export const loginUser = async (loginDTO: Login): Promise<string|undefined> => {
     const response = await api.post<ApiResponse<null>>('/auth/login', loginDTO);
-    
-    return response.data.token!;
+    return response.data.token;
 }
