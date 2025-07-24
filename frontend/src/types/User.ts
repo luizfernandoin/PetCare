@@ -31,6 +31,21 @@ type UserCreate = Omit<User, 'id'>
 
 type UserUpdate = Partial<UserCreate>;
 
+interface UserRegistration {
+    email: string;
+    nome: string;
+    senha: string;
+    telefone: string;
+    location: {
+        street: string,
+        number: string,
+        city: string,
+        state: string,
+        country: string,
+        postalcode: string
+    };
+    tipo: 'Cliente' | 'Profissional';
+}
 
 export {
     UserRole,
@@ -40,4 +55,5 @@ export {
     GeoLocation,
     AddressInput,
     Location,
+    UserRegistration
 };
