@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import AuthenticationService from "../service/authenticationService";
 import User from "../models/user";
 import { validate } from "../utils/middlewares/validate";
-import { loginSchema, userSchema } from "../utils/validators/userValidation";
+import { loginSchema, userSchema } from "@petcare/shared";
 import GeocodingService from "../service/GeocodingService";
 import { IUserCreate } from "../@types/User";
 

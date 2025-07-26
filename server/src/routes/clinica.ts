@@ -9,9 +9,12 @@ import User from "../models/user";
 import HttpError from "../utils/errors/HttpError";
 import { STATUS_CODES } from "http";
 import { validate, validateParams } from "../utils/middlewares/validate";
-import { clinicaCreateSchema } from "../utils/validators/clinicaValidation";
+import { 
+    clinicaCreateSchema, 
+    urlParamsSchema 
+} from "@petcare/shared";
 import GeocodingService from "../service/GeocodingService";
-import { urlParamsSchema } from "../utils/validators/paramsValidation";
+
 
 const router = Router();
 const clinicaService = new ClinicaService(Clinica);

@@ -1,0 +1,25 @@
+{
+  "name": "petcare",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start:frontend": "npm run dev --workspace=frontend",
+    "start:backend": "npm run start:dev --workspace=server",
+    "dev": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "workspaces": [
+    "shared",
+    "frontend",
+    "server"
+  ],
+  "dependencies": {
+    "axios": "^1.8.3",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "@types/node": "^24.0.13",
+    "concurrently": "^9.2.0"
+  }
+}

@@ -7,8 +7,11 @@ import HttpError from "../utils/errors/HttpError";
 import UserService from "../service/userService";
 import User from "../models/user";
 import { validate, validateParams } from "../utils/middlewares/validate";
-import { urlParamsSchema } from "../utils/validators/paramsValidation";
-import { reviewSchema } from "../utils/validators/reviewValidation";
+import { 
+    urlParamsSchema, 
+    reviewSchema 
+} from "@petcare/shared";
+
 
 const router = Router();
 const reviewService = new ReviewService(Review, TouristPlace);

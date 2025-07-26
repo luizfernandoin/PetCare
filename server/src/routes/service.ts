@@ -9,8 +9,11 @@ import User from "../models/user";
 import Service from "../models/service"
 import Clinica from "../models/clinica";
 import { validate, validateParams } from "../utils/middlewares/validate";
-import { urlParamsSchema } from "../utils/validators/paramsValidation";
-import { serviceSchema } from "../utils/validators/serviceValidation";
+import { 
+    urlParamsSchema, 
+    serviceSchema 
+} from "@petcare/shared";
+
 
 const router = Router();
 const userService = new UserService(User);

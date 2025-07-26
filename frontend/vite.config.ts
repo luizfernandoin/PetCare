@@ -9,12 +9,13 @@ export default defineConfig({
   // root: "./src",
 
   server: {
-    port: 3000,
+    port: 3001,
   },
 
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      '@petcare/shared': path.resolve(__dirname, '../shared/src/validators'),
     },
   },
   test: {
@@ -28,5 +29,4 @@ export default defineConfig({
       '**/e2e/**'
     ],
   }
-
 })

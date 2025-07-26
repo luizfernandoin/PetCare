@@ -6,8 +6,12 @@ import authenticateToken from "../utils/middlewares/authenticateToken";
 import Pet from "../models/pet";
 import User from "../models/user";
 import { validate, validateParams } from "../utils/middlewares/validate";
-import { petCreateSchema, petUpdateSchema } from "../utils/validators/petValidation";
-import { urlParamsSchema } from "../utils/validators/paramsValidation";
+import { 
+    petCreateSchema, 
+    petUpdateSchema, 
+    urlParamsSchema 
+} from "@petcare/shared";
+
 
 const router = Router()
 const petService = new PetService(Pet);

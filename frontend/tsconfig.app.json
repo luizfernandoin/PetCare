@@ -27,8 +27,10 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "@petcare/shared": ["../shared/src/validators"],
     }
   },
-  "include": ["src"]
+  "include": ["src", "../shared/src/validators/**/*.ts"],
+  "exclude": ["node_modules"]
 }

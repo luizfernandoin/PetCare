@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AnyZodObject, ZodEffects, ZodError, ZodObject } from "zod";
-import { urlParamsSchema } from "../validators/paramsValidation";
+import { urlParamsSchema } from "@petcare/shared";
 
 
 const validate = (schema: AnyZodObject | ZodEffects<AnyZodObject>) => (request: Request, response: Response, next: NextFunction) => {

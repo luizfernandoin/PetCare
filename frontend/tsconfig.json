@@ -7,7 +7,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@petcare/shared": ["../shared/src/validators"],
+      "@petcare/shared/*": ["../shared/src/validators/*"]
     }
   }
 }

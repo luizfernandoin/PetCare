@@ -6,8 +6,7 @@ import UserService from "../service/userService";
 import User from "../models/user";
 import HttpError from "../utils/errors/HttpError";
 import { validate, validateParams } from "../utils/middlewares/validate";
-import { agendamentoSchema } from "../utils/validators/agendamentoValidation";
-import { urlParamsSchema } from "../utils/validators/paramsValidation";
+import { agendamentoSchema, urlParamsSchema } from "@petcare/shared";
 
 
 const router = Router();

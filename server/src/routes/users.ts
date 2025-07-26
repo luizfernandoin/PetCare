@@ -7,8 +7,10 @@ import User from "../models/user";
 import Pet from "../models/pet";
 import HttpError from "../utils/errors/HttpError";
 import { validate, validateParams } from "../utils/middlewares/validate";
-import { userUpdateSchema } from "../utils/validators/userValidation";
-import { urlParamsSchema } from "../utils/validators/paramsValidation";
+import { 
+    userUpdateSchema, 
+    urlParamsSchema 
+} from "@petcare/shared";
 
 
 const router = Router();

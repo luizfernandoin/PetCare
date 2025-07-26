@@ -3,14 +3,19 @@ import { version } from "../../package.json";
 import swaggerJSDoc from "swagger-jsdoc";
 import SwaggerUi from "swagger-ui-express";
 import { createSchema } from "zod-openapi";
-import { loginSchema, userSchema, userUpdateSchema } from "../utils/validators/userValidation";
-import { z } from "zod";
-import { agendamentoSchema } from "../utils/validators/agendamentoValidation";
-import { clinicaCreateSchema } from "../utils/validators/clinicaValidation";
-import { petCreateSchema, petUpdateSchema } from "../utils/validators/petValidation";
-import { reviewSchema } from "../utils/validators/reviewValidation";
-import { serviceSchema } from "../utils/validators/serviceValidation";
-import { horarioSchema } from "../utils/validators/horarioValidation";
+
+import {
+    loginSchema, 
+    userSchema, 
+    userUpdateSchema,
+    agendamentoSchema,
+    clinicaCreateSchema,
+    petCreateSchema,
+    petUpdateSchema,
+    reviewSchema,
+    serviceSchema,
+    horarioSchema
+} from "@petcare/shared";
 
 
 const swaggerOptions = {
