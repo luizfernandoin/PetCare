@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Link } from "react-router";
 import { registerUser } from "@/services/auth"
-import { UserRegistration } from "@/types/User";
+import { UserCreate } from "@/types/User";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useNavigate } from "react-router";
@@ -11,12 +11,12 @@ import { useNavigate } from "react-router";
 export function RegistrationUser() {
   const navigate = useNavigate();
   const [page, setPage] = useState<"user" | "location">("user");
-  const [user, setUser] = useState<UserRegistration>({
+  const [user, setUser] = useState<UserCreate>({
     nome: "jose",
     email: "jose4@gmail.com",
     telefone: "34999999999",
     senha: "123123",
-    tipo: "Cliente",
+    tipo: "CLIENTE",
     location: {
       street: "Avenida Paulista",
       number: "1578",
@@ -54,13 +54,13 @@ export function RegistrationUser() {
               <InputField type="email" placeholder="Email" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} />
               <InputField type="phone" placeholder="Telefone" value={user.telefone} onChange={(e) => setUser({ ...user, telefone: e.target.value })} />
               <InputField type="password" placeholder="Senha" value={user.senha} onChange={(e) => setUser({ ...user, senha: e.target.value })} />
-              <RadioGroup defaultValue="Cliente" className="flex gap-8" onValueChange={(value) => setUser({ ...user, tipo: value as "Cliente" | "Profissional" })}>
+              <RadioGroup defaultValue="CLIENTE" className="flex gap-8" onValueChange={(value) => setUser({ ...user, tipo: value as "CLIENTE" | "PROFISSIONAL" })}>
                 <div className="flex items-center gap-3">
-                  <RadioGroupItem value="Cliente" id="r1"/>
+                  <RadioGroupItem value="CLIENTE" id="r1"/>
                   <Label htmlFor="r1">Cliente</Label>
                 </div>
                 <div className="flex items-center gap-3">
-                  <RadioGroupItem value="Profissional" id="r2"/>
+                  <RadioGroupItem value="PROFISSIONAL" id="r2"/>
                   <Label htmlFor="r2">Profissional</Label>
                 </div>
               </RadioGroup>
