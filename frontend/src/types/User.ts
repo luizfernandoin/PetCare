@@ -6,6 +6,11 @@ const userRoleMapper: Record<UserRole, UserRoleBackend> = {
     "PROFISSIONAL": "Profissional"
 }
 
+const userRoleBackendMapper: Record<UserRoleBackend, UserRole> = {
+    "Cliente": "CLIENTE",
+    "Profissional": "PROFISSIONAL"
+}
+
 type AddressInput = {
     street: string,
     number: string,
@@ -26,12 +31,20 @@ type User = {
     image?: string;
 }
 
+type Profile = Omit<User,"tipo"> &  {
+    tipo: UserRoleBackend
+}
+
 type UserCreate = Omit<User, 'id'|'image'>
+type UserUpdate = Partial<UserCreate>
 
 export {
     UserRole,
     User,
     UserCreate,
+    UserUpdate,
     AddressInput,
-    userRoleMapper
+    userRoleMapper,
+    userRoleBackendMapper,
+    Profile
 };

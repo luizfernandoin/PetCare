@@ -1,28 +1,38 @@
 import { InputField } from "@/components/atoms/input/InputField";
 import { Button } from "@/components/ui/button";
 import { loginUser } from "@/services/auth";
+import {getProfile} from "@/services/user"
+import { useAuthStore } from "@/stores/authStore";
 import { Login as LoginType } from "@/types/auth";
+import {userRoleBackendMapper} from "@/types/User"
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 
+
 export function Login() {
+  const { setToken, setUser: setUserStore } = useAuthStore(); 
   const navigate = useNavigate();
   const [user, setUser] = useState<LoginType>({
     email: "",
     senha: ""
   })
+
   const handleLogin = async ()=>{
     const token = await loginUser(user)
     if (token) {
       localStorage.setItem("token", token);
+      setToken(token);
+      const profile = await getProfile();
+      console.log(JSON.stringify(profile, null, 2));
+      setUserStore({...profile, tipo: userRoleBackendMapper[profile.tipo!]});
+
       navigate("/");
     }
     else {
-      console.log("Erro ao logar");
-      
-    }
-    
+      console.log("Erro ao logar"); 
+}
   }
+
   return (
     <div className="flex flex-col items-center justify-center flex-1">
       <div className="bg-white p-8 rounded-lg w-full max-w-sm">
