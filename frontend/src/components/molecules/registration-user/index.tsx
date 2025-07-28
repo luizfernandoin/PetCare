@@ -7,34 +7,20 @@ import { UserCreate } from "@/types/User";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useNavigate } from "react-router";
+import { defaultUser } from "./data";
 
 export function RegistrationUser() {
   const navigate = useNavigate();
   const [page, setPage] = useState<"user" | "location">("user");
-  const [user, setUser] = useState<UserCreate>({
-    nome: "jose",
-    email: "jose4@gmail.com",
-    telefone: "34999999999",
-    senha: "123123",
-    tipo: "CLIENTE",
-    location: {
-      street: "Avenida Paulista",
-      number: "1578",
-      city: "São Paulo",
-      state: "SP",
-      country: "Brasil",
-      postalcode: "01310-200"
-    }
-  })
+  const [user, setUser] = useState<UserCreate>(defaultUser);
+
   const alterPage = () => {
     if (page === "user") {setPage("location")}
     else {setPage("user")}
   }
 
   const handleRegistration = async () => {
-    console.log(JSON.stringify(user, null, 2));
     const newUser = await registerUser(user);
-    console.log(JSON.stringify(newUser, null, 2));
 
     if (newUser) {
       navigate("/auth/signin");
