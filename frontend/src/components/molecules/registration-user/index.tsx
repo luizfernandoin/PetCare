@@ -7,31 +7,46 @@ import { UserRegistration } from "@/types/User";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useNavigate } from "react-router";
+import { userSchema } from "@petcare/shared";
+import { useFormValidation } from "@/hooks/useFormValidation";
+
 
 export function RegistrationUser() {
   const navigate = useNavigate();
   const [page, setPage] = useState<"user" | "location">("user");
-  const [user, setUser] = useState<UserRegistration>({
-    nome: "jose",
-    email: "jose4@gmail.com",
-    telefone: "34999999999",
-    senha: "123123",
+
+  const {
+    values: user,
+    errors,
+    handleChange,
+    validateForm,
+    isFormValid
+  } = useFormValidation<UserRegistration>({
+    nome: "",
+    email: "",
+    telefone: "",
+    senha: "",
     tipo: "Cliente",
     location: {
-      street: "Avenida Paulista",
-      number: "1578",
-      city: "São Paulo",
-      state: "SP",
-      country: "Brasil",
-      postalcode: "01310-200"
+      street: "",
+      number: "",
+      city: "",
+      state: "",
+      country: "",
+      postalcode: ""
     }
-  })
+  }, userSchema);
+
   const alterPage = () => {
-    if (page === "user") {setPage("location")}
-    else {setPage("user")}
+    if (page === "user") {
+      setPage("location")
+    }
+    else { setPage("user") }
   }
 
   const handleRegistration = async () => {
+    if (!validateForm()) return;
+
     console.log(JSON.stringify(user, null, 2));
     const newUser = await registerUser(user);
     console.log(JSON.stringify(newUser, null, 2));
@@ -43,6 +58,7 @@ export function RegistrationUser() {
     }
   };
 
+
   return (
     <div className="flex flex-col items-center justify-center flex-1">
       <div className="grid grid-cols-1 grid-rows-[1fr_auto_1fr] bg-white p-8 rounded-lg w-full max-w-sm min-h-[600px]">
@@ -50,17 +66,49 @@ export function RegistrationUser() {
           <>
             <h2 className="text-center text-xl font-semibold text-[#3C6D7F] mb-6">Dados do usuário</h2>
             <div className="space-y-4">
-              <InputField type="name" placeholder="Nome" value={user.nome} onChange={(e) => setUser({ ...user, nome: e.target.value })} />
-              <InputField type="email" placeholder="Email" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} />
-              <InputField type="phone" placeholder="Telefone" value={user.telefone} onChange={(e) => setUser({ ...user, telefone: e.target.value })} />
-              <InputField type="password" placeholder="Senha" value={user.senha} onChange={(e) => setUser({ ...user, senha: e.target.value })} />
-              <RadioGroup defaultValue="Cliente" className="flex gap-8" onValueChange={(value) => setUser({ ...user, tipo: value as "Cliente" | "Profissional" })}>
+              <div>
+                <InputField
+                  type="name"
+                  placeholder="Nome"
+                  value={user.nome}
+                  onChange={(e) => handleChange("nome", e.target.value)}
+                />
+                {errors.nome && <p className="text-red-500 text-xs mt-1 ml-3">{errors.nome}</p>}
+              </div>
+              <div>
+                <InputField
+                  type="email"
+                  placeholder="Email"
+                  value={user.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                />
+                {errors.email && <p className="text-red-500 text-xs mt-1 ml-3">{errors.email}</p>}
+              </div>
+              <div>
+                <InputField
+                  type="phone"
+                  placeholder="Telefone"
+                  value={user.telefone}
+                  onChange={(e) => handleChange("telefone", e.target.value)}
+                />
+                {errors.telefone && <p className="text-red-500 text-xs mt-1 ml-3">{errors.telefone}</p>}
+              </div>
+              <div>
+                <InputField
+                  type="password"
+                  placeholder="Senha"
+                  value={user.senha}
+                  onChange={(e) => handleChange("senha", e.target.value)}
+                />
+                {errors.senha && <p className="text-red-500 text-xs mt-1 ml-3">{errors.senha}</p>}
+              </div>
+              <RadioGroup defaultValue="Cliente" className="flex gap-8" onValueChange={(value) => handleChange("tipo", value as "Cliente" | "Profissional")}>
                 <div className="flex items-center gap-3">
-                  <RadioGroupItem value="Cliente" id="r1"/>
+                  <RadioGroupItem value="Cliente" id="r1" />
                   <Label htmlFor="r1">Cliente</Label>
                 </div>
                 <div className="flex items-center gap-3">
-                  <RadioGroupItem value="Profissional" id="r2"/>
+                  <RadioGroupItem value="Profissional" id="r2" />
                   <Label htmlFor="r2">Profissional</Label>
                 </div>
               </RadioGroup>
@@ -71,12 +119,59 @@ export function RegistrationUser() {
           <>
             <h2 className="text-center text-xl font-semibold text-[#3C6D7F] mb-6">Localidade</h2>
             <div className="space-y-4">
-              <InputField type="name" placeholder="Pais" value={user.location.country} onChange={(e) => setUser({ ...user, location: { ...user.location, country: e.target.value } })} />
-              <InputField type="name" placeholder="Estado" value={user.location.state} onChange={(e) => setUser({ ...user, location: { ...user.location, state: e.target.value } })} />
-              <InputField type="name" placeholder="Cidade" value={user.location.city} onChange={(e) => setUser({ ...user, location: { ...user.location, city: e.target.value } })} />
-              <InputField type="name" placeholder="Rua" value={user.location.street} onChange={(e) => setUser({ ...user, location: { ...user.location, street: e.target.value } })} />
-              <InputField type="name" placeholder="Numero" value={user.location.number} onChange={(e) => setUser({ ...user, location: { ...user.location, number: e.target.value } })} />
-              <InputField type="name" placeholder="Código Postal" value={user.location.postalcode} onChange={(e) => setUser({ ...user, location: { ...user.location, postalcode: e.target.value } })} />
+              <div>
+                <InputField
+                  type="name"
+                  placeholder="Pais"
+                  value={user.location.country}
+                  onChange={(e) => handleChange("location", { ...user.location, country: e.target.value })}
+                />
+
+              </div>
+              <div>
+                <InputField
+                  type="name"
+                  placeholder="Estado"
+                  value={user.location.state}
+                  onChange={(e) => handleChange("location", { ...user.location, state: e.target.value })}
+                />
+
+              </div>
+              <div>
+                <InputField
+                  type="name"
+                  placeholder="Cidade"
+                  value={user.location.city}
+                  onChange={(e) => handleChange("location", { ...user.location, city: e.target.value })}
+                />
+
+              </div>
+              <div>
+                <InputField
+                  type="name"
+                  placeholder="Rua"
+                  value={user.location.street}
+                  onChange={(e) => handleChange("location", { ...user.location, street: e.target.value })}
+                />
+
+              </div>
+              <div>
+                <InputField
+                  type="name"
+                  placeholder="Numero"
+                  value={user.location.number}
+                  onChange={(e) => handleChange("location", { ...user.location, number: e.target.value })}
+                />
+
+              </div>
+              <div>
+                <InputField
+                  type="name"
+                  placeholder="Código Postal"
+                  value={user.location.postalcode}
+                  onChange={(e) => handleChange("location", { ...user.location, postalcode: e.target.value })}
+                />
+              </div>
             </div>
           </>
         )}
@@ -89,7 +184,12 @@ export function RegistrationUser() {
                 (
                   <>
                     <Button onClick={alterPage} variant="outline" >Voltar</Button>
-                    <Button onClick={handleRegistration}>Cadastrar</Button>
+                    <Button
+                      onClick={handleRegistration}
+                      disabled={!isFormValid()}
+                    >
+                      Cadastrar
+                    </Button>
                   </>
                 )
             }

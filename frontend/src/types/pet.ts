@@ -2,11 +2,11 @@ type PortePet = 'PEQUENO' | 'MÉDIO' | 'GRANDE';
 
 type Pet = {
     id: string;
-    nome: string;
-    raca: string;
-    idade: number;
-    porte: PortePet;
-    caracteristicas?: string;
+    name: string;
+    breed: string;
+    age: number;
+    size: PortePet;
+    features?: string;
     image?: string;
 };
 

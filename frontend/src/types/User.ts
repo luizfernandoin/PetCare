@@ -31,7 +31,7 @@ type UserCreate = Omit<User, 'id'>
 
 type UserUpdate = Partial<UserCreate>;
 
-interface UserRegistration {
+type UserRegistration = {
     email: string;
     nome: string;
     senha: string;

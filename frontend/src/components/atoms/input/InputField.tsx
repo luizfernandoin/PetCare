@@ -3,7 +3,8 @@ import { ComponentProps } from "react";
 type inputType = "password" | "email" | "phone" | "name"
 
 interface InputFieldProps extends ComponentProps<"input"> {
-    type?: inputType
+    type?: inputType,
+    error?: string,
 }
 
 const icon: Record<inputType, React.ReactNode> = {
@@ -15,13 +16,16 @@ const icon: Record<inputType, React.ReactNode> = {
 
 export function InputField({
     type,
+    error,
     ...props
 }: InputFieldProps) {
     return (
         <div className="relative">
             <input
                 {...props}
-                className="w-full p-3 pl-10 rounded-full border-none bg-gray-100 shadow-inner focus:outline-none"
+                className={`w-full p-3 pl-10 rounded-full border-none bg-gray-100 shadow-inner focus:outline-none ${
+                    error ? "ring-2 ring-red-500" : ""
+                }`}
             />
             {type && icon[type]}
         </div>
