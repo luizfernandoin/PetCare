@@ -4,7 +4,7 @@ import { loginUser } from "@/services/auth";
 import { useAuthStore } from "@/stores/authStore";
 import { Login as LoginType } from "@/types/auth";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 
 const userDefault = {
   email: "",
@@ -13,7 +13,6 @@ const userDefault = {
 
 export function Login() {
   const { login } = useAuthStore();
-  const navigate = useNavigate();
   const [user, setUser] = useState<LoginType>(userDefault);
 
   const handleLogin = async () => {
@@ -24,7 +23,6 @@ export function Login() {
     }
 
     login(result.user, result.token);
-    navigate("/");
   }
 
   return (
