@@ -8,21 +8,33 @@ import { Pets } from './pages/pets'
 import Services from './pages/services'
 import Appointments from './pages/appointments'
 import Calendar from './pages/calendar'
+import { PrivateRouteWrapper } from './components/template/private-route-wrapper'
+import { Home } from './pages/home'
 
 export default function Router() {
-    return (
-        <Routes>
-            <Route element={<SidebarLayoutWrapper />}>
-                <Route path='/dashboard' element={<Dashboard />}/>
-                <Route path='/pets' element={<Pets />}/>
-                <Route path="*" element={<NotFound/>} />
-                <Route path='/services' element={<Services />} />
-                <Route path='/appointments' element={<Appointments />} />
-                <Route path='/calendar' element={<Calendar />} />
-            </Route>
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
 
-          <Route path="/auth/signin" element={<Signin />} />
-          <Route path="/auth/signup" element={<Signup />} />
-      </Routes>
+      <Route element={<PrivateRouteWrapper roles={['NAO_LOGADO']} />}>
+        <Route path="/auth/signin" element={<Signin />} />
+        <Route path="/auth/signup" element={<Signup />} />
+      </Route>
+
+      <Route element={<SidebarLayoutWrapper />}>
+        <Route element={<PrivateRouteWrapper roles={['CLIENTE']} />}>
+          <Route path='/pets' element={<Pets />} />
+        </Route>
+        <Route element={<PrivateRouteWrapper roles={['PROFISSIONAL']} />}>
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/services' element={<Services />} />
+          <Route path='/appointments' element={<Appointments />} />
+          <Route path='/calendar' element={<Calendar />} />
+        </Route>
+      </Route>
+
+
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   )
 }

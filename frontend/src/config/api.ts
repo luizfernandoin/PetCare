@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores/authStore';
 import axios from 'axios';
 
 
@@ -21,7 +22,8 @@ api.interceptors.response.use(
     (error) => {
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
-            window.location.href = '/account/signin';
+            useAuthStore.getState().logout();
+            //window.location.href = '/account/signin';
         }
         return Promise.reject(error);
     }
