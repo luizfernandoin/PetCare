@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Link } from "react-router";
 import { registerUser } from "@/services/auth"
-import { UserRegistration } from "@/types/User";
+import { UserCreate, userRoleBackendMapper } from "@/types/User";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useNavigate } from "react-router";
 import { userSchema } from "@petcare/shared";
 import { useFormValidation } from "@/hooks/useFormValidation";
 
+import { defaultUser } from "./data";
 
 export function RegistrationUser() {
   const navigate = useNavigate();
@@ -21,21 +22,7 @@ export function RegistrationUser() {
     handleChange,
     validateForm,
     isFormValid
-  } = useFormValidation<UserRegistration>({
-    nome: "",
-    email: "",
-    telefone: "",
-    senha: "",
-    tipo: "Cliente",
-    location: {
-      street: "",
-      number: "",
-      city: "",
-      state: "",
-      country: "",
-      postalcode: ""
-    }
-  }, userSchema);
+  } = useFormValidation<UserCreate>(defaultUser, userSchema);
 
   const alterPage = () => {
     if (page === "user") {
@@ -47,9 +34,7 @@ export function RegistrationUser() {
   const handleRegistration = async () => {
     if (!validateForm()) return;
 
-    console.log(JSON.stringify(user, null, 2));
     const newUser = await registerUser(user);
-    console.log(JSON.stringify(newUser, null, 2));
 
     if (newUser) {
       navigate("/auth/signin");
@@ -102,16 +87,22 @@ export function RegistrationUser() {
                 />
                 {errors.senha && <p className="text-red-500 text-xs mt-1 ml-3">{errors.senha}</p>}
               </div>
-              <RadioGroup defaultValue="Cliente" className="flex gap-8" onValueChange={(value) => handleChange("tipo", value as "Cliente" | "Profissional")}>
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value="Cliente" id="r1" />
-                  <Label htmlFor="r1">Cliente</Label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value="Profissional" id="r2" />
-                  <Label htmlFor="r2">Profissional</Label>
-                </div>
-              </RadioGroup>
+              <div>
+                <RadioGroup
+                  defaultValue="Cliente"
+                  className="flex gap-8"
+                  onValueChange={(value) => handleChange("tipo", userRoleBackendMapper[value as keyof typeof userRoleBackendMapper])}
+                >
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value="Cliente" id="r1" />
+                    <Label htmlFor="r1">Cliente</Label>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value="Profissional" id="r2" />
+                    <Label htmlFor="r2">Profissional</Label>
+                  </div>
+                </RadioGroup>
+              </div>
             </div>
           </>
         )}

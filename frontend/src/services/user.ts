@@ -1,6 +1,6 @@
 import api from "@/config/api";
 import { ApiResponse } from "@/types/api";
-import { User, UserUpdate } from "@/types/User";
+import { Profile, User, UserUpdate } from "@/types/User";
 
 
 export const getAllUsers = async (): Promise<User[]> => {
@@ -9,8 +9,8 @@ export const getAllUsers = async (): Promise<User[]> => {
     return response.data.data!;
 }
 
-export const getProfile = async (): Promise<User> => {
-    const response = await api.get<ApiResponse<User>>('/users/profile');
+export const getProfile = async (): Promise<Profile> => {
+    const response = await api.get<ApiResponse<Profile>>('/users/profile');
 
     return response.data.data!;
 }

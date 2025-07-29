@@ -1,28 +1,32 @@
-type UserRole = "CLIENTE" | "PROFISSIONAL" | "ADMIN";
+type UserRole = "CLIENTE" | "PROFISSIONAL";
+type UserRoleBackend = "Cliente" | "Profissional";
 
-type GeoLocation = {
-    type: 'Point';
-    coordinates: [number, number];
+const userRoleMapper: Record<UserRole, UserRoleBackend> = {
+    "CLIENTE": "Cliente",
+    "PROFISSIONAL": "Profissional"
+}
+
+const userRoleBackendMapper: Record<UserRoleBackend, UserRole> = {
+    "Cliente": "CLIENTE",
+    "Profissional": "PROFISSIONAL"
 }
 
 type AddressInput = {
-    pais: string;
-    estado: string;
-    cep: string;
-    cidade: string;
-    rua: string;
-    numero: string;
-}
-
-type Location = AddressInput | GeoLocation;
+    street: string,
+    number: string,
+    city: string,
+    state: string,
+    country: string,
+    postalcode: string
+};
 
 type User = {
     id: string;
     email: string;
     nome: string;
     senha: string;
-    telefone?: string;
-    location: Location;
+    telefone: string;
+    location: AddressInput;
     tipo: UserRole;
     image?: string;
 }
@@ -31,29 +35,18 @@ type UserCreate = Omit<User, 'id'>
 
 type UserUpdate = Partial<UserCreate>;
 
-type UserRegistration = {
-    email: string;
-    nome: string;
-    senha: string;
-    telefone: string;
-    location: {
-        street: string,
-        number: string,
-        city: string,
-        state: string,
-        country: string,
-        postalcode: string
-    };
-    tipo: 'Cliente' | 'Profissional';
+type Profile = Omit<User, "tipo"> & {
+    tipo: UserRoleBackend
 }
+
 
 export {
     UserRole,
     User,
     UserCreate,
     UserUpdate,
-    GeoLocation,
     AddressInput,
-    Location,
-    UserRegistration
+    userRoleMapper,
+    userRoleBackendMapper,
+    Profile
 };

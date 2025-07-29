@@ -15,7 +15,6 @@ export default function Router() {
             <Route element={<SidebarLayoutWrapper />}>
                 <Route path='/dashboard' element={<Dashboard />}/>
                 <Route path='/pets' element={<Pets />}/>
-                <Route path='/dashboard' element={<Dashboard />} />
                 <Route path="*" element={<NotFound/>} />
                 <Route path='/services' element={<Services />} />
                 <Route path='/appointments' element={<Appointments />} />
