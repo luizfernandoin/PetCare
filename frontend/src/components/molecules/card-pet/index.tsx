@@ -2,10 +2,10 @@ import { Edit, Trash } from "lucide-react";
 import ModalEditPet from "../modal-edit-pet";
 import { useState } from "react";
 
-import { Pet } from "@/types/Pet";
+import { PetCreate } from "@/types/pet";
 
-interface props extends Pet{
-    setPets: React.Dispatch<React.SetStateAction<Pet[]>>
+interface props extends PetCreate{
+    setPets: React.Dispatch<React.SetStateAction<PetCreate[]>>
 }
 
 export default function CardPet({ name, breed, size, age, features, image, setPets }: props) {

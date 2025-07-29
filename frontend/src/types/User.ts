@@ -31,12 +31,14 @@ type User = {
     image?: string;
 }
 
-type Profile = Omit<User,"tipo"> &  {
+type UserCreate = Omit<User, 'id'>
+
+type UserUpdate = Partial<UserCreate>;
+
+type Profile = Omit<User, "tipo"> & {
     tipo: UserRoleBackend
 }
 
-type UserCreate = Omit<User, 'id'|'image'>
-type UserUpdate = Partial<UserCreate>
 
 export {
     UserRole,
