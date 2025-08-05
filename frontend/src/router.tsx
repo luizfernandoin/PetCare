@@ -10,11 +10,12 @@ import Appointments from './pages/appointments'
 import Calendar from './pages/calendar'
 import { PrivateRouteWrapper } from './components/template/private-route-wrapper'
 import { Home } from './pages/home'
+import { Presentation } from './pages/presentation'
 
 export default function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Presentation />} />
 
       <Route element={<PrivateRouteWrapper roles={['NAO_LOGADO']} />}>
         <Route path="/auth/signin" element={<Signin />} />
@@ -31,8 +32,10 @@ export default function Router() {
           <Route path='/appointments' element={<Appointments />} />
           <Route path='/calendar' element={<Calendar />} />
         </Route>
+        <Route element={<PrivateRouteWrapper roles={['CLIENTE','PROFISSIONAL']} />}>
+          <Route path='/home' element={<Home />} />
+        </Route>
       </Route>
-
 
       <Route path="*" element={<NotFound />} />
     </Routes>

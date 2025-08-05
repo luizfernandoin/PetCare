@@ -1,3 +1,4 @@
+import { SideBarConfigType } from "@/types/SideBarConfig";
 import {
     Home,
     LayoutDashboard,
@@ -13,7 +14,7 @@ import {
 } from "lucide-react";
 
 
-export const sidebarConfig = {
+export const sidebarConfig: SideBarConfigType = {
     user: {
         name: "example",
         email: "example@gmail.com",
@@ -43,19 +44,19 @@ export const sidebarConfig = {
             title: "Home",
             url: "/home",
             icon: Home,
-            roles: [],
+            roles: ["CLIENTE", "PROFISSIONAL"],
         },
         {
             title: "Dashboard",
             url: "/dashboard",
             icon: LayoutDashboard,
-            roles: [],
+            roles: ["PROFISSIONAL"],
         },
         {
             title: "Serviços",
             url: "/services",
             icon: Stethoscope,
-            roles: [],
+            roles: ["PROFISSIONAL"],
         },
         {
             title: "Meus Pets",
@@ -66,7 +67,7 @@ export const sidebarConfig = {
             //     { title: "Gatos", url: "/pets/gatos" },
             //     { title: "Outros", url: "/pets/outros" },
             // ],
-            roles: [],
+            roles: ["CLIENTE"],
         },
         {
             title: "Profissionais",
@@ -77,21 +78,21 @@ export const sidebarConfig = {
                 { title: "Banho & Tosa", url: "/profissionais/banho-tosa" },
                 { title: "Atendentes", url: "/profissionais/atendentes" },
             ],
-            roles: [],
+            roles: ["PROFISSIONAL"],
         },
         {
             title: "Calendario",
             url: "/calendar",
             icon: CalendarDays,
             isActive: true,
-            roles: [],
+            roles: ["PROFISSIONAL"],
         },
         {
             title: "Agendamentos",
             url: "/appointments",
             icon: CalendarCheck2,
             isActive: true,
-            roles: [],
+            roles: ["PROFISSIONAL"],
         },
     ],
 

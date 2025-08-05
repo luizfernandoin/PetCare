@@ -1,17 +1,11 @@
-import { Button } from '@/components/ui/button'
-import React from 'react'
-import { Link } from 'react-router'
+import { useAuthStore } from '@/stores/authStore'
 
 export function Home() {
+  const { user, role } = useAuthStore()
   return (
     <div className='space-y-4'>
-      <h1 className='text-2xl font-bold'>Pagina home</h1>
-      <p>Rota publica para todos os tipos de usuarios</p>
-      <div className='flex gap-4'>
-        <Button><Link to={"/auth/signin"}>Entrar</Link></Button>
-        <Button><Link to={"/dashboard"}>Dashboard</Link></Button>
-        <Button><Link to={"/pets"}>Pets</Link></Button>
-      </div>
+      <h1 className='text-2xl font-bold'>Bem vindo {user?.nome}</h1>
+      <p>Sua função é {role}</p>
     </div>
   )
 }

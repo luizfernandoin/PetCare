@@ -14,10 +14,18 @@ import {
 import { sidebarConfig as data } from "@/config/sidebarConfig"
 import { NavSecondary } from "../organisms/nav-secundary";
 import type { NavItem } from "@/types/NavItem";
+import { useAuthStore } from "@/stores/authStore";
+import { useEffect } from "react";
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const [navMain, setNavMain] = React.useState<NavItem[]>(data.navMain);
+    const { role } = useAuthStore()
+    useEffect(()=>{
+      const permittedRoutes = data.navMain.filter(link=>link.roles.includes(role))  
+      console.log("->", permittedRoutes);
+      setNavMain(permittedRoutes)
+    },[role])
 
     return (
         <Sidebar collapsible="icon" {...props}>
@@ -25,7 +33,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <TeamSwitcher teams={data.teams} />
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={data.navMain} />
+                <NavMain items={navMain} />
                 <NavSecondary items={data.navSecondary} className="mt-auto" />
             </SidebarContent>
             <SidebarFooter>
