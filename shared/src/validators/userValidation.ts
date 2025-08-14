@@ -2,7 +2,7 @@ import 'zod-openapi/extend';
 import * as z from "zod";
 
 
-const userRole = z.enum(["Cliente", "Profissional"]);
+const userRole = z.enum(["CLIENTE", "PROFISSIONAL"]);
 
 const senhaInput = z
     .string()
@@ -37,7 +37,7 @@ const baseUserSchema = z.object({
         .regex(/^\d{10,15}$/, "O telefone deve conter entre 10 e 15 dígitos numéricos")
         .openapi({ description: "Número de telefone", example: "11999999999" }),
     location: location,
-    tipo: userRole.openapi({ description: "Tipo de usuário", example: "Cliente" }),
+    tipo: userRole.openapi({ description: "Tipo de usuário", example: "CLIENTE" }),
 })
 
 const userSchema = baseUserSchema;
