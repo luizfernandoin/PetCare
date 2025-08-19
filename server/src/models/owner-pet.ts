@@ -1,13 +1,12 @@
 import { DataTypes, Model, ForeignKey } from "sequelize";
 import db from "../config/sequelize";
 
-
-class DonoPet extends Model {
+class OwnerPet extends Model {
     declare userId: ForeignKey<string>;
     declare petId: ForeignKey<string>;
 };
 
-DonoPet.init({
+OwnerPet.init({
     userId: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -29,9 +28,9 @@ DonoPet.init({
 },
 {
     sequelize: db,
-    tableName: 'DonoPet',
+    tableName: 'ownerpet',
     timestamps: false
 });
 
 
-export default DonoPet;
+export default OwnerPet;

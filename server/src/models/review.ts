@@ -1,15 +1,14 @@
-import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
+import { DataTypes, Model, ForeignKey } from 'sequelize';
 import db from "../config/sequelize";
 
-
-class Avaliacoes extends Model {
+class Review extends Model {
     declare userId: ForeignKey<string>;
     declare serviceId: ForeignKey<string>;
-    declare comentario: string;
-    declare nota: number;
+    declare comment: string;
+    declare rating: number;
 }
 
-Avaliacoes.init({
+Review.init({
     userId: {
         type: DataTypes.UUID,
         references: {
@@ -26,11 +25,11 @@ Avaliacoes.init({
         },
         primaryKey: true,
     },
-    comentario: {
+    comment: {
         type: DataTypes.TEXT,
         allowNull: false,
     },
-    nota: {
+    rating: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
@@ -40,8 +39,8 @@ Avaliacoes.init({
     },
 }, {
     sequelize: db,
-    tableName: 'avaliacoes',
+    tableName: 'reviews',
 });
 
 
-export default Avaliacoes;
+export default Review;

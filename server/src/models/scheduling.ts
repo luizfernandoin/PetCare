@@ -3,22 +3,22 @@ import db from "../config/sequelize";
 import User from './user';
 import Pet from './pet';
 import Service from './service';
-import Clinica from './clinica';
+import Clinic from './clinic';
 
 
-class Agendamento extends Model {
+class Scheduling extends Model {
     declare id: CreationOptional<string>;
     declare userId: ForeignKey<string>;
     declare petId: ForeignKey<string>;
     declare serviceId: ForeignKey<string>;
-    declare clinicaId: ForeignKey<string>;
-    declare dataAgendamento: Date;
-    declare horaInicio: string;
-    declare horaFim: string;
-    declare status: "pendente" | "confirmado" | "cancelado";
+    declare clinicId: ForeignKey<string>;
+    declare scheduledDate: Date;
+    declare startTime: string;
+    declare endTime: string;
+    declare status: "PENDING" | "CONFIRMED" | "CANCELED";
 }
 
-Agendamento.init({
+Scheduling.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -48,23 +48,23 @@ Agendamento.init({
             key: 'id',
         },
     },
-    clinicaId: {
+    clinicId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-            model: 'clinicas',
+            model: 'clinics',
             key: 'id',
         },
     },
-    dataAgendamento: {
+    scheduledDate: {
         type: DataTypes.DATE,
         allowNull: false,
     },
-    horaInicio: {
+    startTime: {
         type: DataTypes.TIME,
         allowNull: false,
     },
-    horaFim: {
+    endTime: {
         type: DataTypes.TIME,
         allowNull: false,
     },
@@ -74,18 +74,18 @@ Agendamento.init({
     },
 }, {
     sequelize: db,
-    tableName: 'agendamentos',
+    tableName: 'schedules',
     timestamps: false,
 });
 
-Agendamento.belongsTo(User, { foreignKey: 'userId' });
-Agendamento.belongsTo(Pet, { foreignKey: 'petId' });
-Agendamento.belongsTo(Service, { foreignKey: 'serviceId' });
-Agendamento.belongsTo(Clinica, { foreignKey: 'clinicaId' });
+Scheduling.belongsTo(User, { foreignKey: 'userId' });
+Scheduling.belongsTo(Pet, { foreignKey: 'petId' });
+Scheduling.belongsTo(Service, { foreignKey: 'serviceId' });
+Scheduling.belongsTo(Clinic, { foreignKey: 'clinicId' });
 
-User.hasMany(Agendamento, { foreignKey: 'userId' });
-Pet.hasMany(Agendamento, { foreignKey: 'petId' });
-Service.hasMany(Agendamento, { foreignKey: 'serviceId' });
-Clinica.hasMany(Agendamento, { foreignKey: 'clinicaId' });
+User.hasMany(Scheduling, { foreignKey: 'userId' });
+Pet.hasMany(Scheduling, { foreignKey: 'petId' });
+Service.hasMany(Scheduling, { foreignKey: 'serviceId' });
+Clinic.hasMany(Scheduling, { foreignKey: 'clinicId' });
 
-export default Agendamento;
+export default Scheduling;
