@@ -1,7 +1,7 @@
 import { ModelStatic, Sequelize, ValidationError, ValidationErrorItem } from "sequelize";
-import Clinica from "../models/clinica";
-import TrabalhaClinica from "../models/TrabalhaClinica";
-import Horario from "../models/horario";
+import Clinic from "../models/clinic";
+import Employee from "../models/employee";
+import Schedule from "../models/schedule";
 import HttpError from "../utils/errors/HttpError";
 import User from "../models/user";
 import { UUID } from "crypto";
@@ -19,15 +19,15 @@ interface horariosDTO {
 
 
 class ClinicaService {
-    private clinicaModel: ModelStatic<Clinica>;
+    private clinicaModel: ModelStatic<Clinic>;
 
-    constructor(clinicaModel: ModelStatic<Clinica>) {
+    constructor(clinicaModel: ModelStatic<Clinic>) {
         this.clinicaModel = clinicaModel;
     }
 
     async getOwnerId(clinicaId: string) {
         try {
-            const ownerRecord = await TrabalhaClinica.findOne({
+            const ownerRecord = await Employee.findOne({
                 where: { clinicaId: clinicaId },
             });
 
@@ -35,7 +35,7 @@ class ClinicaService {
                 throw new HttpError("Proprietário não encontrado para esta clínica!", 404);
             }
 
-            return ownerRecord.userId;
+            return ownerRecord.userId as string;
         } catch (error) {
             if (error instanceof Error) {
                 throw new HttpError(error.message, 500);
@@ -97,7 +97,7 @@ class ClinicaService {
 
     async getNearbyClinicas(longitude: number, latitude: number, distance: number) {
         console.log(longitude, latitude);
-        return await Clinica.findAll({
+        return await Clinic.findAll({
             where: Sequelize.where(
                 Sequelize.fn(
                     'ST_DWithin',
@@ -112,7 +112,7 @@ class ClinicaService {
 
     async getHorariosByClinicaId(clinicaId: string) {
         try {
-            const horarios = await Horario.findAll({
+            const horarios = await Schedule.findAll({
                 where: { clinicaId },
                 order: [["dia", "ASC"], ["horaInicio", "ASC"]]
             })
@@ -123,7 +123,7 @@ class ClinicaService {
         }
     }
 
-    async createClinica(clinicaDTO: Partial<Clinica>, user: any) {
+    async createClinica(clinicaDTO: Partial<Clinic>, user: any) {
         try {
             const newClinica = await this.clinicaModel.create(clinicaDTO);
             await user.addClinica(newClinica);
@@ -149,7 +149,7 @@ class ClinicaService {
                 throw new HttpError('ClinicaId e ProfissionalId são obrigatórios.', 400);
             }
 
-            const existeVinculo = await TrabalhaClinica.findOne({
+            const existeVinculo = await Employee.findOne({
                 where: { clinicaId, userId: profissionalId }
             });
 
@@ -157,7 +157,7 @@ class ClinicaService {
                 throw new HttpError('O profissional já está vinculado a esta clínica.', 409);
             }
 
-            const vinculo = await TrabalhaClinica.create({ clinicaId, userId: profissionalId });
+            const vinculo = await Employee.create({ clinicaId, userId: profissionalId });
 
             return vinculo;
         } catch (error) {
@@ -173,7 +173,7 @@ class ClinicaService {
         try {
             if (!clinicaId || !profissionalId) throw new HttpError('ClinicaId e ProfissionalId são obrigatórios.', 400);
 
-            const vinculo = await TrabalhaClinica.findOne({
+            const vinculo = await Employee.findOne({
                 where: { clinicaId, userId: profissionalId }
             });
     
@@ -181,7 +181,7 @@ class ClinicaService {
                 throw new HttpError('O profissional não está vinculado a esta clínica.', 404);
             }
 
-            const profissionaisVinculados = await TrabalhaClinica.count({
+            const profissionaisVinculados = await Employee.count({
                 where: { clinicaId },
             });
 
@@ -218,7 +218,7 @@ class ClinicaService {
             throw new HttpError("Clínica não encontrada.", 404);
         }
 
-        if (!(await user.hasClinica(clinica))) {
+        if (!(await user.hasClinic(clinica))) {
             throw new HttpError("Usuário não tem permissão para adicionar horários a esta clínica.", 403);
         }
 
@@ -239,7 +239,7 @@ class ClinicaService {
                     const horaInicioFormatada = formatarHora(horaInicio);
                     const horaFimFormatada = formatarHora(horaFim);
 
-                    return await Horario.create({
+                    return await Schedule.create({
                         clinicaId,
                         dia,
                         horaInicio: horaInicioFormatada,
@@ -262,7 +262,7 @@ class ClinicaService {
                 throw new HttpError("Clinica não encontrada!", 404);
             }
 
-            await user.removeClinica(clinica);
+            await user.removeClinic(clinica);
             await clinica.destroy();
 
             return clinica;
