@@ -3,7 +3,7 @@ import db from "../config/sequelize";
 import DonoPet from './DonoPet';
 import Pet from './pet';
 import Clinica from './clinica';
-import TrabalhaClinica from './TrabalhaClinica';
+import Employee from './employee';
 import Atendimento from './atendimento';
 import Service from './service';
 import Agendamento from './agendamento';
@@ -13,28 +13,29 @@ import Avaliacoes from './avaliacoes';
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare id: CreationOptional<string>;
     declare email: string;
-    declare nome: string;
-    declare senha: string;
-    declare telefone: string;
+    declare name: string;
+    declare password: string;
+    declare phone: string;
     declare location: {
         type: string;
         coordinates: [number, number];
     };
-    declare tipo: 'Cliente' | 'Profissional';
+    declare role: 'CLIENTE' | 'PROFISSIONAL';
     declare image: CreationOptional<string>;
 
     public getPets!: () => Promise<Pet[]>;
     public removePets!: (pets: Pet[]) => Promise<void>;
     public addPet!: (pet: Pet) => Promise<void>;
-    public removeClinica!: (clinica: Clinica) => Promise<void>;
-    public async hasClinica(clinica: Clinica): Promise<boolean> {
-        const trabalha = await TrabalhaClinica.findOne({
+    public removeClinic!: (clinic: Clinica) => Promise<void>;
+
+    public async hasClinic(clinic: Clinica): Promise<boolean> {
+        const employeeRecord = await Employee.findOne({
             where: {
                 userId: this.id,
-                clinicaId: clinica.id
+                clinicId: clinic.id
             }
         });
-        return !!trabalha;
+        return !!employeeRecord;
     }
 }
 
@@ -52,15 +53,15 @@ User.init({
           isEmail: true,
         },
     },
-    nome: {
+    name: {
         type: DataTypes.STRING(100),
         allowNull: false,
     },
-    senha: {
+    password: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    telefone: {
+    phone: {
         type: DataTypes.STRING(15),
         allowNull: false,
     },
@@ -68,8 +69,8 @@ User.init({
         type: DataTypes.GEOMETRY("POINT"),
         allowNull: false,
     },
-    tipo: {
-        type: DataTypes.ENUM('Cliente', 'Profissional'),
+    role: {
+        type: DataTypes.ENUM('CLIENTE', 'PROFISSIONAL'),
         allowNull: false,
     },
     image: {
@@ -98,16 +99,16 @@ Pet.belongsToMany(User, {
 });
 
 User.belongsToMany(Clinica, {
-    through: TrabalhaClinica,
+    through: Employee,
     foreignKey: 'userId',
-    otherKey: 'clinicaId',
+    otherKey: 'clinicId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
 })
 
 Clinica.belongsToMany(User, {
-    through: TrabalhaClinica,
-    foreignKey: 'clinicaId',
+    through: Employee,
+    foreignKey: 'clinicId',
     otherKey: 'userId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'

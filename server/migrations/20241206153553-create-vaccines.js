@@ -3,25 +3,25 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('vacinas', {
+    await queryInterface.createTable('vaccines', {
       id: {
         type: Sequelize.DataTypes.UUID,
         defaultValue: Sequelize.DataTypes.UUIDV4,
         primaryKey: true,
       },
-      nome: {
+      name: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
-      validade: {
+      expirationDate: {
         type: Sequelize.DataTypes.DATE,
         allowNull: false,
       },
-      fabricante: {
+      manufacturer: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
-      lote: {
+      batchNumber: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
@@ -41,6 +41,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('vacinas');
+    await queryInterface.dropTable('vaccines');
   }
 };

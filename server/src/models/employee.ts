@@ -2,12 +2,12 @@ import { DataTypes, Model, ForeignKey } from "sequelize";
 import db from "../config/sequelize";
 
 
-class TrabalhaClinica extends Model {
+class Employee extends Model {
     declare userId: ForeignKey<string>;
-    declare clinicaId: ForeignKey<string>;
+    declare clinicId: ForeignKey<string>;
 }
 
-TrabalhaClinica.init({
+Employee.init({
     userId: {
         type: DataTypes.UUID,
         references: {
@@ -16,7 +16,7 @@ TrabalhaClinica.init({
         },
         primaryKey: true,
     },
-    clinicaId: {
+    clinicId: {
         type: DataTypes.UUID,
         references: {
             model: 'clinicas',
@@ -26,9 +26,9 @@ TrabalhaClinica.init({
     }
 }, {
     sequelize: db,
-    tableName: 'TrabalhaClinica',
+    tableName: 'employees',
     timestamps: false
 });
 
 
-export default TrabalhaClinica;
+export default Employee;

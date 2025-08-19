@@ -3,37 +3,37 @@ import db from "../config/sequelize";
 import Service from './service';
 
 
-class Vacina extends Model<InferAttributes<Vacina>, InferCreationAttributes<Vacina>> {
+class Vaccine extends Model<InferAttributes<Vaccine>, InferCreationAttributes<Vaccine>> {
     declare id: string;
-    declare nome: string;
-    declare validade: Date;
-    declare fabricante: string;
-    declare lote: string;
+    declare name: string;
+    declare expirationDate: Date;
+    declare manufacturer: string;
+    declare batchNumber: string;
     declare serviceId: string;
 }
 
-Vacina.init({
+Vaccine.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
     },
-    nome: {
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    validade: {
+    expirationDate: {
         type: DataTypes.DATE,
         allowNull: false,
         validate: {
             isAfter: new Date().toISOString(),
         },
     },
-    fabricante: {
+    manufacturer: {
         type: DataTypes.STRING(100),
         allowNull: false,
     },
-    lote: {
+    batchNumber: {
         type: DataTypes.STRING(50),
         allowNull: false,
     },
@@ -48,9 +48,9 @@ Vacina.init({
     },
 }, {
     sequelize: db,
-    tableName: 'vacinas',
+    tableName: 'vaccines',
     timestamps: false,
 });
 
 
-export default Vacina;
+export default Vaccine;
