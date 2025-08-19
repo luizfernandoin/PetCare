@@ -1,19 +1,19 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('horarios', {
-      dia: {
+    await queryInterface.createTable('schedules', {
+      day: {
         type: Sequelize.DataTypes.STRING,
         primaryKey: true
       },
-      horaInicio: {
+      startTime: {
         type: Sequelize.DataTypes.TIME,
         allowNull: false,
       },
-      horaFim: {
+      endTime: {
         type: Sequelize.DataTypes.TIME,
         allowNull: false,
       },
-      clinicaId: {
+      clinicId: {
         type: Sequelize.DataTypes.UUID,
         allowNull: false,
         references: {
@@ -30,6 +30,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('horarios');
+    await queryInterface.dropTable('schedules');
   }
 };

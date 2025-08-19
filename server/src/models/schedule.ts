@@ -4,15 +4,15 @@ import Clinica from "./clinica";
 import sequelize from "sequelize";
 
 
-class Horario extends Model {
-    declare clinicaId: ForeignKey<string>; 
-    declare dia: string;
-    declare horaInicio: string;
-    declare horaFim: string;
+class Schedule extends Model {
+    declare clinicId: ForeignKey<string>; 
+    declare day: string;
+    declare startTime: string;
+    declare endTime: string;
 };
 
-Horario.init({
-    clinicaId: {
+Schedule.init({
+    clinicId: {
         type: sequelize.UUID,
         allowNull: false,
         references: {
@@ -21,25 +21,25 @@ Horario.init({
         },
         primaryKey: true,
     },
-    dia: {
+    day: {
         type: sequelize.STRING,
         allowNull: false,
         primaryKey: true,
     },
-    horaInicio: {
+    startTime: {
         type: sequelize.TIME,
         allowNull: false,
     },
-    horaFim: {
+    endTime: {
         type: sequelize.TIME,
         allowNull: false,
     },
 }, 
 {
-    tableName: 'horarios',
+    tableName: 'schedules',
     sequelize: db,
     timestamps: false,
 });
 
 
-export default Horario;
+export default Schedule;
