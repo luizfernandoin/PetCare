@@ -1,12 +1,12 @@
 import { ModelStatic, ValidationError, ValidationErrorItem } from "sequelize";
-import Agendamento from "../models/agendamento";
+import Scheduling from "../models/scheduling";
 import HttpError from "../utils/errors/HttpError";
 
 
-class AgendamentoService {
-    private agendamentoModel: ModelStatic<Agendamento>;
+class SchedulingService {
+    private agendamentoModel: ModelStatic<Scheduling>;
 
-    constructor(userModel: ModelStatic<Agendamento>) {
+    constructor(userModel: ModelStatic<Scheduling>) {
         this.agendamentoModel = userModel;
     }
 
@@ -42,37 +42,37 @@ class AgendamentoService {
         }
     }
 
-    async verificarDisponibilidade(agendamentoData: Agendamento) {
-        const { clinicaId, serviceId, dataAgendamento, horaInicio, horaFim } = agendamentoData;
+    async verificarDisponibilidade(agendamentoData: Scheduling) {
+        const { clinicId, serviceId, scheduledDate, startTime, endTime } = agendamentoData;
 
-        const agendamentosExistentes = await this.getAgengamentosForDay(clinicaId, new Date(dataAgendamento));
+        const agendamentosExistentes = await this.getAgengamentosForDay(clinicId, new Date(scheduledDate));
 
         return !agendamentosExistentes.some((agendamento) => {
             return (
-                (horaInicio >= agendamento.horaInicio && horaInicio < agendamento.horaFim) ||
-                (horaFim > agendamento.horaInicio && horaFim <= agendamento.horaFim) ||
-                (horaInicio <= agendamento.horaInicio && horaFim >= agendamento.horaFim)
+                (startTime >= agendamento.startTime && startTime < agendamento.endTime) ||
+                (endTime > agendamento.startTime && endTime <= agendamento.endTime) ||
+                (startTime <= agendamento.startTime && endTime >= agendamento.endTime)
             );
         });
     }
 
-    async criarAgendamento(agendamentoDTO: Agendamento) {
+    async criarAgendamento(agendamentoDTO: Scheduling) {
         try {
             console.log(agendamentoDTO);
-            const { userId, petId, serviceId, clinicaId, dataAgendamento, horaInicio, horaFim, status } = agendamentoDTO;
+            const { userId, petId, serviceId, clinicId, scheduledDate, startTime, endTime, status } = agendamentoDTO;
 
-            if (!userId || !petId || !serviceId || !clinicaId || !dataAgendamento || !horaInicio || !horaFim || !status) {
+            if (!userId || !petId || !serviceId || !clinicId || !scheduledDate || !startTime || !endTime || !status) {
                 throw new Error("Todos os campos são obrigatórios.");
             }
 
-            const agendamento = await Agendamento.create({
+            const agendamento = await Scheduling.create({
                 userId,
                 petId,
                 serviceId,
-                clinicaId,
-                dataAgendamento,
-                horaInicio,
-                horaFim,
+                clinicId,
+                scheduledDate,
+                startTime,
+                endTime,
                 status,
             });
 
@@ -98,7 +98,7 @@ class AgendamentoService {
         if (userId) where.userId = userId;
         if (dataAgendamento) where.dataAgendamento = dataAgendamento;
 
-        const agendamentos = await Agendamento.findAll({
+        const agendamentos = await Scheduling.findAll({
             where,
             include: ["User", "Pet", "Service", "Clinica"],
         });
@@ -107,7 +107,7 @@ class AgendamentoService {
     }
 
     async deletarAgendamento(agendamentoId: string) {
-        const agendamento = await Agendamento.findOne({
+        const agendamento = await Scheduling.findOne({
             where: { agendamentoId }
         });
 
@@ -121,4 +121,4 @@ class AgendamentoService {
 }
 
 
-export default AgendamentoService;
+export default SchedulingService;

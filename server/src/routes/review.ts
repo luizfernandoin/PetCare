@@ -1,7 +1,7 @@
 import { NextFunction, Router, Request, Response } from "express";
 import authenticateToken from "../utils/middlewares/authenticateToken";
 import ReviewService from "../service/reviewService";
-import Review from "../models/avaliacoes";
+import Review from "../models/review";
 import TouristPlace from "../models/service";
 import HttpError from "../utils/errors/HttpError";
 import UserService from "../service/userService";

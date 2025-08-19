@@ -1,11 +1,11 @@
 import { Router } from "express";
 import userRouter from './users';
 import petRouter from './pet';
-import clinicaRouter from './clinica';
+import clinicaRouter from './clinic';
 import serviceRouter from './service';
 import authRouter from "./authentication";
 import reviewRouter from "./review";
-import agendamentoRouter from "./agendamento";
+import agendamentoRouter from "./scheduling";
 
 
 const router = Router();

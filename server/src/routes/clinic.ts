@@ -1,9 +1,9 @@
 import { Router, Request, Response, NextFunction } from "express";
-import ClinicaService from "../service/clinicaService";
+import ClinicService from "../service/clinicService";
 import authenticateToken from "../utils/middlewares/authenticateToken";
 import typeUser from "../utils/middlewares/typeUser.js";
 import verifyOwnership from "../utils/middlewares/verifyOwnership";
-import Clinica from "../models/clinica";
+import Clinic from "../models/clinic";
 import UserService from "../service/userService";
 import User from "../models/user";
 import HttpError from "../utils/errors/HttpError";
@@ -17,7 +17,7 @@ import GeocodingService from "../service/GeocodingService";
 
 
 const router = Router();
-const clinicaService = new ClinicaService(Clinica);
+const clinicaService = new ClinicService(Clinic);
 const userService = new UserService(User);
 const geocodingService = new GeocodingService();
 
@@ -122,7 +122,7 @@ router.post('/',
         const clinica = await clinicaService.createClinica(clinicaToSave, user);
 
         response.status(201).json({ 
-            message: `Clínica ${clinica.nome} criada e associada ao usuário ${user.nome} com sucesso!`, 
+            message: `Clínica ${clinica.name} criada e associada ao usuário ${user.name} com sucesso!`, 
             data: clinica 
         });
     } catch (error) {
@@ -159,7 +159,7 @@ router.delete("/:id", authenticateToken, validateParams(urlParamsSchema), typeUs
         const clinica = await clinicaService.deleteClinica(clinicaId, user);
 
         response.status(200).json({
-            message: `Clinica ${clinica.nome} deletada com sucesso.`,
+            message: `Clinica ${clinica.name} deletada com sucesso.`,
             data: clinica
         });
     } catch (error) {

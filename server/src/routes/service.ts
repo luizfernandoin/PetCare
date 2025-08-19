@@ -3,11 +3,11 @@ import authenticateToken from "../utils/middlewares/authenticateToken";
 import typeUser from "../utils/middlewares/typeUser";
 import UserService from "../service/userService";
 import ServiceService from "../service/serviceService";
-import ClinicaService from "../service/clinicaService";
+import ClinicaService from "../service/clinicService";
 
 import User from "../models/user";
 import Service from "../models/service"
-import Clinica from "../models/clinica";
+import Clinica from "../models/clinic";
 import { validate, validateParams } from "../utils/middlewares/validate";
 import { 
     urlParamsSchema, 
@@ -46,7 +46,7 @@ router.post("/:clinicaId/services",
         const newService = await serviceService.createService(serviceDTO, clinica);
 
         response.status(201).json({ 
-            message: `Serviço adicionado a clinica ${clinica.nome} com sucesso!`, 
+            message: `Serviço adicionado a clinica ${clinica.name} com sucesso!`, 
             data: newService 
         });
     } catch (error) {

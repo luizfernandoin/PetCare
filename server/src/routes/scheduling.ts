@@ -1,16 +1,16 @@
 import { Router, Request, Response, NextFunction } from "express";
-import Agendamento from "../models/agendamento";
-import AgendamentoService from "../service/AgendamentoService";
+import Scheduling from "../models/scheduling";
+import SchedulingService from "../service/schedulingService";
 import authenticateToken from "../utils/middlewares/authenticateToken";
 import UserService from "../service/userService";
 import User from "../models/user";
 import HttpError from "../utils/errors/HttpError";
 import { validate, validateParams } from "../utils/middlewares/validate";
-import { agendamentoSchema, urlParamsSchema } from "@petcare/shared";
+import { schedulingSchema, urlParamsSchema } from "@petcare/shared";
 
 
 const router = Router();
-const agendamentoService = new AgendamentoService(Agendamento)
+const agendamentoService = new SchedulingService(Scheduling)
 const userService = new UserService(User);
 
 
@@ -32,7 +32,7 @@ router.get("/:clinicaId/agendamentos",
 })
 
 router.post("/:clinicaId/agendamentos", 
-    validateParams(urlParamsSchema), validate(agendamentoSchema),
+    validateParams(urlParamsSchema), validate(schedulingSchema),
     authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
     const { clinicaId } = request.params;
     const { email } = request.user;
@@ -58,7 +58,7 @@ router.post("/:clinicaId/agendamentos",
         const agendamento = await agendamentoService.criarAgendamento(agendamentoData);
 
         response.status(201).json({
-            message: `Agendamento do pet ${agendamento.petId} realizado na clinia ${agendamento.clinicaId} com sucesso!`,
+            message: `Agendamento do pet ${agendamento.petId} realizado na clinia ${agendamento.clinicId} com sucesso!`,
             data: agendamento,
         });
     } catch (error) {
