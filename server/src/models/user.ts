@@ -1,13 +1,12 @@
 import { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import db from "../config/sequelize";
-import DonoPet from './DonoPet';
+import OwnerPet from './owner-pet';
 import Pet from './pet';
-import Clinica from './clinica';
+import Clinic from './clinic';
 import Employee from './employee';
 import Atendimento from './atendimento';
 import Service from './service';
-import Agendamento from './agendamento';
-import Avaliacoes from './avaliacoes';
+import Review from './review';
 
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
@@ -26,9 +25,9 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     public getPets!: () => Promise<Pet[]>;
     public removePets!: (pets: Pet[]) => Promise<void>;
     public addPet!: (pet: Pet) => Promise<void>;
-    public removeClinic!: (clinic: Clinica) => Promise<void>;
+    public removeClinic!: (clinic: Clinic) => Promise<void>;
 
-    public async hasClinic(clinic: Clinica): Promise<boolean> {
+    public async hasClinic(clinic: Clinic): Promise<boolean> {
         const employeeRecord = await Employee.findOne({
             where: {
                 userId: this.id,
@@ -83,7 +82,7 @@ User.init({
 });
 
 User.belongsToMany(Pet, { 
-    through: DonoPet,
+    through: OwnerPet,
     foreignKey: 'userId',
     otherKey: 'petId',
     onDelete: 'CASCADE',
@@ -91,14 +90,14 @@ User.belongsToMany(Pet, {
 });
 
 Pet.belongsToMany(User, { 
-    through: DonoPet,
+    through: OwnerPet,
     foreignKey: 'petId',
     otherKey: 'userId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
 
-User.belongsToMany(Clinica, {
+User.belongsToMany(Clinic, {
     through: Employee,
     foreignKey: 'userId',
     otherKey: 'clinicId',
@@ -106,7 +105,7 @@ User.belongsToMany(Clinica, {
     onUpdate: 'CASCADE'
 })
 
-Clinica.belongsToMany(User, {
+Clinic.belongsToMany(User, {
     through: Employee,
     foreignKey: 'clinicId',
     otherKey: 'userId',
@@ -127,13 +126,13 @@ Atendimento.belongsTo(User, {
 });
 
 User.belongsToMany(Service, { 
-    through: Avaliacoes,
+    through: Review,
     foreignKey: 'userId',
     otherKey: 'serviceId'
 });
 
 Service.belongsToMany(User, { 
-    through: Avaliacoes,
+    through: Review,
     foreignKey: 'serviceId',
     otherKey: 'userId'
 });

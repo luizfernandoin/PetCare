@@ -1,6 +1,5 @@
-import { DataTypes, Model, ForeignKey } from "sequelize";
+import { Model, ForeignKey } from "sequelize";
 import db from "../config/sequelize";
-import Clinica from "./clinica";
 import sequelize from "sequelize";
 
 

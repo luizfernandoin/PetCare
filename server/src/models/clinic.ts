@@ -1,7 +1,7 @@
 import { CreationOptional, DataTypes, Model } from 'sequelize';
 import db from "../config/sequelize";
 import Service from './service';
-import Horario from './horario';
+import Schedule from './schedule';
 import sequelize from 'sequelize';
 
 class Clinic extends Model {
@@ -54,13 +54,13 @@ Service.belongsTo(Clinic, {
   onUpdate: 'CASCADE',
 });
 
-Clinic.hasMany(Horario, {
+Clinic.hasMany(Schedule, {
   foreignKey: 'clinicId',
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
 });
 
-Horario.belongsTo(Clinic, {
+Schedule.belongsTo(Clinic, {
   foreignKey: 'clinicId',
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE',

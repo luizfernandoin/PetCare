@@ -1,7 +1,5 @@
 import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize';
 import db from "../config/sequelize";
-import Service from './service';
-
 
 class Vaccine extends Model<InferAttributes<Vaccine>, InferCreationAttributes<Vaccine>> {
     declare id: string;
