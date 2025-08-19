@@ -1,18 +1,18 @@
 import { ModelStatic } from "sequelize";
-import Avaliacoes from "../models/avaliacoes";
+import Review from "../models/review";
 import HttpError from "../utils/errors/HttpError";
 import Service from "../models/service";
 
 class ReviewService {
-    private reviewModel: ModelStatic<Avaliacoes>;
+    private reviewModel: ModelStatic<Review>;
     private serviceModel: ModelStatic<Service>;
 
-    constructor(reviewModel: ModelStatic<Avaliacoes>, placeModel: ModelStatic<Service>) {
+    constructor(reviewModel: ModelStatic<Review>, placeModel: ModelStatic<Service>) {
         this.reviewModel = reviewModel;
         this.serviceModel = placeModel
     };
 
-    async createReview(userID: string, serviceID: string, data: Partial<Avaliacoes>) {
+    async createReview(userID: string, serviceID: string, data: Partial<Review>) {
         console.log(userID, serviceID, data);
 
         const service = await this.serviceModel.findByPk(serviceID);
@@ -20,22 +20,22 @@ class ReviewService {
             throw new HttpError("Serviço não encontrado.", 404);
         }
 
-        if (!data.nota || !data.comentario) {
+        if (!data.rating || !data.comment) {
             throw new HttpError("Nota e comentário são obrigatórios.", 400);
         }
 
-        const review = await Avaliacoes.create({
+        const review = await Review.create({
             userId: userID,
             serviceId: serviceID,
-            nota: data.nota,
-            comentario: data.comentario,
+            nota: data.rating,
+            comentario: data.comment,
         });
 
         return review;
     }
 
     async getReviewsForService(serviceID: string) {
-        const reviews = await Avaliacoes.findAll({
+        const reviews = await Review.findAll({
             where: { serviceId: serviceID },
             order: [["createdAt", "DESC"]],
         });
@@ -48,7 +48,7 @@ class ReviewService {
     }
 
     async getReviewById(reviewID: string) {
-        const review = await Avaliacoes.findByPk(reviewID);
+        const review = await Review.findByPk(reviewID);
 
         if (!review) {
             throw new HttpError("Review não encontrado.", 404);
@@ -58,7 +58,7 @@ class ReviewService {
     }
 
     async deleteReview(serviceId: string, userID: string) {
-        const review = await Avaliacoes.findOne({
+        const review = await Review.findOne({
             where: {
                 userId: userID,
                 serviceId 
