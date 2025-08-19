@@ -18,40 +18,40 @@ module.exports = {
           isEmail: true,
         },
       },
-      nome: {
+      name: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      senha: {
+      password: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      telefone: {
+      phone: {
         type: Sequelize.STRING(15),
         allowNull: false,
       },
-      uf: {
+      state: {
         type: Sequelize.STRING(50),
         allowNull: false,
       },
-      cidade: {
+      city: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      rua: {
+      street: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      bairro: {
+      neighborhood: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      num: {
+      number: {
         type: Sequelize.STRING(10),
         allowNull: false,
       },
-      tipo: {
-        type: Sequelize.ENUM('Cliente', 'Profissional'),
+      role: {
+        type: Sequelize.ENUM('CLIENTE', 'PROFISSIONAL'),
         allowNull: false,
       },
       createdAt: {
