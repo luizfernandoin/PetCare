@@ -1,4 +1,4 @@
-export * from "./schedulingValidation";
+export * from "./appointmentValidation";
 export * from "./clinicaValidation";
 export * from "./horarioValidation";
 export * from "./paramsValidation";
