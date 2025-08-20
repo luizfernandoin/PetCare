@@ -8,12 +8,12 @@ const fileService = new FileService();
 
 router.post("/upload-image", fileService.singleUpload, (request: Request, response: Response) => {
     if (!request.file) {
-        throw new HttpError("Nenhuma imagem foi enviada.", 400);
+        throw new HttpError("No image was uploaded.", 400);
     }
 
     const imageUrl = fileService.generateImageUrl(request.file, request);
     
-    response.status(200).json({ message: "Imagem carregada com sucesso.", imageUrl });
+    response.status(200).json({ message: "Image uploaded successfully.", imageUrl });
 });
 
 

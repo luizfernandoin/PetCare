@@ -23,7 +23,7 @@ router.get("/:clinicId/appointments",
         const appointments = await appointmentService.getAppointmentsForClinicId(clinicId);
 
         response.status(201).json({
-            message: `Agendamentos encontrados com sucesso!`,
+            message: `Appointments retrieved successfully!`,
             data: appointments,
         });
     } catch (error) {
@@ -37,29 +37,28 @@ router.post("/:clinicId/appointments",
     const { clinicId } = request.params;
     const { email } = request.user;
     const user = await userService.getUserByEmail(email);
-    const agendamentoData = {
+    const appointmentData = {
         ...request.body,
         clinicId,
         userId: user.id
     };
 
-    if (!agendamentoData.petId || !agendamentoData.serviceId || !agendamentoData.appointmentDate ||
-        !agendamentoData.startTime || !agendamentoData.endTime || !agendamentoData.status) {
-        next(new HttpError("Todos os campos obrigatórios devem ser enviados.", 400));
+    if (!appointmentData.petId || !appointmentData.serviceId || !appointmentData.appointmentDate ||
+        !appointmentData.startTime || !appointmentData.endTime || !appointmentData.status) {
+        next(new HttpError("All required fields must be provided.", 400));
     }
 
     try {
-        const disponivel = await appointmentService.checkAvailability(agendamentoData);
-        if (!disponivel) {
-            return next(new HttpError("Horário indisponível para agendamento.", 400));
+        const available = await appointmentService.checkAvailability(appointmentData);
+        if (!available) {
+            return next(new HttpError("Time slot unavailable for appointment.", 400));
         }
 
-        console.log("O HttpError não interrompeu!")
-        const agendamento = await appointmentService.createAppointment(agendamentoData);
+        const appointment = await appointmentService.createAppointment(appointmentData);
 
         response.status(201).json({
-            message: `Agendamento do pet ${agendamento.petId} realizado na clinia ${agendamento.clinicId} com sucesso!`,
-            data: agendamento,
+            message: `Appointment for pet ${appointment.petId} scheduled at clinic ${appointment.clinicId} successfully!`,
+            data: appointment,
         });
     } catch (error) {
         next(error);

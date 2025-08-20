@@ -21,39 +21,38 @@ router.get("/", async (request: Request, response: Response) => {
     try {
         const users = await userService.get();
         response.status(200).json({
-            message: "Usuários encontrados com sucesso.",
+            message: "Users retrieved successfully.",
             data: users,
         });
     } catch (error) {
         if (error instanceof Error) {
-            response.status(500).json({ message: 'Erro ao buscar usuários.', error: error.message });
+            response.status(500).json({ message: 'Error retrieving users.', error: error.message });
         }
 
-        response.status(500).json({ message: 'Erro ao buscar usuários.', error: 'Erro desconhecido' });
+        response.status(500).json({ message: 'Error retrieving users.', error: 'Unknown error occurred' });
     }
 });
 
 router.get("/profile", authenticateToken, async (request: Request, response: Response) => {
     try {
         const userAuth = request.user;
-        console.log(userAuth);
 
         if (!userAuth) {
-            throw new HttpError("Usuário não encontrado", 404);
+            throw new HttpError("User not found", 404);
         }
 
         const user = await userService.getUserByEmail(userAuth.email);
 
         response.status(200).json({
-            message: "Usuário encontrado com sucesso.",
+            message: "User retrieved successfully.",
             data: user,
         });
     } catch (error) {
         if (error instanceof Error) {
-            response.status(500).json({ message: 'Erro ao buscar usuário.', error: error.message });
+            response.status(500).json({ message: 'Error retrieving user.', error: error.message });
         }
 
-        response.status(500).json({ message: 'Erro ao buscar usuários.', error: 'Erro desconhecido' });
+        response.status(500).json({ message: 'Error retrieving users.', error: 'Unknown error occurred' });
     }
 })
 
@@ -64,15 +63,15 @@ router.get("/:id", validateParams(urlParamsSchema), async(request: Request, resp
         const user = await userService.getUserById(id);
 
         response.status(200).json({
-            message: "Usuário encontrado com sucesso.",
+            message: "User retrieved successfully.",
             data: user,
         });
     } catch (error) {
         if (error instanceof Error) {
-            response.status(500).json({ message: 'Erro ao buscar usuário.', error: error.message });
+            response.status(500).json({ message: 'Error retrieving user.', error: error.message });
         }
 
-        response.status(500).json({ message: 'Erro ao buscar usuários.', error: 'Erro desconhecido' });
+        response.status(500).json({ message: 'Error retrieving users.', error: 'Unknown error occurred' });
     }
 })
 
@@ -81,7 +80,7 @@ router.delete('/', authenticateToken, async (request: Request, response: Respons
         const userAuth = request.user;
 
         if (!userAuth) {
-            throw new HttpError("Usuário não encontrado.", 404);
+            throw new HttpError("User not found.", 404);
         }
 
         const user = await userService.getUserByEmail(userAuth.email);
@@ -91,7 +90,7 @@ router.delete('/', authenticateToken, async (request: Request, response: Respons
         const result = await userService.deleteUser(userAuth);
 
         response.status(200).json({
-            message: "Usuário deletado com sucesso."
+            message: "User deleted successfully."
         });
     } catch (error) {
         next(error);
@@ -103,7 +102,7 @@ router.delete('/:id', validateParams(urlParamsSchema), async(request: Request, r
         const { id } = request.params;
         const result = await userService.deleteUserById(id);
 
-        response.status(200).json({"message": "Usuário deletado com sucesso."});
+        response.status(200).json({"message": "User deleted successfully."});
     } catch (error) {
         next(error)
     }
@@ -117,7 +116,7 @@ router.put('/profile', validate(userUpdateSchema), authenticateToken, async(requ
         const user = await userService.updateUser(userAuth, userDTO);
         
         response.status(200).json({
-            message: "Perfil atualizado com sucesso.",
+            message: "Profile updated successfully.",
             data: user,
         })
     } catch (error) {
@@ -130,7 +129,7 @@ router.patch("/profile", validate(userUpdateSchema), authenticateToken, async (r
     const updates = request.body;
 
     if (Object.keys(updates).length === 0) {
-        next(new HttpError("Nenhum campo foi enviado para atualização.", 400));
+        next(new HttpError("No fields were provided for update.", 400));
     }
 
     try {
@@ -138,7 +137,7 @@ router.patch("/profile", validate(userUpdateSchema), authenticateToken, async (r
 
         
         response.status(200).json({
-            message: "Perfil atualizado parcialmente com sucesso.",
+            message: "Profile partially updated successfully.",
             data: user,
         });
     } catch (error) {
