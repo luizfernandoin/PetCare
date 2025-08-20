@@ -19,7 +19,7 @@ Employee.init({
     clinicId: {
         type: DataTypes.UUID,
         references: {
-            model: 'clinicas',
+            model: 'clinics',
             key: 'id',
         },
         primaryKey: true,

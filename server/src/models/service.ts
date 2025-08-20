@@ -1,6 +1,6 @@
 import { DataTypes, Model, CreationOptional, ForeignKey, InferAttributes, InferCreationAttributes } from "sequelize";
 import db from "../config/sequelize";
-import Clinica from "./clinica";
+import Clinica from "./clinic";
 import Vacina from "./vaccine";
 import Atendimento from "./atendimento";
 
