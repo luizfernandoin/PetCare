@@ -31,7 +31,7 @@ class GeocodingService {
       });
 
       if (!response.data || response.data.length === 0) {
-        throw new HttpError("Endereço não encontrado. Por favor, revise o endereço informado.", 404);
+        throw new HttpError("Address not found. Please review the provided address.", 404);
       }
 
       const location = response.data[0];
@@ -40,11 +40,11 @@ class GeocodingService {
         lon: parseFloat(location.lon),
       };
     } catch (error: any) {
-      console.error("Erro ao buscar coordenadas:", error.message || error);
+      console.error("Error fetching coordinates:", error.message || error);
       if (error.code === "ECONNABORTED") {
-        throw new HttpError("O serviço de geocodificação demorou muito para responder.", 408);
+        throw new HttpError("Geocoding service took too long to respond.", 408);
       }
-      throw new HttpError("Erro ao buscar coordenadas. Tente novamente mais tarde.", 500, error);
+      throw new HttpError("Error fetching coordinates. Please try again later.", 500, error);
     }
   }
 }

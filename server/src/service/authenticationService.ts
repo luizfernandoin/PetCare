@@ -16,17 +16,17 @@ class AuthenticationService {
     async createUser(userDTO: Partial<User>) {
         const { email, name, password, phone, location, role } = userDTO;
 
-        const usuarioExiste = await this.userModel.findOne({ where: { email } });
+        const userExists = await this.userModel.findOne({ where: { email } });
 
-        if (usuarioExiste) {
-            throw new HttpError("E-mail já cadastrado.", 400);
+        if (userExists) {
+            throw new HttpError("Email already registered.", 400);
         }
 
         try {
             const salt = await bcrypt.genSalt();
             const hashedPassword = await bcrypt.hash(password!, salt);
 
-            const novoUsuario = await this.userModel.create({
+            const newUser = await this.userModel.create({
                 email: email!,
                 name: name!,
                 password: hashedPassword!,
@@ -35,33 +35,33 @@ class AuthenticationService {
                 role: role!,
             });
 
-            return { status: 201, message: "Usuário criado com sucesso!", data: novoUsuario };
+            return { status: 201, message: "User created successfully!", data: newUser };
         } catch (error) {
             if (error instanceof ValidationError) {
                 const errors = error.errors.map((err: ValidationErrorItem) => err.message);
-                throw new HttpError(`Erro de validação: ${errors.join(", ")}`, 400);
+                throw new HttpError(`Validation error: ${errors.join(", ")}`, 400);
             }
 
-            throw new HttpError("Erro interno ao criar usuário.", 500);
+            throw new HttpError("Internal error creating user.", 500);
         }
     }
 
-    async login(email: string, senha: string) {
-        if (!email || !senha) {
-            throw new HttpError("Email e senha são obrigatórios.", 400);
+    async login(email: string, password: string) {
+        if (!email || !password) {
+            throw new HttpError("Email and password are required.", 400);
         }
 
         try {
             const user = await this.userModel.findOne({ where: { email } });
 
             if (!user) {
-                throw new HttpError("Usuário não encontrado.", 404);
+                throw new HttpError("User not found.", 404);
             }
 
-            const senhaValida = await bcrypt.compare(senha, user.password);
+            const validPassword = await bcrypt.compare(password, user.password);
 
-            if (!senhaValida) {
-                throw new HttpError("Senha incorreta.", 401);
+            if (!validPassword) {
+                throw new HttpError("Incorrect password.", 401);
             }
 
             const token = jwt.sign(
@@ -76,7 +76,7 @@ class AuthenticationService {
                 throw new HttpError(error.message, error.statusCode);
             }
 
-            throw new HttpError(`Erro interno ao realizar login: erro`, 500);
+            throw new HttpError(`Internal error during login: ${error}`, 500);
         }
     }
 }
