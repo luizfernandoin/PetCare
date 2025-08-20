@@ -8,14 +8,16 @@ import {
     loginSchema, 
     userSchema, 
     userUpdateSchema,
-    agendamentoSchema,
-    clinicaCreateSchema,
+    appointmentSchema,
+    clinicCreateSchema,
     petCreateSchema,
     petUpdateSchema,
     reviewSchema,
     serviceSchema,
-    horarioSchema
+    scheduleSchema
 } from "@petcare/shared";
+import Appointment from "src/models/appointment";
+import Clinic from "src/models/clinic";
 
 
 const swaggerOptions = {
@@ -38,9 +40,9 @@ const swaggerOptions = {
                 User: createSchema(userSchema).schema,
                 UserUpdate: createSchema(userUpdateSchema).schema,
                 Login: createSchema(loginSchema).schema,
-                Agendamento: createSchema(agendamentoSchema).schema,
-                Clinica: createSchema(clinicaCreateSchema).schema,
-                Horarios: createSchema(horarioSchema).schema,
+                Appointment: createSchema(appointmentSchema).schema,
+                Clinic: createSchema(clinicCreateSchema).schema,
+                Schedule: createSchema(scheduleSchema).schema,
                 Pet: createSchema(petCreateSchema).schema,
                 PetUpdate: createSchema(petUpdateSchema).schema,
                 Review: createSchema(reviewSchema).schema,
