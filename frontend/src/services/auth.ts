@@ -1,5 +1,5 @@
 import api from "@/config/api";
-import { User, UserCreate, userRoleBackendMapper, userRoleMapper } from "@/types/User";
+import { User, UserCreate, UserRole } from "@/types/User";
 import { ApiResponse } from "@/types/api";
 import { Login, LoginResult } from "@/types/auth";
 import { getProfile } from "./user";
@@ -7,9 +7,7 @@ import { getProfile } from "./user";
 
 export const registerUser = async (userDTO: UserCreate): Promise<User | undefined> => {
     try {
-        const response = await api.post<ApiResponse<User>>('/auth/register', {
-            ...userDTO, tipo: userRoleMapper[userDTO.tipo]
-        });
+        const response = await api.post<ApiResponse<User>>('/auth/register', userDTO);
         return response.data.data;
     } catch (error) {
         console.error(error);
@@ -25,14 +23,15 @@ export const loginUser = async (loginDTO: Login): Promise<LoginResult> => {
         localStorage.setItem("token", token);
         const profile = await getProfile();
         if (!profile) return undefined;
+        console.log(profile);
 
-        const userWithMappedRole = {
+        const user = {
             ...profile,
-            tipo: userRoleBackendMapper[profile.tipo!],
-        };
+            tipo: profile.tipo as UserRole
+        }
 
         return {
-            user: userWithMappedRole,
+            user,
             token
         }
     } catch (error) {

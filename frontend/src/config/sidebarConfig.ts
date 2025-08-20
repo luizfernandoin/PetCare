@@ -92,7 +92,7 @@ export const sidebarConfig: SideBarConfigType = {
             url: "/appointments",
             icon: CalendarCheck2,
             isActive: true,
-            roles: ["PROFISSIONAL"],
+            roles: ["PROFISSIONAL", "CLIENTE"],
         },
     ],
 

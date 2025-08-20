@@ -14,7 +14,7 @@ class AuthenticationService {
     }
 
     async createUser(userDTO: Partial<User>) {
-        const { email, nome, senha, telefone, location, tipo } = userDTO;
+        const { email, name, password, phone, location, role } = userDTO;
 
         const usuarioExiste = await this.userModel.findOne({ where: { email } });
 
@@ -24,15 +24,15 @@ class AuthenticationService {
 
         try {
             const salt = await bcrypt.genSalt();
-            const hashedPassword = await bcrypt.hash(senha!, salt);
+            const hashedPassword = await bcrypt.hash(password!, salt);
 
             const novoUsuario = await this.userModel.create({
                 email: email!,
-                nome: nome!,
-                senha: hashedPassword!,
-                telefone: telefone!,
+                name: name!,
+                password: hashedPassword!,
+                phone: phone!,
                 location: location!,
-                tipo: tipo!,
+                role: role!,
             });
 
             return { status: 201, message: "Usuário criado com sucesso!", data: novoUsuario };
@@ -58,14 +58,14 @@ class AuthenticationService {
                 throw new HttpError("Usuário não encontrado.", 404);
             }
 
-            const senhaValida = await bcrypt.compare(senha, user.senha);
+            const senhaValida = await bcrypt.compare(senha, user.password);
 
             if (!senhaValida) {
                 throw new HttpError("Senha incorreta.", 401);
             }
 
             const token = jwt.sign(
-                { email: user.email, tipo: user.tipo },
+                { email: user.email, role: user.role },
                 this.secretKey,
                 { expiresIn: "1h" }
             );

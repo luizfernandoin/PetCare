@@ -29,11 +29,11 @@ export default function Router() {
         <Route element={<PrivateRouteWrapper roles={['PROFISSIONAL']} />}>
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/services' element={<Services />} />
-          <Route path='/appointments' element={<Appointments />} />
           <Route path='/calendar' element={<Calendar />} />
         </Route>
         <Route element={<PrivateRouteWrapper roles={['CLIENTE','PROFISSIONAL']} />}>
           <Route path='/home' element={<Home />} />
+          <Route path='/appointments' element={<Appointments />} />
         </Route>
       </Route>
 

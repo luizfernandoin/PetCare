@@ -10,6 +10,7 @@ interface props {
 
 export function PrivateRouteWrapper({ roles }: props) {
   const { role, isLoading } = useAuthStore();
+  console.log(role, isLoading);
   
   if (isLoading) {
     return <div className="p-4 text-center text-gray-600">Carregando...</div>;

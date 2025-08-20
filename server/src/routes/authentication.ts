@@ -34,6 +34,8 @@ router.post("/register", validate(userSchema), async (request: Request, response
             },
         };
 
+        console.log(userToSave);
+
         const newUser = await authenticationService.createUser(userToSave);
 
         response.status(201).json({
@@ -41,6 +43,7 @@ router.post("/register", validate(userSchema), async (request: Request, response
             data: newUser,
         });
     } catch (error) {
+        console.log(error);
         next(error)
     };
 });
