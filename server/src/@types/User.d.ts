@@ -1,8 +1,8 @@
 interface IUserCreate {
     email: string;
-    nome: string;
-    senha: string;
-    telefone: string;
+    name: string;
+    password: string;
+    phone: string;
     location: {
         street: string,
         number: string,
@@ -11,7 +11,7 @@ interface IUserCreate {
         country: string,
         postalcode: string
     };
-    tipo: 'Cliente' | 'Profissional';
+    role: 'CLIENTE' | 'PROFISSIONAL';
 }
 
 export {IUserCreate};

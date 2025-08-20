@@ -1,9 +1,9 @@
 import { DataTypes, Model, CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
 import db from "../config/sequelize";
 import User from './user';
-import DonoPet from './DonoPet';
+import DonoPet from './owner-pet';
 import Atendimento from './atendimento';
-import Agendamento from './agendamento';
+import Agendamento from './appointment';
 
 
 class Pet extends Model<InferAttributes<Pet>, InferCreationAttributes<Pet>> {

@@ -15,7 +15,7 @@ Schedule.init({
         type: sequelize.UUID,
         allowNull: false,
         references: {
-            model: 'clinicas',
+            model: 'clinics',
             key: 'id',
         },
         primaryKey: true,

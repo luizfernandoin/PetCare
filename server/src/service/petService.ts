@@ -2,7 +2,7 @@ import { InferCreationAttributes, ModelStatic, ValidationError, ValidationErrorI
 import Pet from "../models/pet";
 import User from "../models/user";
 import HttpError from "../utils/errors/HttpError";
-import DonoPet from "../models/DonoPet";
+import OwnerPet from "../models/owner-pet";
 
 class PetService {
     private petModel: ModelStatic<Pet>;
@@ -64,13 +64,13 @@ class PetService {
     }
 
     async isOwner(petId: string, userId: string) {
-        const donoPet = await DonoPet.findOne({
+        const ownerPet = await OwnerPet.findOne({
             where: {
                 petId: petId,
                 userId: userId
             }
         });
-        return !!donoPet;
+        return !!ownerPet;
     }
     
     async updatePet(petId: string, user: User, updates: Pet) {

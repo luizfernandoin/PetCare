@@ -13,16 +13,16 @@ class UserService {
     async get() {
         try {
             const users = await this.user.findAll({
-                attributes: { exclude: ['senha']},
+                attributes: { exclude: ['password']},
             });
 
             return users;
         } catch (error) {
             if (error instanceof Error) {
-                return new HttpError("Não foi possível buscar usuários", 500, error);
+                return new HttpError("Could not retrieve users", 500, error);
             }
 
-            throw new HttpError("Erro interno ao tentar buscar usuários.", 500);
+            throw new HttpError("Internal error while trying to retrieve users.", 500);
         }
     }
 
@@ -30,11 +30,11 @@ class UserService {
         try {
             const user = await this.user.findOne({ 
                 where: { id: userId },
-                attributes: { exclude: ['senha'] } 
+                attributes: { exclude: ['password'] } 
             })
 
             if (!user) {
-                throw new HttpError("Usuário não encontrado.", 404);
+                throw new HttpError("User not found.", 404);
             }
     
             return user;
@@ -43,7 +43,7 @@ class UserService {
                 throw new HttpError(error.message, error.statusCode);
             }
 
-            throw new HttpError("Erro interno ao buscar usuário.", 500);
+            throw new HttpError("Internal error while retrieving user.", 500);
         }
     }
 
@@ -51,10 +51,10 @@ class UserService {
         try {
             const user = await this.user.findOne({ 
                 where: { email: userEmail },
-                attributes: { exclude: ['senha'] }
+                attributes: { exclude: ['password'] }
             });
 
-            if (!user) throw new HttpError("Usuário não encontrado.", 404);
+            if (!user) throw new HttpError("User not found.", 404);
 
             return user;
         } catch (error) {
@@ -62,7 +62,7 @@ class UserService {
                 throw new HttpError(error.message, error.statusCode);
             }
 
-            throw new HttpError("Erro interno ao buscar usuário.", 500);
+            throw new HttpError("Internal error while retrieving user.", 500);
         }
     }
     
@@ -71,34 +71,34 @@ class UserService {
             const user = await this.getUserByEmail(userAuth.email);
 
             if(!user) {
-                throw new HttpError("Usuário não encontrado.", 404);
+                throw new HttpError("User not found.", 404);
             }
 
             await user.destroy();
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro ao deletar usuário.", 500, new Error(error.message));
+                throw new HttpError("Error deleting user.", 500, new Error(error.message));
             }
 
-            throw new HttpError("Erro ao deletar usuário.", 500);
+            throw new HttpError("Error deleting user.", 500);
         }
     }
     
     async deleteUserById(id: string) {
         try {
-            const usuario = await this.user.findOne({ where: { 'id': id } })
+            const user = await this.user.findOne({ where: { 'id': id } })
             
-            if (!usuario) {
-                throw new HttpError("Usuário não encontrado.", 404);
+            if (!user) {
+                throw new HttpError("User not found.", 404);
             }
     
-            await usuario.destroy();
+            await user.destroy();
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro ao deletar usuário.", 500, new Error(error.message));
+                throw new HttpError("Error deleting user.", 500, new Error(error.message));
             }
             
-            throw new HttpError("Erro ao deletar usuário.", 500);
+            throw new HttpError("Error deleting user.", 500);
         }
 
     }
@@ -108,7 +108,7 @@ class UserService {
             const userToDelete = await this.user.findOne({ where: { email } });
 
             if (!userToDelete) {
-                throw new HttpError("Usuário não encontrado.", 404);
+                throw new HttpError("User not found.", 404);
             }
 
             await userToDelete.destroy();
@@ -116,50 +116,50 @@ class UserService {
             return userToDelete
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro ao tentar deletar usuário.", 500, error);
+                throw new HttpError("Error trying to delete user.", 500, error);
             }
 
-            throw new HttpError("Erro interno ao tentar deletar usuário.", 500);
+            throw new HttpError("Internal error while trying to delete user.", 500);
         }
     }
 
     async updateUser(userAuth: User, updates: Partial<User>) {
         try {
-            const usuario = await this.getUserByEmail(userAuth.email);
+            const user = await this.getUserByEmail(userAuth.email);
 
-            if (!usuario) {
-                throw new HttpError("Usuário não encontrado.", 404);
+            if (!user) {
+                throw new HttpError("User not found.", 404);
             }
 
-            await usuario.update(updates);
+            await user.update(updates);
 
-            return usuario;
+            return user;
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro ao atualizar usuário.", 500, new Error(error.message));
+                throw new HttpError("Error updating user.", 500, new Error(error.message));
             }
 
-            throw new HttpError("Erro interno ao atualizar usuário.", 500);
+            throw new HttpError("Internal error while updating user.", 500);
         }
     }
 
     async patchUser(email: string, updates: Partial<User>) {
         try {
-            const usuario = await this.user.findOne({ where: { email } });
+            const user = await this.user.findOne({ where: { email } });
     
-            if (!usuario) {
-                return { status: 404, message: "Usuário não encontrado." };
+            if (!user) {
+                return { status: 404, message: "User not found." };
             }
     
-            await usuario.update(updates);
+            await user.update(updates);
     
-            return usuario;
+            return user;
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro ao atualizar usuário.", 500, error);
+                throw new HttpError("Error updating user.", 500, error);
             }  
             
-            throw new HttpError("Erro interno ao tentar atualizar usuário.", 500);
+            throw new HttpError("Internal error while trying to update user.", 500);
         }
     }
 }

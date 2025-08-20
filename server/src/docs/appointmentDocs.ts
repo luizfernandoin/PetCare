@@ -1,20 +1,20 @@
 /**
  * @swagger
- * /api/clinicas/{clinicaId}/agendamentos:
+ * /api/clinics/{clinicId}/appointments:
  *   get:
- *     summary: Busca os agendamentos de uma clínica
+ *     summary: Retrieves appointments for a clinic
  *     tags:
- *       - Agendamentos
+ *       - Appointments
  *     parameters:
- *       - name: clinicaId
+ *       - name: clinicId
  *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da clínica cujos agendamentos serão buscados
+ *         description: ID of the clinic to retrieve appointments for
  *     responses:
  *       200:
- *         description: Agendamentos encontrados com sucesso
+ *         description: Appointments retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -22,13 +22,13 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Agendamentos encontrados com sucesso!"
+ *                   example: "Appointments retrieved successfully!"
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Agendamento'
+ *                     $ref: '#/components/schemas/Appointment'
  *       404:
- *         description: Clínica não encontrada
+ *         description: Clinic not found
  *         content:
  *           application/json:
  *             schema:
@@ -36,9 +36,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Clínica não encontrada."
+ *                   example: "Clinic not found."
  *       500:
- *         description: Erro interno ao buscar agendamentos
+ *         description: Internal server error while retrieving appointments
  *         content:
  *           application/json:
  *             schema:
@@ -46,35 +46,35 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Erro ao buscar agendamentos."
+ *                   example: "Error retrieving appointments."
  */
 
 
 /**
  * @swagger
- * /api/clinicas/{clinicaId}/agendamentos:
+ * /api/clinics/{clinicId}/appointments:
  *   post:
- *     summary: Cria um novo agendamento
+ *     summary: Creates a new appointment
  *     tags:
- *       - Agendamentos
+ *       - Appointments
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - name: clinicaId
+ *       - name: clinicId
  *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da clínica onde o agendamento será realizado
+ *         description: ID of the clinic where the appointment will be scheduled
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Agendamento'
+ *             $ref: '#/components/schemas/Appointment'
  *     responses:
  *       201:
- *         description: Agendamento criado com sucesso
+ *         description: Appointment created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -82,11 +82,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Agendamento do pet 123 realizado na clínica ABC com sucesso!"
+ *                   example: "Pet 123 appointment scheduled at clinic ABC successfully!"
  *                 data:
- *                   $ref: '#/components/schemas/Agendamento'
+ *                   $ref: '#/components/schemas/Appointment'
  *       400:
- *         description: Dados inválidos ou horário indisponível
+ *         description: Invalid data or unavailable time slot
  *         content:
  *           application/json:
  *             schema:
@@ -94,9 +94,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Horário indisponível para agendamento."
+ *                   example: "Time slot unavailable for appointment."
  *       401:
- *         description: Usuário não autenticado
+ *         description: User not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -104,9 +104,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário não autenticado."
+ *                   example: "User not authenticated."
  *       403:
- *         description: Usuário não autenticado
+ *         description: Invalid or expired token
  *         content:
  *           application/json:
  *             schema:
@@ -114,9 +114,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token inválido ou expirado."
+ *                   example: "Invalid or expired token."
  *       404:
- *         description: Usuário não encontrado!
+ *         description: User not found!
  *         content:
  *           application/json:
  *             schema:
@@ -124,9 +124,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Usuário não encontrado!"
+ *                   example: "User not found!"
  *       500:
- *         description: Erro interno ao criar agendamento
+ *         description: Internal server error while creating appointment
  *         content:
  *           application/json:
  *             schema:
@@ -134,8 +134,8 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao criar agendamento."
+ *                   example: "Error creating appointment."
  *                 error:
  *                   type: string
- *                   example: "Erro desconhecido."
+ *                   example: "Unknown error occurred."
  */

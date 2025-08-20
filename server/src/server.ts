@@ -1,5 +1,4 @@
-import express, { request, response } from 'express';
-import userRouter from './routes/users'
+import express from 'express';
 import cors from 'cors';
 import sequelize from './config/sequelize';
 import router from './routes/routes';
@@ -17,11 +16,11 @@ app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
     
     swaggerDocsSetup(app, PORT);
 })
 
 sequelize.sync().then(() => {
-  console.log('Conectado ao BD')
+  console.log('Connected to database')
 })

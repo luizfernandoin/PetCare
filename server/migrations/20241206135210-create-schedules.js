@@ -17,7 +17,7 @@ module.exports = {
         type: Sequelize.DataTypes.UUID,
         allowNull: false,
         references: {
-          model: 'clinicas',
+          model: 'clinics',
           key: 'id',
         },
         primaryKey: true,

@@ -1,6 +1,6 @@
 export * from "./appointmentValidation";
 export * from "./clinicValidation";
-export * from "./horarioValidation";
+export * from "./scheduleValidation";
 export * from "./paramsValidation";
 export * from "./petValidation";
 export * from "./reviewValidation";

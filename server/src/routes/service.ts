@@ -42,7 +42,7 @@ router.post("/:clinicaId/services",
         const serviceDTO = request.body;
         const { clinicaId } = request.params;
 
-        const clinica = await clinicaService.getClinicaById(clinicaId);
+        const clinica = await clinicaService.getClinicById(clinicaId);
         const newService = await serviceService.createService(serviceDTO, clinica);
 
         response.status(201).json({ 

@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('DonoPet', {
+    await queryInterface.createTable('ownerpet', {
       userId: {
         type: Sequelize.UUID,
         references: {
@@ -30,7 +30,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('DonoPet');
+    await queryInterface.dropTable('ownerpet');
   }
 };
 

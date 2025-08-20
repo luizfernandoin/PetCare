@@ -24,10 +24,10 @@ router.post("/register", validate(userSchema), async (request: Request, response
         
         const userToSave = {
             email: userDTO.email,
-            nome: userDTO.nome,
-            senha: userDTO.senha,
-            telefone: userDTO.telefone,
-            tipo: userDTO.tipo,
+            name: userDTO.name,
+            password: userDTO.password,
+            phone: userDTO.phone,
+            role: userDTO.role,
             location: {
                 type: "Point",
                 coordinates: [lon, lat] as [number, number],
@@ -37,7 +37,7 @@ router.post("/register", validate(userSchema), async (request: Request, response
         const newUser = await authenticationService.createUser(userToSave);
 
         response.status(201).json({
-            message: "Usuário criado com sucesso.",
+            message: "User created successfully.",
             data: newUser,
         });
     } catch (error) {
@@ -47,10 +47,10 @@ router.post("/register", validate(userSchema), async (request: Request, response
 
 router.post("/login", validate(loginSchema), async (request: Request, response: Response, next: NextFunction) => {
     try {
-        const { email, senha } = request.body;
-        const token = await authenticationService.login(email, senha);
+        const { email, password } = request.body;
+        const token = await authenticationService.login(email, password);
         response.status(200).json({
-            message: "Usuário logado com sucesso.",
+            message: "User logged in successfully.",
             token: token,
         });
     } catch (error) {
