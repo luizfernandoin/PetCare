@@ -8,10 +8,8 @@ const errorMiddleware = (
     response: Response, 
     next: NextFunction
 ) => {
-    console.log("Cheguei aqui")
-    console.error(err);
     response.status(err.statusCode || 500).json({
-        error: err.message || 'Erro interno do servidor!',
+        error: err.message || 'Internal server error!',
     });
 
     next();

@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../../models/user";
 import UserService from "../../service/userService";
-import ClinicaService from "../../service/clinicaService";
+import ClinicService from "../../service/clinicService";
 import HttpError from "../errors/HttpError";
 
 const userService = new UserService(User);
 
-const verifyOwnership = (service: ClinicaService) => {
+const verifyOwnership = (service: ClinicService) => {
     return async(request: Request, response: Response, next: NextFunction) => {
         try {
             const { id } = request.params;
@@ -16,11 +16,11 @@ const verifyOwnership = (service: ClinicaService) => {
             const ownerId = await service.getOwnerId(id);
 
             if (!ownerId) {
-                throw new HttpError("Serviço não encontrado!", 404);
+                throw new HttpError("Service not found!", 404);
             }
 
             if (ownerId !== user.id) {
-                throw new HttpError("Usuário não autorizado.", 403);
+                throw new HttpError("User not authorized.", 403);
             }
             
             next();

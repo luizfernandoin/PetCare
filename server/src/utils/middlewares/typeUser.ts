@@ -2,15 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import HttpError from "../errors/HttpError";
 
 const typeUser = (requiredType: string) => {
-    console.log(requiredType);
     return (request: Request, response: Response, next: NextFunction) => {
-        console.log(request.user);
         if (!request.user) {
-            throw new HttpError('Usuário não autenticado.', 401);
+            throw new HttpError('User not authenticated.', 401);
         }
 
-        if (request.user.tipo !== requiredType) {
-            throw new HttpError(`Acesso negado! Tipo de usuário necessário: ${requiredType}`, 403);
+        if (request.user.role !== requiredType) {
+            throw new HttpError(`Access denied! Required user role: ${requiredType}`, 403);
         }
 
         next();

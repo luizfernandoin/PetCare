@@ -11,7 +11,7 @@ const authenticateToken = (request: Request, response: Response, next: NextFunct
     const authHeader = request.headers.authorization;
 
     if (!authHeader) {
-        throw next(new HttpError("Token não fornecido.", 401));
+        throw next(new HttpError("Token not provided.", 401));
     }
 
     const token = authHeader.split(" ")[1];
@@ -21,7 +21,7 @@ const authenticateToken = (request: Request, response: Response, next: NextFunct
         request.user = decoded;
         next();
     } catch (error) {
-        return next(new HttpError("Token inválido ou expirado.", 403));
+        return next(new HttpError("Invalid or expired token.", 403));
     }
 };
 
