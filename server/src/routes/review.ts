@@ -19,7 +19,7 @@ const userService = new UserService(User);
 
 
 
-router.post("/:serviceId/review", 
+router.post("/:serviceId/reviews", 
     validateParams(urlParamsSchema), validate(reviewSchema),
     authenticateToken, async(request: Request, response: Response, next: NextFunction) => {
     const { serviceId } = request.params;

@@ -6,29 +6,29 @@ import HttpError from "../utils/errors/HttpError";
 import User from "../models/user";
 import { UUID } from "crypto";
 
-interface horario {
+interface scheduleType {
     dia: string,
     horaInicio: string,
     horaFim: string
 }
 
-interface horariosDTO {
-    clinicaId: string,
-    horarios: horario
+interface schedulesDTO {
+    clinicId: string,
+    schedules: scheduleType
 }
 
 
-class ClinicaService {
-    private clinicaModel: ModelStatic<Clinic>;
+class ClinicService {
+    private clinicModel: ModelStatic<Clinic>;
 
-    constructor(clinicaModel: ModelStatic<Clinic>) {
-        this.clinicaModel = clinicaModel;
+    constructor(clinicModel: ModelStatic<Clinic>) {
+        this.clinicModel = clinicModel;
     }
 
-    async getOwnerId(clinicaId: string) {
+    async getOwnerId(clinicId: string) {
         try {
             const ownerRecord = await Employee.findOne({
-                where: { clinicaId: clinicaId },
+                where: { clinicId: clinicId },
             });
 
             if (!ownerRecord) {
@@ -45,9 +45,9 @@ class ClinicaService {
         }
     }
 
-    async getElementById(clinicaId: string) {
+    async getElementById(clinicId: string) {
         try {
-            const clinica = await this.clinicaModel.findByPk(clinicaId);
+            const clinica = await this.clinicModel.findByPk(clinicId);
 
             if (!clinica) {
                 throw new HttpError("Clínica não encontrada!", 404);
@@ -63,9 +63,9 @@ class ClinicaService {
         }
     }
 
-    async getAllClinicas() {
+    async getAllClinics() {
         try {
-            const clinicas = await this.clinicaModel.findAll();
+            const clinicas = await this.clinicModel.findAll();
 
             return clinicas;
         } catch (error) {
@@ -77,9 +77,9 @@ class ClinicaService {
         }
     }
 
-    async getClinicaById(clinicaId: string) {
+    async getClinicById(clinicId: string) {
         try {
-            const clinica = await this.clinicaModel.findByPk(clinicaId);
+            const clinica = await this.clinicModel.findByPk(clinicId);
 
             if (!clinica) {
                 throw new HttpError("Clinica não encontrada!", 404);
@@ -95,7 +95,7 @@ class ClinicaService {
         }
     }
 
-    async getNearbyClinicas(longitude: number, latitude: number, distance: number) {
+    async getNearbyClinics(longitude: number, latitude: number, distance: number) {
         console.log(longitude, latitude);
         return await Clinic.findAll({
             where: Sequelize.where(
@@ -110,10 +110,10 @@ class ClinicaService {
         });
     };
 
-    async getHorariosByClinicaId(clinicaId: string) {
+    async getSchedulesByClinicId(clinicId: string) {
         try {
             const horarios = await Schedule.findAll({
-                where: { clinicaId },
+                where: { clinicId },
                 order: [["dia", "ASC"], ["horaInicio", "ASC"]]
             })
 
@@ -123,9 +123,9 @@ class ClinicaService {
         }
     }
 
-    async createClinica(clinicaDTO: Partial<Clinic>, user: any) {
+    async createClinic(clinicDTO: Partial<Clinic>, user: any) {
         try {
-            const newClinica = await this.clinicaModel.create(clinicaDTO);
+            const newClinica = await this.clinicModel.create(clinicDTO);
             await user.addClinica(newClinica);
 
             return newClinica;
@@ -143,21 +143,21 @@ class ClinicaService {
         }
     }
 
-    async vincularProfissional(clinicaId: string, profissionalId: string) {
+    async linkProfessional(clinicId: string, professionalId: string) {
         try {
-            if (!clinicaId || !profissionalId) {
-                throw new HttpError('ClinicaId e ProfissionalId são obrigatórios.', 400);
+            if (!clinicId || !professionalId) {
+                throw new HttpError('ClinicId e ProfissionalId são obrigatórios.', 400);
             }
 
             const existeVinculo = await Employee.findOne({
-                where: { clinicaId, userId: profissionalId }
+                where: { clinicId, userId: professionalId }
             });
 
             if (existeVinculo) {
                 throw new HttpError('O profissional já está vinculado a esta clínica.', 409);
             }
 
-            const vinculo = await Employee.create({ clinicaId, userId: profissionalId });
+            const vinculo = await Employee.create({ clinicId, userId: professionalId });
 
             return vinculo;
         } catch (error) {
@@ -169,12 +169,12 @@ class ClinicaService {
         }
     }
 
-    async desvincularProfissional(clinicaId: string, profissionalId: string) {
+    async unlinkProfessional(clinicId: string, professionalId: string) {
         try {
-            if (!clinicaId || !profissionalId) throw new HttpError('ClinicaId e ProfissionalId são obrigatórios.', 400);
+            if (!clinicId || !professionalId) throw new HttpError('ClinicId e ProfissionalId são obrigatórios.', 400);
 
             const vinculo = await Employee.findOne({
-                where: { clinicaId, userId: profissionalId }
+                where: { clinicId, userId: professionalId }
             });
     
             if (!vinculo) {
@@ -182,7 +182,7 @@ class ClinicaService {
             }
 
             const profissionaisVinculados = await Employee.count({
-                where: { clinicaId },
+                where: { clinicId },
             });
 
             if (profissionaisVinculados <= 1) {
@@ -204,16 +204,16 @@ class ClinicaService {
         }
     }
 
-    async addHorarios(horariosDTO: horariosDTO, user: User) {
-        const { clinicaId, horarios } = horariosDTO;
-        console.log(horariosDTO);
-        console.log(horarios);
+    async addSchedules(schedulesDTO: schedulesDTO, user: User) {
+        const { clinicId, schedules } = schedulesDTO;
+        console.log(schedulesDTO);
+        console.log(schedules);
 
-        if (!clinicaId || !horarios || !Array.isArray(horarios)) {
+        if (!clinicId || !schedules || !Array.isArray(schedules)) {
             throw new HttpError("ID da clínica e horários são obrigatórios.", 400);
         }
 
-        const clinica = await this.clinicaModel.findByPk(clinicaId);
+        const clinica = await this.clinicModel.findByPk(clinicId);
         if (!clinica) {
             throw new HttpError("Clínica não encontrada.", 404);
         }
@@ -224,7 +224,7 @@ class ClinicaService {
 
         try {
             const horariosCriados = await Promise.all(
-                horarios.map(async (horario) => {
+                schedules.map(async (horario) => {
                     console.log("Chegou no map");
                     const { dia, horaInicio, horaFim } = horario;
 
@@ -240,7 +240,7 @@ class ClinicaService {
                     const horaFimFormatada = formatarHora(horaFim);
 
                     return await Schedule.create({
-                        clinicaId,
+                        clinicId,
                         dia,
                         horaInicio: horaInicioFormatada,
                         horaFim: horaFimFormatada,
@@ -254,9 +254,9 @@ class ClinicaService {
         }
     };
 
-    async deleteClinica(clinicaId: string, user: User) {
+    async deleteClinic(clinicId: string, user: User) {
         try {
-            const clinica = await this.clinicaModel.findOne({ where: { id: clinicaId } });
+            const clinica = await this.clinicModel.findOne({ where: { id: clinicId } });
 
             if (!clinica) {
                 throw new HttpError("Clinica não encontrada!", 404);
@@ -277,4 +277,4 @@ class ClinicaService {
 }
 
 
-export default ClinicaService;
+export default ClinicService;

@@ -6,19 +6,19 @@ import Service from './service';
 import Clinic from './clinic';
 
 
-class Scheduling extends Model {
+class Appointment extends Model {
     declare id: CreationOptional<string>;
     declare userId: ForeignKey<string>;
     declare petId: ForeignKey<string>;
     declare serviceId: ForeignKey<string>;
     declare clinicId: ForeignKey<string>;
-    declare scheduledDate: Date;
+    declare appointmentDate: Date;
     declare startTime: string;
     declare endTime: string;
     declare status: "PENDING" | "CONFIRMED" | "CANCELED";
 }
 
-Scheduling.init({
+Appointment.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -56,7 +56,7 @@ Scheduling.init({
             key: 'id',
         },
     },
-    scheduledDate: {
+    appointmentDate: {
         type: DataTypes.DATE,
         allowNull: false,
     },
@@ -74,18 +74,18 @@ Scheduling.init({
     },
 }, {
     sequelize: db,
-    tableName: 'schedules',
+    tableName: 'appointments',
     timestamps: false,
 });
 
-Scheduling.belongsTo(User, { foreignKey: 'userId' });
-Scheduling.belongsTo(Pet, { foreignKey: 'petId' });
-Scheduling.belongsTo(Service, { foreignKey: 'serviceId' });
-Scheduling.belongsTo(Clinic, { foreignKey: 'clinicId' });
+Appointment.belongsTo(User, { foreignKey: 'userId' });
+Appointment.belongsTo(Pet, { foreignKey: 'petId' });
+Appointment.belongsTo(Service, { foreignKey: 'serviceId' });
+Appointment.belongsTo(Clinic, { foreignKey: 'clinicId' });
 
-User.hasMany(Scheduling, { foreignKey: 'userId' });
-Pet.hasMany(Scheduling, { foreignKey: 'petId' });
-Service.hasMany(Scheduling, { foreignKey: 'serviceId' });
-Clinic.hasMany(Scheduling, { foreignKey: 'clinicId' });
+User.hasMany(Appointment, { foreignKey: 'userId' });
+Pet.hasMany(Appointment, { foreignKey: 'petId' });
+Service.hasMany(Appointment, { foreignKey: 'serviceId' });
+Clinic.hasMany(Appointment, { foreignKey: 'clinicId' });
 
-export default Scheduling;
+export default Appointment;

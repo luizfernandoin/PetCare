@@ -24,7 +24,7 @@ const geocodingService = new GeocodingService();
 
 router.get("/", async (request: Request, response: Response, next: NextFunction) => {
     try {
-        const clinicas = await clinicaService.getAllClinicas();
+        const clinicas = await clinicaService.getAllClinics();
         
         response.status(200).json({
             message: "Clínicas encontradas com sucesso!",
@@ -35,7 +35,7 @@ router.get("/", async (request: Request, response: Response, next: NextFunction)
     }
 })
 
-router.get("/clinicas-proximas", authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
+router.get("/nearby-clinics", authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const userAuth = request.user;
         const { radius } = request.query;
@@ -45,7 +45,7 @@ router.get("/clinicas-proximas", authenticateToken, async (request: Request, res
         const distancia = parseFloat(radius as string) || 5000;
         const [longitude, latitude] = user.location.coordinates;
 
-        const nearbyClinicas = await clinicaService.getNearbyClinicas(longitude, latitude, distancia);
+        const nearbyClinicas = await clinicaService.getNearbyClinics(longitude, latitude, distancia);
 
         response.status(200).json(nearbyClinicas);
     } catch (error) {
@@ -53,11 +53,11 @@ router.get("/clinicas-proximas", authenticateToken, async (request: Request, res
     }
 })
 
-router.get('/:id/horarios', validateParams(urlParamsSchema), async(request: Request, response: Response, next: NextFunction) => {
+router.get('/:id/schedules', validateParams(urlParamsSchema), async(request: Request, response: Response, next: NextFunction) => {
     try {
         const { id: clinicaId } = request.params;
 
-        const horarios = await clinicaService.getHorariosByClinicaId(clinicaId);
+        const horarios = await clinicaService.getSchedulesByClinicId(clinicaId);
 
         response.status(200).json({
             message: "Horários de atendimento encontrados com sucesso!",
@@ -68,14 +68,14 @@ router.get('/:id/horarios', validateParams(urlParamsSchema), async(request: Requ
     }
 })
 
-router.post("/:id/vincular-profissional/:profissionalId",
+router.post("/:id/link-professional/:professionalId",
     validateParams(urlParamsSchema),
     authenticateToken, typeUser("Profissional"), verifyOwnership(clinicaService),
     async(request: Request, response: Response, next: NextFunction) => {
         try {
             const { id: clinicaId, profissionalId } = request.params;
 
-            const vinculo = await clinicaService.vincularProfissional(clinicaId, profissionalId);
+            const vinculo = await clinicaService.linkProfessional(clinicaId, profissionalId);
 
             response.status(201).json({
                 message: "Profissional vinculado com sucesso à clínica.",
@@ -86,14 +86,14 @@ router.post("/:id/vincular-profissional/:profissionalId",
         }
 })
 
-router.delete("/:id/desvincular-profissional/:profissionalId",
+router.delete("/:id/unlink-professional/:professionalId",
     validateParams(urlParamsSchema), 
     authenticateToken, typeUser("Profissional"), verifyOwnership(clinicaService), 
     async (request: Request, response: Response, next: NextFunction) => {
         try {
             const { id: clinicaId, profissionalId } = request.params;
 
-            const resultado = await clinicaService.desvincularProfissional(clinicaId, profissionalId);
+            const resultado = await clinicaService.unlinkProfessional(clinicaId, profissionalId);
 
             response.status(200).json(resultado);
         } catch (error) {
@@ -119,7 +119,7 @@ router.post('/',
         };
 
         const user = await userService.getUserByEmail(request.user.email);
-        const clinica = await clinicaService.createClinica(clinicaToSave, user);
+        const clinica = await clinicaService.createClinic(clinicaToSave, user);
 
         response.status(201).json({ 
             message: `Clínica ${clinica.name} criada e associada ao usuário ${user.name} com sucesso!`, 
@@ -130,7 +130,7 @@ router.post('/',
     };
 });
 
-router.post('/:id/horarios',
+router.post('/:id/schedules',
     validateParams(urlParamsSchema),
     authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
     try {
@@ -139,7 +139,7 @@ router.post('/:id/horarios',
         const horarioData = { ...request.body, clinicaId };
 
         const user = await userService.getUserByEmail(email);
-        const horarios = await clinicaService.addHorarios(horarioData, user);
+        const horarios = await clinicaService.addSchedules(horarioData, user);
 
         response.status(201).json({
             message: "Horários de atendimento adicionados com sucesso!",
@@ -156,7 +156,7 @@ router.delete("/:id", authenticateToken, validateParams(urlParamsSchema), typeUs
 
     try {
         const user = await userService.getUserByEmail(email);
-        const clinica = await clinicaService.deleteClinica(clinicaId, user);
+        const clinica = await clinicaService.deleteClinic(clinicaId, user);
 
         response.status(200).json({
             message: `Clinica ${clinica.name} deletada com sucesso.`,
