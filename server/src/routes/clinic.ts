@@ -17,14 +17,14 @@ import GeocodingService from "../service/GeocodingService";
 
 
 const router = Router();
-const clinicaService = new ClinicService(Clinic);
+const clinicService = new ClinicService(Clinic);
 const userService = new UserService(User);
 const geocodingService = new GeocodingService();
 
 
 router.get("/", async (request: Request, response: Response, next: NextFunction) => {
     try {
-        const clinicas = await clinicaService.getAllClinics();
+        const clinicas = await clinicService.getAllClinics();
         
         response.status(200).json({
             message: "Clínicas encontradas com sucesso!",
@@ -45,7 +45,7 @@ router.get("/nearby-clinics", authenticateToken, async (request: Request, respon
         const distancia = parseFloat(radius as string) || 5000;
         const [longitude, latitude] = user.location.coordinates;
 
-        const nearbyClinicas = await clinicaService.getNearbyClinics(longitude, latitude, distancia);
+        const nearbyClinicas = await clinicService.getNearbyClinics(longitude, latitude, distancia);
 
         response.status(200).json(nearbyClinicas);
     } catch (error) {
@@ -57,7 +57,7 @@ router.get('/:id/schedules', validateParams(urlParamsSchema), async(request: Req
     try {
         const { id: clinicaId } = request.params;
 
-        const horarios = await clinicaService.getSchedulesByClinicId(clinicaId);
+        const horarios = await clinicService.getSchedulesByClinicId(clinicaId);
 
         response.status(200).json({
             message: "Horários de atendimento encontrados com sucesso!",
@@ -70,16 +70,16 @@ router.get('/:id/schedules', validateParams(urlParamsSchema), async(request: Req
 
 router.post("/:id/link-professional/:professionalId",
     validateParams(urlParamsSchema),
-    authenticateToken, typeUser("Profissional"), verifyOwnership(clinicaService),
+    authenticateToken, typeUser("Profissional"), verifyOwnership(clinicService),
     async(request: Request, response: Response, next: NextFunction) => {
         try {
             const { id: clinicaId, profissionalId } = request.params;
 
-            const vinculo = await clinicaService.linkProfessional(clinicaId, profissionalId);
+            const link = await clinicService.linkProfessional(clinicaId, profissionalId);
 
             response.status(201).json({
                 message: "Profissional vinculado com sucesso à clínica.",
-                vinculo
+                link
             });
         } catch (error) {
             next(error);
@@ -88,14 +88,14 @@ router.post("/:id/link-professional/:professionalId",
 
 router.delete("/:id/unlink-professional/:professionalId",
     validateParams(urlParamsSchema), 
-    authenticateToken, typeUser("Profissional"), verifyOwnership(clinicaService), 
+    authenticateToken, typeUser("Profissional"), verifyOwnership(clinicService), 
     async (request: Request, response: Response, next: NextFunction) => {
         try {
             const { id: clinicaId, profissionalId } = request.params;
 
-            const resultado = await clinicaService.unlinkProfessional(clinicaId, profissionalId);
+            const result = await clinicService.unlinkProfessional(clinicaId, profissionalId);
 
-            response.status(200).json(resultado);
+            response.status(200).json(result);
         } catch (error) {
             next(error);
         }
@@ -119,11 +119,11 @@ router.post('/',
         };
 
         const user = await userService.getUserByEmail(request.user.email);
-        const clinica = await clinicaService.createClinic(clinicaToSave, user);
+        const clinic = await clinicService.createClinic(clinicaToSave, user);
 
         response.status(201).json({ 
-            message: `Clínica ${clinica.name} criada e associada ao usuário ${user.name} com sucesso!`, 
-            data: clinica 
+            message: `Clínica ${clinic.name} criada e associada ao usuário ${user.name} com sucesso!`, 
+            data: clinic 
         });
     } catch (error) {
         next(error);
@@ -134,12 +134,12 @@ router.post('/:id/schedules',
     validateParams(urlParamsSchema),
     authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
     try {
-        const { id: clinicaId } = request.params;
+        const { id: clinicId } = request.params;
         const { email } = request.user;
-        const horarioData = { ...request.body, clinicaId };
+        const horarioData = { ...request.body, clinicId };
 
         const user = await userService.getUserByEmail(email);
-        const horarios = await clinicaService.addSchedules(horarioData, user);
+        const horarios = await clinicService.addSchedules(horarioData, user);
 
         response.status(201).json({
             message: "Horários de atendimento adicionados com sucesso!",
@@ -150,17 +150,17 @@ router.post('/:id/schedules',
     }
 })
 
-router.delete("/:id", authenticateToken, validateParams(urlParamsSchema), typeUser("Profissional"), verifyOwnership(clinicaService), async(request: Request, response: Response, next: NextFunction) => {
-    const clinicaId = request.params.id;
+router.delete("/:id", authenticateToken, validateParams(urlParamsSchema), typeUser("Profissional"), verifyOwnership(clinicService), async(request: Request, response: Response, next: NextFunction) => {
+    const clinicId = request.params.id;
     const { email } = request.user;
 
     try {
         const user = await userService.getUserByEmail(email);
-        const clinica = await clinicaService.deleteClinic(clinicaId, user);
+        const clinic = await clinicService.deleteClinic(clinicId, user);
 
         response.status(200).json({
-            message: `Clinica ${clinica.name} deletada com sucesso.`,
-            data: clinica
+            message: `Clinica ${clinic.name} deletada com sucesso.`,
+            data: clinic
         });
     } catch (error) {
         next(error);

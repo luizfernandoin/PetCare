@@ -7,9 +7,9 @@ import User from "../models/user";
 import { UUID } from "crypto";
 
 interface scheduleType {
-    dia: string,
-    horaInicio: string,
-    horaFim: string
+    day: string,
+    startTime: string,
+    endTime: string
 }
 
 interface schedulesDTO {
@@ -47,13 +47,13 @@ class ClinicService {
 
     async getElementById(clinicId: string) {
         try {
-            const clinica = await this.clinicModel.findByPk(clinicId);
+            const clinic = await this.clinicModel.findByPk(clinicId);
 
-            if (!clinica) {
+            if (!clinic) {
                 throw new HttpError("Clínica não encontrada!", 404);
             }
 
-            return clinica;
+            return clinic;
         } catch (error) {
             if (error instanceof Error) {
                 throw new HttpError(error.message, 500);
@@ -114,7 +114,7 @@ class ClinicService {
         try {
             const horarios = await Schedule.findAll({
                 where: { clinicId },
-                order: [["dia", "ASC"], ["horaInicio", "ASC"]]
+                order: [["day", "ASC"], ["startTime", "ASC"]]
             })
 
             return horarios;
@@ -226,9 +226,9 @@ class ClinicService {
             const horariosCriados = await Promise.all(
                 schedules.map(async (horario) => {
                     console.log("Chegou no map");
-                    const { dia, horaInicio, horaFim } = horario;
+                    const { day, startTime, endTime } = horario;
 
-                    if (!dia || !horaInicio || !horaFim) {
+                    if (!day || !startTime || !endTime) {
                         throw new HttpError("Todos os horários devem ter dia, hora de início e hora de fim.", 400);
                     }
                     
@@ -236,14 +236,14 @@ class ClinicService {
                         return hora.length === 5 ? `${hora}:00` : hora;
                     };
 
-                    const horaInicioFormatada = formatarHora(horaInicio);
-                    const horaFimFormatada = formatarHora(horaFim);
+                    const startTimeFormat = formatarHora(startTime);
+                    const endTimeFormat = formatarHora(endTime);
 
                     return await Schedule.create({
                         clinicId,
-                        dia,
-                        horaInicio: horaInicioFormatada,
-                        horaFim: horaFimFormatada,
+                        day,
+                        startTime: startTimeFormat,
+                        endTime: endTimeFormat,
                     });
                 })
             );

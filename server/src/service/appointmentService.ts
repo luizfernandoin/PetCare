@@ -6,8 +6,8 @@ import HttpError from "../utils/errors/HttpError";
 class AppointmentService {
     private appointmentModel: ModelStatic<Appointment>;
 
-    constructor(userModel: ModelStatic<Appointment>) {
-        this.appointmentModel = userModel;
+    constructor(appointmentModel: ModelStatic<Appointment>) {
+        this.appointmentModel = appointmentModel;
     }
 
     async getAppointmentsForClinicId(clinicId: string) {
@@ -30,7 +30,7 @@ class AppointmentService {
             return await this.appointmentModel.findAll({
                 where: {
                     clinicId,
-                    dataAgendamento: date
+                    appointmentDate: date
                 }
             })
         } catch (error) {
@@ -91,16 +91,16 @@ class AppointmentService {
     }
 
     async listAppointments(filters: any) {
-        const { clinicaId, userId, dataAgendamento } = filters;
+        const { clinicId, userId, appointmentDate } = filters;
 
         const where: any = {};
-        if (clinicaId) where.clinicaId = clinicaId;
+        if (clinicId) where.clinicId = clinicId;
         if (userId) where.userId = userId;
-        if (dataAgendamento) where.dataAgendamento = dataAgendamento;
+        if (appointmentDate) where.appointmentDate = appointmentDate;
 
         const appointment = await Appointment.findAll({
             where,
-            include: ["User", "Pet", "Service", "Clinica"],
+            include: ["User", "Pet", "Service", "Clinic"],
         });
 
         return appointment;
