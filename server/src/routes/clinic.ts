@@ -10,7 +10,7 @@ import HttpError from "../utils/errors/HttpError";
 import { STATUS_CODES } from "http";
 import { validate, validateParams } from "../utils/middlewares/validate";
 import { 
-    clinicaCreateSchema, 
+    clinicCreateSchema, 
     urlParamsSchema 
 } from "@petcare/shared";
 import GeocodingService from "../service/GeocodingService";
@@ -103,15 +103,15 @@ router.delete("/:id/unlink-professional/:professionalId",
 );
 
 router.post('/',
-    validate(clinicaCreateSchema),
+    validate(clinicCreateSchema),
     authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
     try {
-        const { nome, telefone, location } = request.body;
+        const { name, phone, location } = request.body;
         const { lat, lon } = await geocodingService.getCoordinates(location);
         
         const clinicaToSave = {
-            nome,
-            telefone,
+            name,
+            phone,
             location: {
                 type: "Point",
                 coordinates: [lon, lat] as [number, number],
