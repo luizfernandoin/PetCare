@@ -17,7 +17,7 @@ module.exports = {
       clinicId: {
         type: Sequelize.UUID,
         references: {
-          model: 'clinicas',
+          model: 'clinics',
           key: 'id',
         },
         allowNull: false,
