@@ -2,12 +2,12 @@
  * @swagger
  * /api/users/:
  *   get:
- *     summary: Busca todos os usuários
+ *     summary: Retrieve all users
  *     tags:
- *       - Usuários
+ *       - Users
  *     responses:
  *       200:
- *         description: Usuários encontrados com sucesso
+ *         description: Users retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -15,13 +15,13 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuários encontrados com sucesso."
+ *                   example: "Users retrieved successfully."
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/User'
  *       500:
- *         description: Erro ao buscar usuários
+ *         description: Error retrieving users
  *         content:
  *           application/json:
  *             schema:
@@ -29,10 +29,10 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao buscar usuários."
+ *                   example: "Error retrieving users."
  *                 error:
  *                   type: string
- *                   example: "Erro desconhecido."
+ *                   example: "Unknown error occurred."
  */
 
 
@@ -40,14 +40,14 @@
  * @swagger
  * /api/users/profile:
  *   get:
- *     summary: Busca o perfil do usuário autenticado
+ *     summary: Retrieve authenticated user's profile
  *     tags:
- *       - Usuários
+ *       - Users
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Usuário encontrado com sucesso
+ *         description: User profile retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -55,11 +55,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário encontrado com sucesso."
+ *                   example: "User profile retrieved successfully."
  *                 data:
  *                   $ref: '#/components/schemas/User'
  *       404:
- *         description: Usuário não encontrado
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -67,9 +67,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário não encontrado."
+ *                   example: "User not found."
  *       500:
- *         description: Erro interno
+ *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
@@ -77,10 +77,10 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao buscar usuário."
+ *                   example: "Error retrieving user profile."
  *                 error:
  *                   type: string
- *                   example: "Erro desconhecido."
+ *                   example: "Unknown error occurred."
  */
 
 
@@ -88,19 +88,19 @@
  * @swagger
  * /api/users/{id}:
  *   get:
- *     summary: Busca um usuário por ID
+ *     summary: Retrieve a user by ID
  *     tags:
- *       - Usuários
+ *       - Users
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do usuário a ser buscado
+ *         description: ID of the user to retrieve
  *     responses:
  *       200:
- *         description: Usuário encontrado com sucesso
+ *         description: User retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -108,11 +108,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário encontrado com sucesso."
+ *                   example: "User retrieved successfully."
  *                 data:
  *                   $ref: '#/components/schemas/User'
  *       404:
- *         description: Usuário não encontrado
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -120,9 +120,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Usuário não encontrado."
+ *                   example: "User not found."
  *       500:
- *         description: Erro interno
+ *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
@@ -130,24 +130,24 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao buscar usuário."
+ *                   example: "Error retrieving user."
  *                 error:
  *                   type: string
- *                   example: "Erro desconhecido."
+ *                   example: "Unknown error occurred."
  */
 
 /**
  * @swagger
  * /api/users/:
  *   delete:
- *     summary: Deleta o perfil do usuário autenticado
+ *     summary: Delete authenticated user's profile
  *     tags:
- *       - Usuários
+ *       - Users
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Usuário deletado com sucesso
+ *         description: User deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -155,9 +155,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário deletado com sucesso."
+ *                   example: "User deleted successfully."
  *       404:
- *         description: Usuário não encontrado
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -165,9 +165,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Usuário não encontrado."
+ *                   example: "User not found."
  *       500:
- *         description: Erro interno
+ *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
@@ -175,10 +175,10 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao deletar usuário."
+ *                   example: "Error deleting user."
  *                 error:
  *                   type: string
- *                   example: "Erro desconhecido."
+ *                   example: "Unknown error occurred."
  */
 
 
@@ -186,19 +186,19 @@
  * @swagger
  * /api/users/{id}:
  *   delete:
- *     summary: Deleta um usuário pelo ID
+ *     summary: Delete a user by ID
  *     tags:
- *       - Usuários
+ *       - Users
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do usuário a ser deletado
+ *         description: ID of the user to delete
  *     responses:
  *       200:
- *         description: Usuário deletado com sucesso
+ *         description: User deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -206,9 +206,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário deletado com sucesso."
+ *                   example: "User deleted successfully."
  *       404:
- *         description: Usuário não encontrado
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -216,9 +216,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Usuário não encontrado."
+ *                   example: "User not found."
  *       500:
- *         description: Erro interno
+ *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
@@ -226,10 +226,10 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao deletar usuário."
+ *                   example: "Error deleting user."
  *                 error:
  *                   type: string
- *                   example: "Erro desconhecido."
+ *                   example: "Unknown error occurred."
  */
 
 
@@ -237,9 +237,9 @@
  * @swagger
  * /api/users/profile:
  *   put:
- *     summary: Atualiza o perfil do usuário autenticado
+ *     summary: Update authenticated user's profile
  *     tags:
- *       - Usuários
+ *       - Users
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -250,7 +250,7 @@
  *             $ref: '#/components/schemas/UserUpdate'
  *     responses:
  *       200:
- *         description: Perfil atualizado com sucesso
+ *         description: Profile updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -258,11 +258,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Perfil atualizado com sucesso."
+ *                   example: "Profile updated successfully."
  *                 data:
  *                   $ref: '#/components/schemas/UserUpdate'
  *       404:
- *         description: Usuário não encontrado
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -270,9 +270,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Usuário não encontrado."
+ *                   example: "User not found."
  *       500:
- *         description: Erro interno ao atualizar perfil
+ *         description: Internal server error updating profile
  *         content:
  *           application/json:
  *             schema:
@@ -280,20 +280,19 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao atualizar perfil."
+ *                   example: "Error updating profile."
  *                 error:
  *                   type: string
- *                   example: "Erro desconhecido."
+ *                   example: "Unknown error occurred."
  */
-
 
 /**
  * @swagger
  * /api/users/profile:
  *   patch:
- *     summary: Atualiza parcialmente o perfil do usuário autenticado
+ *     summary: Partially update authenticated user's profile
  *     tags:
- *       - Usuários
+ *       - Users
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -304,7 +303,7 @@
  *             $ref: '#/components/schemas/UserUpdate'
  *     responses:
  *       200:
- *         description: Perfil atualizado parcialmente com sucesso
+ *         description: Profile partially updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -312,11 +311,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Perfil atualizado parcialmente com sucesso."
+ *                   example: "Profile partially updated successfully."
  *                 data:
  *                   $ref: '#/components/schemas/UserUpdate'
  *       400:
- *         description: Nenhum campo foi enviado para atualização
+ *         description: No fields provided for update
  *         content:
  *           application/json:
  *             schema:
@@ -324,9 +323,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Nenhum campo foi enviado para atualização."
+ *                   example: "No fields provided for update."
  *       401:
- *         description: Token não fornecido.
+ *         description: Token not provided.
  *         content:
  *           application/json:
  *             schema:
@@ -334,9 +333,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token não fornecido."
+ *                   example: "Token not provided."
  *       404:
- *         description: Usuário não encontrado
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -344,9 +343,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Usuário não encontrado."
+ *                   example: "User not found."
  *       500:
- *         description: Erro interno ao atualizar perfil
+ *         description: Internal server error updating profile
  *         content:
  *           application/json:
  *             schema:
@@ -354,8 +353,8 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao atualizar perfil."
+ *                   example: "Error updating profile."
  *                 error:
  *                   type: string
- *                   example: "Erro desconhecido."
+ *                   example: "Unknown error occurred."
  */

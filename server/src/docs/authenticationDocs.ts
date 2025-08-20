@@ -2,7 +2,7 @@
  * @swagger
  * /api/auth/register:
  *   post:
- *     summary: Registrar um novo usuário
+ *     summary: Register a new user
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -13,7 +13,7 @@
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
- *         description: Usuário criado com sucesso.
+ *         description: User created successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -21,11 +21,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário criado com sucesso."
+ *                   example: "User created successfully."
  *                 data:
  *                   $ref: '#/components/schemas/User'
  *       404:
- *         description: Endereço não encontrado.
+ *         description: Address not found.
  *         content:
  *           application/json:
  *             schema:
@@ -33,11 +33,11 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Endereço não encontrado. Por favor, revise o endereço informado."
+ *                   example: "Address not found. Please review the provided address."
  *                 data:
  *                   $ref: '#/components/schemas/User'
  *       400:
- *         description: Dados inválidos enviados
+ *         description: Invalid data provided
  *         content:
  *           application/json:
  *             schema:
@@ -45,9 +45,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "E-mail já cadastrado."
+ *                   example: "Email already registered."
  *       500:
- *         description: Erro interno ao registrar usuário
+ *         description: Internal server error while registering user
  *         content:
  *           application/json:
  *             schema:
@@ -55,15 +55,14 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Erro interno ao criar usuário."
+ *                   example: "Internal error creating user."
  */
-
 
 /**
  * @swagger
  * /api/auth/login:
  *   post:
- *     summary: Realizar Login
+ *     summary: User login
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -73,6 +72,49 @@
  *           schema:
  *             $ref: '#/components/schemas/Login'
  *     responses:
- *       201:
- *         description: Usuário registrado com sucesso
+ *       200:
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Login successful"
+ *                 token:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid credentials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid email or password"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Authentication failed"
+ *       500:
+ *         description: Internal server error during login
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error during login"
  */
