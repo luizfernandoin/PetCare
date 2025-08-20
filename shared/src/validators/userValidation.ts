@@ -4,58 +4,92 @@ import * as z from "zod";
 
 const userRole = z.enum(["CLIENTE", "PROFISSIONAL"]);
 
-const senhaInput = z
+const passwordInput = z
     .string()
-    .min(6, "A senha deve ter pelo menos 6 caracteres")
-    .regex(/[a-zA-Z]/, "A senha deve conter ao menos uma letra")
-    .regex(/[0-9]/, "A senha deve conter ao menos um número")
-    .regex(/[\W_]/, "A senha deve conter ao menos um caractere especial (por exemplo, !, @, #, $, etc.)")
-    .openapi({ description: "Senha do usuário (mínimo 6 caracteres, incluindo letras, números e caracteres especiais)", example: "andre#123" });
+    .min(6, "Password must be at least 6 characters long")
+    .regex(/[a-zA-Z]/, "Password must contain at least one letter")
+    .regex(/[0-9]/, "Password must contain at least one number")
+    .regex(/[\W_]/, "Password must contain at least one special character (e.g., !, @, #, $, etc.)")
+    .openapi({
+        description: "User password (minimum 6 characters, including letters, numbers, and special characters)",
+        example: "andre#123"
+    });
 
-const location = z.object({
-    street: z.string().min(1, "A rua deve ser informada!").openapi({ description: "Rua", example: "Rua Feliz" }),
-    number: z.string().min(1, "O número deve ser informado!").openapi({ description: "Número da residência", example: "10" }),
-    city: z.string().min(1, "A cidade deve ser informada!").openapi({ description: "Cidade", example: "São Paulo" }),
-    state: z.string().min(1, "O estado deve ser informado!").openapi({ description: "Estado", example: "São Paulo" }),
-    country: z.string().min(1, "O país deve ser informado!").openapi({ description: "País", example: "Brasil" }),
-    postalcode: z.string().min(1, "O código postal deve ser informado!").openapi({ description: "CEP", example: "58900000" }),
-}).openapi({ description: "Localização do usuário" });
+const locationSchema = z.object({
+    street: z
+        .string()
+        .min(1, "Street is required")
+        .openapi({
+            description: "Street",
+            example: "Happy Street"
+        }),
+    number: z
+        .string()
+        .min(1, "House number is required")
+        .openapi({
+            description: "House number",
+            example: "10"
+        }),
+
+    city: z
+        .string()
+        .min(1, "City is required")
+        .openapi({
+            description: "City",
+            example: "São Paulo"
+        }),
+    state: z
+        .string()
+        .min(1, "State is required")
+        .openapi({
+            description: "State",
+            example: "São Paulo"
+        }),
+    country: z
+        .string()
+        .min(1, "Country is required")
+        .openapi({
+            description: "Country",
+            example: "Brazil"
+        }),
+    postalcode: z
+        .string()
+        .min(1, "Postal code is required")
+        .openapi({
+            description: "ZIP code",
+            example: "58900000"
+        }),
+}).openapi({ description: "User location information" });
 
 const baseUserSchema = z.object({
     email: z
         .string()
-        .email("E-mail inválido")
-        .openapi({ description: "Email do usuário", example: "usuario@example.com" }),
-    nome: z
+        .email("Invalid email address")
+        .openapi({ description: "User email", example: "user@example.com" }),
+    name: z
         .string()
-        .min(3, "O nome deve ter pelo menos 3 caracteres")
-        .max(100, "O nome pode ter no máximo 100 caracteres")
-        .openapi({ description: "Nome do usuário", example: "Andre" }),
-    senha: senhaInput,
-    telefone: z
+        .min(3, "Name must be at least 3 characters long")
+        .max(100, "Name can have up to 100 characters maximum")
+        .openapi({ description: "User name", example: "Andre" }),
+    password: passwordInput,
+    phone: z
         .string()
-        .regex(/^\d{10,15}$/, "O telefone deve conter entre 10 e 15 dígitos numéricos")
-        .openapi({ description: "Número de telefone", example: "11999999999" }),
-    location: location,
-    tipo: userRole.openapi({ description: "Tipo de usuário", example: "CLIENTE" }),
+        .regex(/^\d{10,15}$/, "Phone number must contain between 10 and 15 numeric digits")
+        .openapi({ description: "Phone number", example: "11999999999" }),
+    location: locationSchema,
+    role: userRole.openapi({ description: "User type", example: "CLIENTE" }),
 })
 
 const userSchema = baseUserSchema;
 
-// const userSchema = z.object({
-// }).refine((data) => !!data.location, {
-//     message: "O atributo 'location' é obrigatorio!",
-//     path: ["location"],
-// });
-
 const loginSchema = baseUserSchema.pick({
     email: true,
-    senha: true
+    password: true
 });
 
 const userUpdateSchema = userSchema.partial().refine(data => Object.keys(data).length > 0, {
-    message: "Nenhum campo foi enviado para atualização.",
-});;
+    message: "No fields were provided for update.",
+});
 
 
 export { userSchema, userUpdateSchema, loginSchema };

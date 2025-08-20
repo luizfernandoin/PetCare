@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 const urlParamsSchema = z.object({
-    id: z.string().uuid("O ID deve ser um UUID válido.").optional(),
-    clinicId: z.string().uuid({ message: "O ID da clínica é inválido." }).optional(),
-    petId: z.string().uuid({ message: "O id do pet é inválido!" }).optional(),
-    professionalId: z.string().uuid({ message: "O id do profissional é inválido!" }).optional(),
-    serviceId: z.string().uuid({ message: "O id do serviço é inválido!" }).optional(),
+    id: z.string().uuid("ID must be a valid UUID").optional(),
+    clinicId: z.string().uuid("Clinic ID must be a valid UUID").optional(),
+    petId: z.string().uuid("Pet ID must be a valid UUID").optional(),
+    professionalId: z.string().uuid("Professional ID must be a valid UUID").optional(),
+    serviceId: z.string().uuid("Service ID must be a valid UUID").optional(),
 });
 
 export { urlParamsSchema };
