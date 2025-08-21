@@ -15,6 +15,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      '@petcare/shared/enums': path.resolve(__dirname, '../shared/src/enums'),
       '@petcare/shared': path.resolve(__dirname, '../shared/src/validators'),
     },
   },
