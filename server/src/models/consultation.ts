@@ -1,8 +1,8 @@
 import { DataTypes, Model, CreationOptional, ForeignKey } from "sequelize";
 import db from "../config/sequelize";
-import User from "./user";
+/* import User from "./user";
 import Pet from "./pet";
-import Service from "./service";
+import Service from "./service"; */
 
 
 class Consultation extends Model {
@@ -56,7 +56,7 @@ Consultation.init({
     timestamps: false
 });
 
-Consultation.belongsTo(User, {
+/* Consultation.belongsTo(User, {
     foreignKey: 'professionalId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
@@ -72,6 +72,6 @@ Consultation.belongsTo(Service, {
     foreignKey: 'serviceId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
-});
+}); */
 
 export default Consultation;
