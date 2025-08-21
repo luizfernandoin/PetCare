@@ -1,3 +1,5 @@
+import { USER_ROLE } from "@petcare/shared/src/enums";
+
 interface IUserCreate {
     email: string;
     name: string;
@@ -11,7 +13,7 @@ interface IUserCreate {
         country: string,
         postalcode: string
     };
-    role: 'CLIENTE' | 'PROFISSIONAL';
+    role: USER_ROLE;
 }
 
 export {IUserCreate};

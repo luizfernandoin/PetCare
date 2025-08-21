@@ -4,6 +4,7 @@ import User from './user';
 import OwnerPet from './owner-pet';
 import Consultation from './consultation';
 import Appointment from './appointment';
+import { PET_SIZE } from '@petcare/shared/src/enums';
 
 
 class Pet extends Model<InferAttributes<Pet>, InferCreationAttributes<Pet>> {
@@ -11,7 +12,7 @@ class Pet extends Model<InferAttributes<Pet>, InferCreationAttributes<Pet>> {
     declare name: string;
     declare breed: CreationOptional<string>;
     declare age: CreationOptional<number>;
-    declare size: 'small' | 'medium' | 'large';
+    declare size: PET_SIZE;
     declare photo: CreationOptional<string>;
     declare characteristics: CreationOptional<string>;
     declare image: CreationOptional<string>;
@@ -44,10 +45,10 @@ Pet.init({
         },
     },
     size: {
-        type: DataTypes.ENUM('small', 'medium', 'large'),
+        type: DataTypes.ENUM(...Object.values(PET_SIZE)),
         allowNull: false,
         validate: {
-            isIn: [['small', 'medium', 'large']],
+            isIn: [[...Object.values(PET_SIZE)]],
         },
     },
     photo: {

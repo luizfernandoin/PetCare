@@ -4,7 +4,7 @@ import User from './user';
 import Pet from './pet';
 import Service from './service';
 import Clinic from './clinic';
-
+import { APPOINTMENT_STATUS } from '@petcare/shared/src/enums';
 
 class Appointment extends Model {
     declare id: CreationOptional<string>;
@@ -15,7 +15,7 @@ class Appointment extends Model {
     declare appointmentDate: Date;
     declare startTime: string;
     declare endTime: string;
-    declare status: "PENDING" | "CONFIRMED" | "CANCELED";
+    declare status: APPOINTMENT_STATUS;
 }
 
 Appointment.init({
@@ -69,7 +69,7 @@ Appointment.init({
         allowNull: false,
     },
     status: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(...Object.values(APPOINTMENT_STATUS)),
         allowNull: false,
     },
 }, {

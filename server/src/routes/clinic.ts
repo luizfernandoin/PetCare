@@ -14,6 +14,7 @@ import {
     urlParamsSchema 
 } from "@petcare/shared";
 import GeocodingService from "../service/GeocodingService";
+import { USER_ROLE } from "@petcare/shared/src/enums";
 
 
 const router = Router();
@@ -70,7 +71,7 @@ router.get('/:id/schedules', validateParams(urlParamsSchema), async(request: Req
 
 router.post("/:id/link-professional/:professionalId",
     validateParams(urlParamsSchema),
-    authenticateToken, typeUser("Profissional"), verifyOwnership(clinicService),
+    authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), verifyOwnership(clinicService),
     async(request: Request, response: Response, next: NextFunction) => {
         try {
             const { id: clinicId, professionalId } = request.params;
@@ -88,7 +89,7 @@ router.post("/:id/link-professional/:professionalId",
 
 router.delete("/:id/unlink-professional/:professionalId",
     validateParams(urlParamsSchema), 
-    authenticateToken, typeUser("Profissional"), verifyOwnership(clinicService), 
+    authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), verifyOwnership(clinicService), 
     async (request: Request, response: Response, next: NextFunction) => {
         try {
             const { id: clinicId, professionalId } = request.params;
@@ -104,7 +105,7 @@ router.delete("/:id/unlink-professional/:professionalId",
 
 router.post('/',
     validate(clinicCreateSchema),
-    authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
+    authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), async(request: Request, response: Response, next: NextFunction) => {
     try {
         const { name, phone, location } = request.body;
         const { lat, lon } = await geocodingService.getCoordinates(location);
@@ -132,7 +133,7 @@ router.post('/',
 
 router.post('/:id/schedules',
     validateParams(urlParamsSchema),
-    authenticateToken, typeUser("Profissional"), async(request: Request, response: Response, next: NextFunction) => {
+    authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), async(request: Request, response: Response, next: NextFunction) => {
     try {
         const { id: clinicId } = request.params;
         const { email } = request.user;
@@ -150,7 +151,7 @@ router.post('/:id/schedules',
     }
 })
 
-router.delete("/:id", authenticateToken, validateParams(urlParamsSchema), typeUser("Profissional"), verifyOwnership(clinicService), async(request: Request, response: Response, next: NextFunction) => {
+router.delete("/:id", authenticateToken, validateParams(urlParamsSchema), typeUser(USER_ROLE.PROFESSIONAL), verifyOwnership(clinicService), async(request: Request, response: Response, next: NextFunction) => {
     const clinicId = request.params.id;
     const { email } = request.user;
 

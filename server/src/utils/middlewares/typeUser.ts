@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import HttpError from "../errors/HttpError";
+import { USER_ROLE } from "@petcare/shared/src/enums";
 
-const typeUser = (requiredType: string) => {
+const typeUser = (requiredType: USER_ROLE) => {
     return (request: Request, response: Response, next: NextFunction) => {
         if (!request.user) {
             throw new HttpError('User not authenticated.', 401);

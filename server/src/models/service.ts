@@ -3,11 +3,12 @@ import db from "../config/sequelize";
 import Clinic from "./clinic";
 import Vaccine from "./vaccine";
 import Consultation from "./consultation";
+import { SERVICE_TYPE } from "@petcare/shared/src/enums";
 
 
 class Service extends Model<InferAttributes<Service>, InferCreationAttributes<Service>> {
     declare id: CreationOptional<string>;
-    declare type: 'Consultation' | 'Vaccination' | 'Exam' | 'Other';
+    declare type: SERVICE_TYPE;
     declare notes: CreationOptional<string>;
     declare clinicId: ForeignKey<string>;
 
@@ -27,7 +28,7 @@ Service.init({
         primaryKey: true,
     },
     type: {
-        type: DataTypes.ENUM('Consultation', 'Vaccination', 'Exam', 'Other'),
+        type: DataTypes.ENUM(...Object.values(SERVICE_TYPE)),
         allowNull: false,
     },
     notes: {

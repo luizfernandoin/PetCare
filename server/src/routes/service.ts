@@ -13,6 +13,7 @@ import {
     urlParamsSchema, 
     serviceSchema 
 } from "@petcare/shared";
+import { USER_ROLE } from "@petcare/shared/src/enums";
 
 
 const router = Router();
@@ -37,7 +38,7 @@ router.get("/:clinicId/services",
 
 router.post("/:clinicId/services", 
     validateParams(urlParamsSchema), validate(serviceSchema),
-    authenticateToken, typeUser("Profissional"), async(request, response, next: NextFunction) => {
+    authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), async(request, response, next: NextFunction) => {
     try {
         const serviceDTO = request.body;
         const { clinicId } = request.params;

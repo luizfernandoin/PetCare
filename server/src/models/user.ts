@@ -7,6 +7,7 @@ import Employee from './employee';
 import Consultation from './consultation';
 import Service from './service';
 import Review from './review';
+import { USER_ROLE } from '@petcare/shared/src/enums';
 
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
@@ -19,7 +20,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
         type: string;
         coordinates: [number, number];
     };
-    declare role: 'CLIENTE' | 'PROFISSIONAL';
+    declare role: USER_ROLE;
     declare image: CreationOptional<string>;
 
     public getPets!: () => Promise<Pet[]>;
@@ -69,7 +70,7 @@ User.init({
         allowNull: false,
     },
     role: {
-        type: DataTypes.ENUM('CLIENTE', 'PROFISSIONAL'),
+        type: DataTypes.ENUM(...Object.values(USER_ROLE)),
         allowNull: false,
     },
     image: {
