@@ -55,9 +55,9 @@ Service.hasMany(Vaccine, {
 });
   
 Vaccine.belongsTo(Service, {
-foreignKey: 'serviceId',
-onDelete: 'CASCADE',
-onUpdate: 'CASCADE',
+    foreignKey: 'serviceId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
 });
 
 Service.hasMany(Consultation, {

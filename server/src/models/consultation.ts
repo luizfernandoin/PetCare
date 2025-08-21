@@ -56,5 +56,22 @@ Consultation.init({
     timestamps: false
 });
 
+Consultation.belongsTo(User, {
+    foreignKey: 'professionalId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+});
+
+Consultation.belongsTo(Pet, {
+    foreignKey: 'petId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+});
+
+Consultation.belongsTo(Service, {
+    foreignKey: 'serviceId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+});
 
 export default Consultation;

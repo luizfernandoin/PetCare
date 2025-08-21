@@ -4,7 +4,7 @@ import OwnerPet from './owner-pet';
 import Pet from './pet';
 import Clinic from './clinic';
 import Employee from './employee';
-import Atendimento from './atendimento';
+import Consultation from './consultation';
 import Service from './service';
 import Review from './review';
 
@@ -113,14 +113,14 @@ Clinic.belongsToMany(User, {
     onUpdate: 'CASCADE'
 })
 
-User.hasMany(Atendimento, {
-    foreignKey: 'profissionalId',
+User.hasMany(Consultation, {
+    foreignKey: 'professionalId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
 
-Atendimento.belongsTo(User, {
-    foreignKey: 'profissionalId',
+Consultation.belongsTo(User, {
+    foreignKey: 'professionalId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
