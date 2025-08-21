@@ -29,6 +29,7 @@
         "./src/*"
       ],
       "@petcare/shared": ["../shared/src/validators"],
+      "@petcare/shared/enums": ["../shared/src/enums"],
     }
   },
   "include": ["src", "../shared/src/validators/**/*.ts"],
