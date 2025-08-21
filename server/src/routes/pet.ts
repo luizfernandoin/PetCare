@@ -29,7 +29,7 @@ router.post('/',
         const user = await userService.getUserByEmail(email);
         const resultPet = await petService.createPet(petDTO, user);
 
-        response.status(201).json({"message": "Pet criado com sucesso.", "data": resultPet});
+        response.status(201).json({"message": "Pet created successfully", "data": resultPet});
     } catch (error) {
         next(error)
     }
@@ -41,7 +41,7 @@ router.get('/', async (request: Request, response: Response, next: NextFunction)
     try {
         const pets = await petService.getAllPets();
 
-        response.status(200).json({"message": "Pets encontrados com sucesso.", "data": pets});
+        response.status(200).json({"message": "Pets retrieved successfully.", "data": pets});
     } catch (error) {
         next(error)
     }
@@ -52,7 +52,7 @@ router.get('/:id', validateParams(urlParamsSchema), async (request: Request, res
         const { id } = request.params;
         const pet = await petService.getPetById(id);
 
-        response.status(200).json({"message": "Pet encontrado com sucesso.", "data": pet});
+        response.status(200).json({"message": "Pet retrieved successfully.", "data": pet});
     } catch (error) {
         next(error);
     };
@@ -70,7 +70,7 @@ router.put('/:id',
         const pet = await petService.updatePet(id, user, petDTO);
 
         response.status(200).json({
-            message: "Pet atualizado com sucesso.",
+            message: "Pet updated successfully.",
             data: pet,
         });
     } catch (error) {
@@ -84,9 +84,9 @@ router.delete('/:id', validateParams(urlParamsSchema), authenticateToken, async 
         const userAuth = request.user;
 
         const user = await userService.getUserByEmail(userAuth.email)
-        const result = await petService.deletePet(id, user);
+        await petService.deletePet(id, user);
 
-        response.status(200).json({ message: 'Pet deletado com sucesso.' });
+        response.status(200).json({ message: 'Pet deleted successfully.' });
     } catch (error) {
         next(error);
     }

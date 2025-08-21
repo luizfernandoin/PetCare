@@ -20,12 +20,12 @@ class PetService {
             if (error instanceof ValidationError) {
                 const errors = error.errors.map((err: ValidationErrorItem) => err.message);
                 throw new HttpError(
-                    `Erro de validação: ${errors.join(", ")}`, 
+                    `Validation error: ${errors.join(", ")}`, 
                     400
                 );
             }
     
-            throw new HttpError("Erro interno ao criar usuário.", 500);
+            throw new HttpError("Internal error while creating pet.", 500);
         }
     }
     
@@ -36,10 +36,10 @@ class PetService {
             return pets;
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro interno ao buscar pets.", 500, error);
+                throw new HttpError("Internal error while fetching pets.", 500, error);
             }
 
-            throw new HttpError("Erro desconhecido.", 500);
+            throw new HttpError("Unknown error.", 500);
         }
     }
     
@@ -50,16 +50,16 @@ class PetService {
             })
 
             if (!pet) {
-                throw new HttpError("Pet não encontrado.", 404);
+                throw new HttpError("Pet not found.", 404);
             }
     
             return pet;
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro interno ao buscar pet.", 500, error);
+                throw new HttpError("Internal error while fetching pet.", 500, error);
             }
 
-            throw new HttpError("Erro desconhecido.", 500);
+            throw new HttpError("Unknown error.", 500);
         }
     }
 
@@ -77,12 +77,12 @@ class PetService {
         try {
             const pet = await this.petModel.findOne({ where: { id: petId } });
             if (!pet) {
-                throw new HttpError("Pet não encontrado.", 404);
+                throw new HttpError("Pet not found.", 404);
             }
 
             const isOwner = await this.isOwner(petId, user.id);
             if (!isOwner) {
-                throw new HttpError("Você não tem permissão para atualizar este pet.", 403);
+                throw new HttpError("You do not have permission to update this pet.", 403);
             }
 
             await pet.update(updates);
@@ -90,10 +90,10 @@ class PetService {
             return pet;
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro ao tentar atualizar pet.", 500, error);
+                throw new HttpError("Error while updating pet.", 500, error);
             }
 
-            throw new HttpError("Erro interno ao tentar atualizar pet.", 500);
+            throw new HttpError("Internal error while updating pet.", 500);
         }
     }
     
@@ -102,22 +102,22 @@ class PetService {
             const isOwner = await this.isOwner(petId, user.id);
             
             if (!isOwner) {
-                throw new HttpError("Você não tem permissão para deletar este pet.", 403);
+                throw new HttpError("You do not have permission to delete this pet.", 403);
             }
     
             const pet = await this.petModel.findOne({ where: { id: petId } });
             
             if (!pet) {
-                throw new HttpError("Pet não encontrado.", 404);
+                throw new HttpError("Pet not found.", 404);
             }
     
             await pet.destroy();
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro interno ao deletar pet.", 500, error);
+                throw new HttpError("Internal error while deleting pet.", 500, error);
             }
 
-            throw new HttpError("Erro desconhecido.", 500);
+            throw new HttpError("Unknown error.", 500);
         }
     }
 
@@ -126,7 +126,7 @@ class PetService {
             const pets = await user.getPets();
     
             if (pets.length === 0) {
-                return { status: 404, message: "Pets não encontrados." };
+                return { status: 404, message: "Pets not found." };
             }
     
             await user.removePets(pets);
@@ -137,13 +137,13 @@ class PetService {
                 }
             });
 
-            return { status: 200, message: "Pets deletados com sucesso." };
+            return { status: 200, message: "Pets deleted successfully." };
         } catch (error) {
             if (error instanceof HttpError) {
                 throw new HttpError(error.message, error.statusCode);
             }
             
-            throw new HttpError("Erro interno ao deletar pets.", 500);
+            throw new HttpError("Internal error while deleting pets.", 500);
         }    
     }
 }

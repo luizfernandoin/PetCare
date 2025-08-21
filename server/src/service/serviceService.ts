@@ -1,6 +1,6 @@
 import { ModelStatic, ValidationError, ValidationErrorItem } from "sequelize";
 import Service from "../models/service";
-import Clinica from "../models/clinica";
+import Clinic from "../models/clinic";
 import HttpError from "../utils/errors/HttpError";
 
 class ServiceService {
@@ -10,18 +10,18 @@ class ServiceService {
         this.serviceModel = serviceModel;
     }
 
-    async createService(serviceDTO: Service, clinica: Clinica) {
-        const { tipo, observacoes } = serviceDTO;
-        const clinicaId = clinica.id;
+    async createService(serviceDTO: Service, clinic: Clinic) {
+        const { type, notes } = serviceDTO;
+        const clinicId = clinic.id;
 
-        if (!tipo) {
-            throw new HttpError("Tipo do serviço é obrigatorio.", 400);
+        if (!type) {
+            throw new HttpError("Service type is required.", 400);
         }
     
         try {
             const newService = await this.serviceModel.create({
                 ...serviceDTO,
-                clinicaId,
+                clinicId,
             });
 
             return newService;
@@ -29,30 +29,30 @@ class ServiceService {
             if (error instanceof ValidationError) {
                 const errors = error.errors.map((err: ValidationErrorItem) => err.message);
                 throw new HttpError(
-                    `Erro de validação: ${errors.join(", ")}`, 
+                    `Validation error: ${errors.join(", ")}`, 
                     400
                 );
             }
     
-            throw new HttpError("Erro interno ao adicionar serviço.", 500);
+            throw new HttpError("Internal error while adding service", 500);
         }
     }
 
-    async getServicesByClinicaId(clinicaId: string) {
+    async getServicesByClinicId(clinicId: string) {
         try {
             const services = this.serviceModel.findAll({
                 where: {
-                    clinicaId
+                    clinicId
                 }
             });
 
             return services;
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro ao buscar serviços.", 500, new Error(error.message));
+                throw new HttpError("Error fetching services.", 500, new Error(error.message));
             };
 
-            throw new HttpError("Erro interno ao buscar serviços.", 500);
+            throw new HttpError("Internal error fetching services.", 500);
         }
     }
 }

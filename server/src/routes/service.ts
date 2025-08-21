@@ -3,11 +3,11 @@ import authenticateToken from "../utils/middlewares/authenticateToken";
 import typeUser from "../utils/middlewares/typeUser";
 import UserService from "../service/userService";
 import ServiceService from "../service/serviceService";
-import ClinicaService from "../service/clinicService";
+import ClinicService from "../service/clinicService";
 
 import User from "../models/user";
 import Service from "../models/service"
-import Clinica from "../models/clinic";
+import Clinic from "../models/clinic";
 import { validate, validateParams } from "../utils/middlewares/validate";
 import { 
     urlParamsSchema, 
@@ -18,35 +18,35 @@ import {
 const router = Router();
 const userService = new UserService(User);
 const serviceService = new ServiceService(Service);
-const clinicaService = new ClinicaService(Clinica);
+const clinicService = new ClinicService(Clinic);
 
 
-router.get("/:clinicaId/services", 
+router.get("/:clinicId/services", 
     validateParams(urlParamsSchema),
     async(request, response, next: NextFunction) => {
-    const { clinicaId } = request.params;
+    const { clinicId } = request.params;
     
     try {
-        const services = await serviceService.getServicesByClinicaId(clinicaId);
+        const services = await serviceService.getServicesByClinicId(clinicId);
 
-        response.status(200).json({ message: "Serviços encontrados com sucesso.", data: services });
+        response.status(200).json({ message: "Services retrieved successfully.", data: services });
     } catch (error) {
         next(error);
     }
 })
 
-router.post("/:clinicaId/services", 
+router.post("/:clinicId/services", 
     validateParams(urlParamsSchema), validate(serviceSchema),
     authenticateToken, typeUser("Profissional"), async(request, response, next: NextFunction) => {
     try {
         const serviceDTO = request.body;
-        const { clinicaId } = request.params;
+        const { clinicId } = request.params;
 
-        const clinica = await clinicaService.getClinicById(clinicaId);
-        const newService = await serviceService.createService(serviceDTO, clinica);
+        const clinic = await clinicService.getClinicById(clinicId);
+        const newService = await serviceService.createService(serviceDTO, clinic);
 
         response.status(201).json({ 
-            message: `Serviço adicionado a clinica ${clinica.name} com sucesso!`, 
+            message: `Service added to clinic ${clinic.name} successfully!`, 
             data: newService 
         });
     } catch (error) {

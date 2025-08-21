@@ -32,7 +32,7 @@ class ClinicService {
             });
 
             if (!ownerRecord) {
-                throw new HttpError("Proprietário não encontrado para esta clínica!", 404);
+                throw new HttpError("Owner not found for this clinic!", 404);
             }
 
             return ownerRecord.userId as string;
@@ -41,7 +41,7 @@ class ClinicService {
                 throw new HttpError(error.message, 500);
             };
 
-            throw new HttpError("Erro interno ao buscar proprietário da clínica.", 500);
+            throw new HttpError("Internal error while fetching clinic owner.", 500);
         }
     }
 
@@ -50,7 +50,7 @@ class ClinicService {
             const clinic = await this.clinicModel.findByPk(clinicId);
 
             if (!clinic) {
-                throw new HttpError("Clínica não encontrada!", 404);
+                throw new HttpError("Clinic not found!", 404);
             }
 
             return clinic;
@@ -59,39 +59,39 @@ class ClinicService {
                 throw new HttpError(error.message, 500);
             };
 
-            throw new HttpError("Erro interno ao buscar clínica.", 500);
+            throw new HttpError("Internal error while fetching clinic.", 500);
         }
     }
 
     async getAllClinics() {
         try {
-            const clinicas = await this.clinicModel.findAll();
+            const clinics = await this.clinicModel.findAll();
 
-            return clinicas;
+            return clinics;
         } catch (error) {
             if (error instanceof Error) {
                 throw new HttpError(error.message, 500);
             };
 
-            throw new HttpError("Erro interno ao buscar clínicas.", 500);
+            throw new HttpError("Internal error while fetching clinics.", 500);
         }
     }
 
     async getClinicById(clinicId: string) {
         try {
-            const clinica = await this.clinicModel.findByPk(clinicId);
+            const clinic = await this.clinicModel.findByPk(clinicId);
 
-            if (!clinica) {
-                throw new HttpError("Clinica não encontrada!", 404);
+            if (!clinic) {
+                throw new HttpError("Clinic not found!", 404);
             }
 
-            return clinica;
+            return clinic;
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro ao buscar clinica", 500, new Error(error.message))
+                throw new HttpError("Error while fetching clinic.", 500, new Error(error.message))
             }
 
-            throw new HttpError("Erro interno ao buscar clinica", 500)
+            throw new HttpError("Internal error while fetching clinics.", 500)
         }
     }
 
@@ -112,95 +112,91 @@ class ClinicService {
 
     async getSchedulesByClinicId(clinicId: string) {
         try {
-            const horarios = await Schedule.findAll({
+            const schedule = await Schedule.findAll({
                 where: { clinicId },
                 order: [["day", "ASC"], ["startTime", "ASC"]]
             })
 
-            return horarios;
+            return schedule;
         } catch(error) {
-            throw new HttpError("Erro ao buscar horários.", 500);
+            throw new HttpError("Error fetching schedules.", 500);
         }
     }
 
     async createClinic(clinicDTO: Partial<Clinic>, user: any) {
         try {
-            const newClinica = await this.clinicModel.create(clinicDTO);
-            await user.addClinica(newClinica);
+            const newClinic = await this.clinicModel.create(clinicDTO);
+            await user.addClinic(newClinic);
 
-            return newClinica;
+            return newClinic;
         } catch (error) {
             if (error instanceof ValidationError) {
                 const errors = error.errors.map((err: ValidationErrorItem) => err.message);
-                throw new HttpError(
-                    `Erro de validação`,
-                    400,
-                    new Error(errors.join(", "))
-                );
+                throw new HttpError(`Validation error`, 400, new Error(errors.join(", ")));
             }
 
-            throw new HttpError("Erro interno ao criar usuário.", 500);
+            throw new HttpError("Internal error while creating clinic.", 500);
         }
     }
 
     async linkProfessional(clinicId: string, professionalId: string) {
         try {
             if (!clinicId || !professionalId) {
-                throw new HttpError('ClinicId e ProfissionalId são obrigatórios.', 400);
+                throw new HttpError('ClinicId and ProfessionalId are required.', 400);
             }
 
-            const existeVinculo = await Employee.findOne({
+            const existingLink = await Employee.findOne({
                 where: { clinicId, userId: professionalId }
             });
 
-            if (existeVinculo) {
-                throw new HttpError('O profissional já está vinculado a esta clínica.', 409);
+            if (existingLink) {
+                throw new HttpError('The professional is already linked to this clinic.', 409);
             }
 
-            const vinculo = await Employee.create({ clinicId, userId: professionalId });
+            const link= await Employee.create({ clinicId, userId: professionalId });
 
-            return vinculo;
+            return link;
         } catch (error) {
-            console.error('Erro ao vincular profissional:', error);
+            console.error('Error while linking professional:', error);
 
             throw error instanceof HttpError
                 ? error
-                : new HttpError('Erro interno ao vincular profissional.', 500);
+                : new HttpError('Internal error while linking professional.', 500);
         }
     }
 
     async unlinkProfessional(clinicId: string, professionalId: string) {
         try {
-            if (!clinicId || !professionalId) throw new HttpError('ClinicId e ProfissionalId são obrigatórios.', 400);
+            if (!clinicId || !professionalId) throw new HttpError('ClinicId and ProfessionalId are required.', 400);
 
-            const vinculo = await Employee.findOne({
+            const link = await Employee.findOne({
                 where: { clinicId, userId: professionalId }
             });
     
-            if (!vinculo) {
-                throw new HttpError('O profissional não está vinculado a esta clínica.', 404);
+            if (!link) {
+                throw new HttpError('The professional is not linked to this clinic.', 404);
             }
 
-            const profissionaisVinculados = await Employee.count({
+            const linkedProfessionals = await Employee.count({
                 where: { clinicId },
             });
 
-            if (profissionaisVinculados <= 1) {
+            if (linkedProfessionals <= 1) {
                 throw new HttpError(
-                    'A clínica precisa ter pelo menos um profissional vinculado. Não é possível desvincular este profissional.',
+                    'The clinic must have at least one professional. Cannot unlink this professional.',
                     400
                 );
             }
     
-            await vinculo.destroy();
+            await link.destroy();
     
-            return { message: 'Profissional desvinculado com sucesso.' };
+            return { message: 'Professional unlinked successfully.' };
         } catch (error) {
-            console.error('Erro ao desvincular profissional:', error);
+            console.error('Error while unlinking professional:', error);
     
             throw error instanceof HttpError
                 ? error
-                : new HttpError('Erro interno ao desvincular profissional.', 500);
+                : new HttpError('Internal error while unlinking professional.', 500);
         }
     }
 
@@ -210,68 +206,65 @@ class ClinicService {
         console.log(schedules);
 
         if (!clinicId || !schedules || !Array.isArray(schedules)) {
-            throw new HttpError("ID da clínica e horários são obrigatórios.", 400);
+            throw new HttpError("Clinic ID and schedules are required", 400);
         }
 
-        const clinica = await this.clinicModel.findByPk(clinicId);
-        if (!clinica) {
-            throw new HttpError("Clínica não encontrada.", 404);
+        const clinic = await this.clinicModel.findByPk(clinicId);
+        if (!clinic) {
+            throw new HttpError("Clinic not found!", 404);
         }
 
-        if (!(await user.hasClinic(clinica))) {
-            throw new HttpError("Usuário não tem permissão para adicionar horários a esta clínica.", 403);
+        if (!(await user.hasClinic(clinic))) {
+            throw new HttpError("User does not have permission to add schedules to this clinic.", 403);
         }
 
         try {
-            const horariosCriados = await Promise.all(
-                schedules.map(async (horario) => {
-                    console.log("Chegou no map");
-                    const { day, startTime, endTime } = horario;
+            const createdSchedules = await Promise.all(
+                schedules.map(async (schedule) => {
+                    console.log("Finish of the map");
+                    const { day, startTime, endTime } = schedule;
 
                     if (!day || !startTime || !endTime) {
-                        throw new HttpError("Todos os horários devem ter dia, hora de início e hora de fim.", 400);
+                        throw new HttpError("All schedules must have a day, start time, and end time.", 400);
                     }
                     
-                    const formatarHora = (hora: string) => {
+                    const formatTime = (hora: string) => {
                         return hora.length === 5 ? `${hora}:00` : hora;
                     };
-
-                    const startTimeFormat = formatarHora(startTime);
-                    const endTimeFormat = formatarHora(endTime);
 
                     return await Schedule.create({
                         clinicId,
                         day,
-                        startTime: startTimeFormat,
-                        endTime: endTimeFormat,
+                        startTime: formatTime(startTime),
+                        endTime: formatTime(endTime),
                     });
                 })
             );
 
-            return horariosCriados;
+            return createdSchedules;
         } catch (error) {
-            throw new HttpError("Erro ao adicionar horários.", 500);
+            throw new HttpError("Error adding schedules.", 500);
         }
     };
 
     async deleteClinic(clinicId: string, user: User) {
         try {
-            const clinica = await this.clinicModel.findOne({ where: { id: clinicId } });
+            const clinic = await this.clinicModel.findOne({ where: { id: clinicId } });
 
-            if (!clinica) {
-                throw new HttpError("Clinica não encontrada!", 404);
+            if (!clinic) {
+                throw new HttpError("Clinic not found!", 404);
             }
 
-            await user.removeClinic(clinica);
-            await clinica.destroy();
+            await user.removeClinic(clinic);
+            await clinic.destroy();
 
-            return clinica;
+            return clinic;
         } catch (error) {
             if (error instanceof Error) {
-                throw new HttpError("Erro ao tentar deletar a clínica.", 500);
+                throw new HttpError("Error deleting clinic.", 500);
             }
 
-            throw new HttpError("Erro interno ao deletar clínica.", 500);
+            throw new HttpError("Internal error while deleting clinic.", 500);
         }
     }
 }
