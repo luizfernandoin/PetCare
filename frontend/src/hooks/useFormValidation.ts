@@ -52,6 +52,11 @@ export function useFormValidation<T extends Record<string, unknown>>(
     };
 
     const isFormValid = () => {
+      console.log(JSON.stringify(errors, null, 2));
+      
+      console.log("Values\n", JSON.stringify(values, null, 2), "\n");
+      
+      
         return Object.values(errors).every(error => !error);
     };
 

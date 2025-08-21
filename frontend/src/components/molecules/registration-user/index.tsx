@@ -52,6 +52,7 @@ export function RegistrationUser() {
                 {page === "user" && (
                     <>
                         <h2 className="text-center text-xl font-semibold text-[#3C6D7F] mb-6">Dados do usuário</h2>
+                        <p>{isFormValid()}</p>
                         <div className="space-y-4">
                             <div>
                                 <InputField

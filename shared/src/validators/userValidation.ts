@@ -1,8 +1,9 @@
 import 'zod-openapi/extend';
 import * as z from "zod";
+import { USER_ROLE } from '../enums';
 
 
-const userRole = z.enum(["CLIENTE", "PROFISSIONAL"]);
+const userRole = z.nativeEnum(USER_ROLE, { message: "Invalid user role" });
 
 const passwordInput = z
     .string()
@@ -77,7 +78,7 @@ const baseUserSchema = z.object({
         .regex(/^\d{10,15}$/, "Phone number must contain between 10 and 15 numeric digits")
         .openapi({ description: "Phone number", example: "11999999999" }),
     location: locationSchema,
-    role: userRole.openapi({ description: "User type", example: "CLIENTE" }),
+    role: userRole.openapi({ description: "User type", example: USER_ROLE.CLIENT }),
 })
 
 const userSchema = baseUserSchema;
