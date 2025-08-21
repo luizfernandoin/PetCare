@@ -2,7 +2,7 @@
  * @swagger
  * /api/pets/:
  *   post:
- *     summary: Cria um novo pet para o usuário autenticado
+ *     summary: Creates a new pet for the authenticated user
  *     tags:
  *       - Pets
  *     security:
@@ -15,7 +15,7 @@
  *             $ref: '#/components/schemas/Pet'
  *     responses:
  *       201:
- *         description: Pet criado com sucesso
+ *         description: Pet created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -23,11 +23,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Pet criado com sucesso."
+ *                   example: "Pet created successfully."
  *                 data:
  *                   $ref: '#/components/schemas/Pet'
  *       400:
- *         description: Dados inválidos
+ *         description: Invalid data
  *         content:
  *           application/json:
  *             schema:
@@ -35,9 +35,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro de validação."
+ *                   example: "Validation error."
  *       401:
- *         description: Usuário não autenticado
+ *         description: User not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -45,9 +45,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário não autenticado."
+ *                   example: "User not authenticated."
  *       403:
- *         description: Usuário não autenticado
+ *         description: Invalid or expired token
  *         content:
  *           application/json:
  *             schema:
@@ -55,9 +55,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token inválido ou expirado."
+ *                   example: "Invalid or expired token."
  *       404:
- *         description: Usuário não encontrado!
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -65,9 +65,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Usuário não encontrado!"
+ *                   example: "User not found!"
  *       500:
- *         description: Erro interno ao criar pet
+ *         description: Internal error while creating pet
  *         content:
  *           application/json:
  *             schema:
@@ -75,7 +75,7 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Erro interno ao criar pet."
+ *                   example: "Internal error while creating pet."
  */
 
 
@@ -83,12 +83,12 @@
  * @swagger
  * /api/pets/:
  *   get:
- *     summary: Busca todos os pets cadastrados
+ *     summary: Fetch all registered pets
  *     tags:
  *       - Pets
  *     responses:
  *       200:
- *         description: Pets encontrados com sucesso
+ *         description: Pets fetched successfully
  *         content:
  *           application/json:
  *             schema:
@@ -96,13 +96,13 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Pets encontrados com sucesso."
+ *                   example: "Pets fetched successfully."
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Pet'
  *       500:
- *         description: Erro interno ao buscar pets
+ *         description: Internal error while fetching pets
  *         content:
  *           application/json:
  *             schema:
@@ -110,7 +110,7 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Erro ao buscar pets."
+ *                   example: "Error fetching pets."
  */
 
 
@@ -118,7 +118,7 @@
  * @swagger
  * /api/pets/{id}:
  *   get:
- *     summary: Busca um pet pelo ID
+ *     summary: Fetch a pet by ID
  *     tags:
  *       - Pets
  *     parameters:
@@ -127,10 +127,10 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do pet a ser buscado
+ *         description: ID of the pet to fetch
  *     responses:
  *       200:
- *         description: Pet encontrado com sucesso
+ *         description: Pet fetched successfully
  *         content:
  *           application/json:
  *             schema:
@@ -138,11 +138,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Pet encontrado com sucesso."
+ *                   example: "Pet fetched successfully."
  *                 data:
  *                   $ref: '#/components/schemas/Pet'
  *       400:
- *         description: Dados inválidos
+ *         description: Invalid data
  *         content:
  *           application/json:
  *             schema:
@@ -150,9 +150,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro de validação."
+ *                   example: "Validation error."
  *       404:
- *         description: Pet não encontrado
+ *         description: Pet not found
  *         content:
  *           application/json:
  *             schema:
@@ -160,9 +160,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Pet não encontrado."
+ *                   example: "Pet not found."
  *       500:
- *         description: Erro interno ao buscar pet
+ *         description: Internal error while fetching pet
  *         content:
  *           application/json:
  *             schema:
@@ -170,10 +170,10 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao buscar pet."
+ *                   example: "Error fetching pet."
  *                 error:
  *                   type: string
- *                   example: "Erro desconhecido."
+ *                   example: "Unknown error."
  */
 
 
@@ -181,7 +181,7 @@
  * @swagger
  * /api/pets/{id}:
  *   put:
- *     summary: Atualiza as informações de um pet
+ *     summary: Update a pet's information
  *     tags:
  *       - Pets
  *     security:
@@ -192,7 +192,7 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do pet a ser atualizado
+ *         description: ID of the pet to update
  *     requestBody:
  *       required: true
  *       content:
@@ -201,7 +201,7 @@
  *             $ref: '#/components/schemas/PetUpdate'
  *     responses:
  *       200:
- *         description: Pet atualizado com sucesso
+ *         description: Pet updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -209,11 +209,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Pet atualizado com sucesso."
+ *                   example: "Pet updated successfully."
  *                 data:
  *                   $ref: '#/components/schemas/Pet'
  *       400:
- *         description: Dados inválidos
+ *         description: Invalid data
  *         content:
  *           application/json:
  *             schema:
@@ -221,9 +221,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro de validação."
+ *                   example: "Validation error."
  *       401:
- *         description: Usuário não autenticado
+ *         description: User not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -231,9 +231,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário não autenticado."
+ *                   example: "User not authenticated."
  *       403:
- *         description: Usuário não autenticado ou acessão negado.
+ *         description: Invalid token or access denied
  *         content:
  *           application/json:
  *             schema:
@@ -241,9 +241,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token inválido/expirado ou você não tem permissão para atualizar este review."
+ *                   example: "Invalid/expired token or you don't have permission to update this review."
  *       404:
- *         description: Usuário ou Pet não encontrado!
+ *         description: User or Pet not found
  *         content:
  *           application/json:
  *             schema:
@@ -251,9 +251,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Usuário ou Pet não encontrado!"
+ *                   example: "User or Pet not found!"
  *       500:
- *         description: Erro interno ao atualizar pet
+ *         description: Internal error while updating pet
  *         content:
  *           application/json:
  *             schema:
@@ -261,10 +261,10 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao atualizar pet."
+ *                   example: "Error updating pet."
  *                 error:
  *                   type: string
- *                   example: "Erro desconhecido."
+ *                   example: "Unknown error."
  */
 
 
@@ -272,7 +272,7 @@
  * @swagger
  * /api/pets/{id}:
  *   delete:
- *     summary: Remove um pet pelo ID
+ *     summary: Remove a pet by ID
  *     tags:
  *       - Pets
  *     security:
@@ -283,10 +283,10 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do pet a ser removido
+ *         description: ID of the pet to remove
  *     responses:
  *       200:
- *         description: Pet deletado com sucesso
+ *         description: Pet deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -294,9 +294,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Pet deletado com sucesso."
+ *                   example: "Pet deleted successfully."
  *       401:
- *         description: Usuário não autenticado
+ *         description: User not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -304,9 +304,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário não autenticado."
+ *                   example: "User not authenticated."
  *       403:
- *         description: Usuário não autenticado ou acessão negado.
+ *         description: Invalid token or access denied
  *         content:
  *           application/json:
  *             schema:
@@ -314,9 +314,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token inválido/expirado ou você não tem permissão para deletar este review.."
+ *                   example: "Invalid/expired token or you don't have permission to delete this review."
  *       404:
- *         description: Usuário ou Pet não encontrado!
+ *         description: User or Pet not found
  *         content:
  *           application/json:
  *             schema:
@@ -324,9 +324,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Usuário ou Pet não encontrado!"
+ *                   example: "User or Pet not found!"
  *       500:
- *         description: Erro interno ao deletar pet
+ *         description: Internal error while deleting pet
  *         content:
  *           application/json:
  *             schema:
@@ -334,8 +334,8 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao deletar pet."
+ *                   example: "Error deleting pet."
  *                 error:
  *                   type: string
- *                   example: "Erro desconhecido."
+ *                   example: "Unknown error."
  */

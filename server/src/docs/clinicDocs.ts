@@ -1,13 +1,13 @@
 /**
  * @swagger
- * /api/clinicas/:
+ * /api/clinics/:
  *   get:
- *     summary: Busca todas as clínicas cadastradas
+ *     summary: Get all registered clinics
  *     tags:
- *       - Clínicas
+ *       - Clinics
  *     responses:
  *       200:
- *         description: Clínicas encontradas com sucesso
+ *         description: Clinics retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -15,13 +15,13 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Clínicas encontradas com sucesso!"
+ *                   example: "Clinics retrieved successfully!"
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Clinica'
+ *                     $ref: '#/components/schemas/Clinic'
  *       500:
- *         description: Erro interno ao buscar clínicas.
+ *         description: Internal error retrieving clinics
  *         content:
  *           application/json:
  *             schema:
@@ -29,17 +29,17 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Erro interno ao buscar clínicas.
+ *                   example: Internal error retrieving clinics.
  */
 
 
 /**
  * @swagger
- * /api/clinicas/clinicas-proximas:
+ * /api/clinics/nearby-clinics:
  *   get:
- *     summary: Busca clínicas próximas ao usuário autenticado
+ *     summary: Get clinics near the authenticated user
  *     tags:
- *       - Clínicas
+ *       - Clinics
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -48,18 +48,18 @@
  *         required: false
  *         schema:
  *           type: number
- *         description: Raio de busca em metros
+ *         description: Search radius in meters
  *     responses:
  *       200:
- *         description: Clínicas encontradas
+ *         description: Clinics found
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Clinica'
+ *                 $ref: '#/components/schemas/Clinic'
  *       401:
- *         description: Usuário não autenticado
+ *         description: User not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -67,9 +67,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário não autenticado."
+ *                   example: "User not authenticated."
  *       403:
- *         description: Usuário não autenticado
+ *         description: Invalid or expired token
  *         content:
  *           application/json:
  *             schema:
@@ -77,9 +77,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token inválido ou expirado."
+ *                   example: "Invalid or expired token."
  *       404:
- *         description: Usuário não encontrado!
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -87,9 +87,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Usuário não encontrado!"
+ *                   example: "User not found!"
  *       500:
- *         description: Erro ao buscar clínicas
+ *         description: Error retrieving clinics
  *         content:
  *           application/json:
  *             schema:
@@ -97,27 +97,27 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao buscar clínicas."
+ *                   example: "Error retrieving clinics."
  */
 
 
 /**
  * @swagger
- * /api/clinicas/{id}/horarios:
+ * /api/clinics/{id}/schedules:
  *   get:
- *     summary: Busca horários de atendimento de uma clínica
+ *     summary: Get clinic's service schedules
  *     tags:
- *       - Clínicas
+ *       - Clinics
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da clínica
+ *         description: Clinic ID
  *     responses:
  *       200:
- *         description: Horários encontrados com sucesso
+ *         description: Schedules retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -125,13 +125,13 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Horários de atendimento encontrados com sucesso!"
+ *                   example: "Service schedules retrieved successfully!"
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Horarios'
+ *                     $ref: '#/components/schemas/Schedules'
  *       404:
- *         description: Clínica não encontrada
+ *         description: Clinic not found
  *         content:
  *           application/json:
  *             schema:
@@ -139,9 +139,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Clínica não encontrada."
+ *                   example: "Clinic not found."
  *       500:
- *         description: Erro ao buscar horários.
+ *         description: Error retrieving schedules
  *         content:
  *           application/json:
  *             schema:
@@ -149,17 +149,17 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao buscar horários."
+ *                   example: "Error retrieving schedules."
  */
 
 
 /**
  * @swagger
- * /api/clinicas/{id}/vincular-profissional/{profissionalId}:
+ * /api/clinics/{id}/link-professional/{professionalId}:
  *   post:
- *     summary: Vincula um profissional a uma clínica
+ *     summary: Link a professional to a clinic
  *     tags:
- *       - Clínicas
+ *       - Clinics
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -168,16 +168,16 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da clínica
- *       - name: profissionalId
+ *         description: Clinic ID
+ *       - name: professionalId
  *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do profissional
+ *         description: Professional ID
  *     responses:
  *       201:
- *         description: Profissional vinculado com sucesso
+ *         description: Professional linked successfully
  *         content:
  *           application/json:
  *             schema:
@@ -185,11 +185,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Profissional vinculado com sucesso à clínica."
- *                 vinculo:
+ *                   example: "Professional successfully linked to the clinic."
+ *                 link:
  *                   $ref: '#/components/schemas/User'
  *       400:
- *         description: Parametros são obrigatórios.
+ *         description: Required parameters missing
  *         content:
  *           application/json:
  *             schema:
@@ -197,9 +197,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "ClinicaId e ProfissionalId são obrigatórios."
+ *                   example: "ClinicId and ProfessionalId are required."
  *       401:
- *         description: Usuário não autenticado
+ *         description: User not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -207,9 +207,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário não autenticado."
+ *                   example: "User not authenticated."
  *       403:
- *         description: Usuário não autenticado ou acessão negado.
+ *         description: Unauthorized action
  *         content:
  *           application/json:
  *             schema:
@@ -217,9 +217,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token inválido/expirado ou você não tem permissão para vincular profissional na clínica."
+ *                   example: "Invalid/expired token or you do not have permission to link a professional to the clinic."
  *       404:
- *         description: Serviço ou Usuário não encontrado!
+ *         description: Service or User not found
  *         content:
  *           application/json:
  *             schema:
@@ -227,9 +227,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Serviço ou Usuário não encontrado!"
+ *                   example: "Service or User not found!"
  *       409:
- *         description: O profissional já está vinculado a esta clínica.
+ *         description: Professional already linked
  *         content:
  *           application/json:
  *             schema:
@@ -237,9 +237,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "O profissional já está vinculado a esta clínica."
+ *                   example: "The professional is already linked to this clinic."
  *       500:
- *         description: Erro interno ao vincular profissional.
+ *         description: Internal error linking professional
  *         content:
  *           application/json:
  *             schema:
@@ -247,17 +247,17 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Erro ao vincular profissional."
+ *                   example: "Error linking professional."
  */
 
 
 /**
  * @swagger
- * /api/clinicas/{id}/desvincular-profissional/{profissionalId}:
+ * /api/clinics/{id}/unlink-professional/{professionalId}:
  *   delete:
- *     summary: Desvincula um profissional de uma clínica
+ *     summary: Unlink a professional from a clinic
  *     tags:
- *       - Clínicas
+ *       - Clinics
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -266,16 +266,16 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da clínica
- *       - name: profissionalId
+ *         description: Clinic ID
+ *       - name: professionalId
  *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do profissional
+ *         description: Professional ID
  *     responses:
  *       200:
- *         description: Profissional desvinculado com sucesso
+ *         description: Professional unlinked successfully
  *         content:
  *           application/json:
  *             schema:
@@ -283,9 +283,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Profissional desvinculado com sucesso."
+ *                   example: "Professional unlinked successfully."
  *       400:
- *         description: Não é possível desvincular este profissional.
+ *         description: Cannot unlink this professional
  *         content:
  *           application/json:
  *             schema:
@@ -293,9 +293,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "A clínica precisa ter pelo menos um profissional vinculado. Não é possível desvincular este profissional."
+ *                   example: "The clinic must have at least one professional linked. Cannot unlink this professional."
  *       401:
- *         description: Usuário não autenticado
+ *         description: User not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -303,9 +303,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário não autenticado."
+ *                   example: "User not authenticated."
  *       403:
- *         description: Usuário não autenticado ou acessão negado.
+ *         description: Unauthorized action
  *         content:
  *           application/json:
  *             schema:
@@ -313,9 +313,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token inválido/expirado ou você não tem permissão para deletar clínica."
+ *                   example: "Invalid/expired token or you do not have permission to delete a clinic."
  *       404:
- *         description: Profissional não vinculado!
+ *         description: Professional not linked
  *         content:
  *           application/json:
  *             schema:
@@ -323,9 +323,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "O profissional não está vinculado a esta clínica."
+ *                   example: "The professional is not linked to this clinic."
  *       500:
- *         description: Erro interno ao desvincular profissional.
+ *         description: Internal error unlinking professional
  *         content:
  *           application/json:
  *             schema:
@@ -333,17 +333,17 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Erro ao desvincular profissional."
+ *                   example: "Error unlinking professional."
  */
 
 
 /**
  * @swagger
- * /api/clinicas/:
+ * /api/clinics/:
  *   post:
- *     summary: Cria uma nova clínica
+ *     summary: Create a new clinic
  *     tags:
- *       - Clínicas
+ *       - Clinics
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -351,10 +351,10 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Clinica'
+ *             $ref: '#/components/schemas/Clinic'
  *     responses:
  *       201:
- *         description: Clínica criada com sucesso
+ *         description: Clinic created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -362,11 +362,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Clínica {clinica.nome} criada e associada ao usuário {user.nome} com sucesso!"
+ *                   example: "Clinic {clinic.name} created and associated with user {user.name} successfully!"
  *                 data:
- *                   $ref: '#/components/schemas/Clinica'
+ *                   $ref: '#/components/schemas/Clinic'
  *       400:
- *         description: Dados inválidos
+ *         description: Invalid data
  *         content:
  *           application/json:
  *             schema:
@@ -374,9 +374,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro de validação."
+ *                   example: "Validation error."
  *       401:
- *         description: Usuário não autenticado
+ *         description: User not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -384,9 +384,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário não autenticado."
+ *                   example: "User not authenticated."
  *       403:
- *         description: Usuário não autenticado ou acessão negado.
+ *         description: Unauthorized action
  *         content:
  *           application/json:
  *             schema:
@@ -394,9 +394,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token inválido/expirado ou você não tem permissão para criar clínica."
+ *                   example: "Invalid/expired token or you do not have permission to create a clinic."
  *       404:
- *         description: Usuário ou Endereço não encontrado!
+ *         description: User or Address not found
  *         content:
  *           application/json:
  *             schema:
@@ -404,9 +404,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Usuário ou Endereço não encontrado. Por favor, revise os dados informados."
+ *                   example: "User or Address not found. Please review the provided data."
  *       408:
- *         description: Endereço não encontrado!
+ *         description: Address service timeout
  *         content:
  *           application/json:
  *             schema:
@@ -414,9 +414,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "O serviço de geocodificação demorou muito para responder."
+ *                   example: "The geocoding service took too long to respond."
  *       500:
- *         description: Erro interno ao buscar coordenadas ou criar clínica.
+ *         description: Internal error creating clinic or retrieving coordinates
  *         content:
  *           application/json:
  *             schema:
@@ -424,17 +424,17 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Erro ao criar clínica ou buscar coordenadas."
+ *                   example: "Error creating clinic or retrieving coordinates."
  */
 
 
 /**
  * @swagger
- * /api/clinicas/{id}/horarios:
+ * /api/clinics/{id}/schedules:
  *   post:
- *     summary: Adiciona horários de atendimento a uma clínica
+ *     summary: Add service schedules to a clinic
  *     tags:
- *       - Clínicas
+ *       - Clinics
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -443,16 +443,16 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da clínica
+ *         description: Clinic ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Horarios'
+ *             $ref: '#/components/schemas/Schedules'
  *     responses:
  *       201:
- *         description: Horários adicionados com sucesso
+ *         description: Schedules added successfully
  *         content:
  *           application/json:
  *             schema:
@@ -460,13 +460,13 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Horários de atendimento adicionados com sucesso!"
+ *                   example: "Service schedules added successfully!"
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Horarios'
+ *                     $ref: '#/components/schemas/Schedules'
  *       400:
- *         description: Dados inválidos
+ *         description: Invalid data
  *         content:
  *           application/json:
  *             schema:
@@ -474,9 +474,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Todos os horários devem ter dia, hora de início e hora de fim."
+ *                   example: "All schedules must have a day, start time, and end time."
  *       401:
- *         description: Usuário não autenticado
+ *         description: User not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -484,9 +484,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário não autenticado."
+ *                   example: "User not authenticated."
  *       403:
- *         description: Usuário não autenticado ou acessão negado.
+ *         description: Unauthorized action
  *         content:
  *           application/json:
  *             schema:
@@ -494,9 +494,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token inválido/expirado ou você não tem permissão para criar clínica."
+ *                   example: "Invalid/expired token or you do not have permission to create a clinic."
  *       404:
- *         description: Clínica ou Usuário não encontrado!
+ *         description: Clinic or User not found
  *         content:
  *           application/json:
  *             schema:
@@ -504,9 +504,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Clínica ou Usuário não encontrado!"
+ *                   example: "Clinic or User not found!"
  *       500:
- *         description: Erro interno ao adicionar horários.
+ *         description: Internal error adding schedules
  *         content:
  *           application/json:
  *             schema:
@@ -514,17 +514,17 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Erro ao adicionar horários."
+ *                   example: "Error adding schedules."
  */
 
 
 /**
  * @swagger
- * /api/clinicas/{id}:
+ * /api/clinics/{id}:
  *   delete:
- *     summary: Exclui uma clínica
+ *     summary: Delete a clinic
  *     tags:
- *       - Clínicas
+ *       - Clinics
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -533,10 +533,10 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da clínica
+ *         description: Clinic ID
  *     responses:
  *       200:
- *         description: Clínica deletada com sucesso
+ *         description: Clinic deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -544,11 +544,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Clínica {clinica.nome} deletada com sucesso."
+ *                   example: "Clinic {clinic.name} deleted successfully."
  *                 data:
- *                   $ref: '#/components/schemas/Clinica'
+ *                   $ref: '#/components/schemas/Clinic'
  *       401:
- *         description: Usuário não autenticado
+ *         description: User not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -556,9 +556,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Usuário não autenticado."
+ *                   example: "User not authenticated."
  *       403:
- *         description: Usuário não autenticado ou acessão negado.
+ *         description: Unauthorized action
  *         content:
  *           application/json:
  *             schema:
@@ -566,9 +566,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token inválido/expirado ou você não tem permissão para deletar clínica."
+ *                   example: "Invalid/expired token or you do not have permission to delete a clinic."
  *       404:
- *         description: Clínica ou Usuário não encontrado!
+ *         description: Clinic or User not found
  *         content:
  *           application/json:
  *             schema:
@@ -576,9 +576,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Clínica ou Usuário não encontrado!"
+ *                   example: "Clinic or User not found!"
  *       500:
- *         description: Erro interno ao deletar clínica.
+ *         description: Internal error deleting clinic
  *         content:
  *           application/json:
  *             schema:
@@ -586,5 +586,5 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Erro ao deletar clínica."
+ *                   example: "Error deleting clinic."
  */

@@ -1,20 +1,20 @@
 /**
  * @swagger
- * /api/clinicas/{clinicaId}/services:
+ * /api/clinics/{clinicId}/services:
  *   get:
- *     summary: Busca todos os serviços de uma clínica
+ *     summary: Fetch all services of a clinic
  *     tags:
- *       - Serviços
+ *       - Services
  *     parameters:
- *       - name: clinicaId
+ *       - name: clinicId
  *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da clínica cujos serviços serão buscados
+ *         description: ID of the clinic whose services will be fetched
  *     responses:
  *       200:
- *         description: Serviços encontrados com sucesso
+ *         description: Services fetched successfully
  *         content:
  *           application/json:
  *             schema:
@@ -22,13 +22,13 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Serviços encontrados com sucesso."
+ *                   example: "Services fetched successfully."
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Service'
  *       404:
- *         description: Clínica não encontrada
+ *         description: Clinic not found
  *         content:
  *           application/json:
  *             schema:
@@ -36,9 +36,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Clínica não encontrada."
+ *                   example: "Clinic not found."
  *       500:
- *         description: Erro interno ao buscar serviços
+ *         description: Internal error while fetching services
  *         content:
  *           application/json:
  *             schema:
@@ -46,26 +46,26 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Erro ao buscar serviços."
+ *                   example: "Error fetching services."
  */
 
 
 /**
  * @swagger
- * /api/clinicas/{clinicaId}/services:
+ * /api/clinics/{clinicId}/services:
  *   post:
- *     summary: Adiciona um novo serviço a uma clínica
+ *     summary: Add a new service to a clinic
  *     tags:
- *       - Serviços
+ *       - Services
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - name: clinicaId
+ *       - name: clinicId
  *         in: path
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da clínica onde o serviço será criado
+ *         description: ID of the clinic where the service will be created
  *     requestBody:
  *       required: true
  *       content:
@@ -74,7 +74,7 @@
  *             $ref: '#/components/schemas/Service'
  *     responses:
  *       201:
- *         description: Serviço criado com sucesso
+ *         description: Service created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -82,11 +82,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Serviço adicionado à clínica NomeClinica com sucesso!"
+ *                   example: "Service added to clinic ClinicName successfully!"
  *                 data:
  *                   $ref: '#/components/schemas/Service'
  *       400:
- *         description: Tipo do serviço é obrigatorio.
+ *         description: Service type is required
  *         content:
  *           application/json:
  *             schema:
@@ -94,9 +94,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Tipo do serviço é obrigatorio."
+ *                   example: "Service type is required."
  *       401:
- *         description: Usuário não autenticado
+ *         description: User not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -104,9 +104,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token não fornecido."
+ *                   example: "Token not provided."
  *       403:
- *         description: Usuário não autenticado
+ *         description: Invalid or expired token
  *         content:
  *           application/json:
  *             schema:
@@ -114,9 +114,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Token inválido ou expirado."
+ *                   example: "Invalid or expired token."
  *       404:
- *         description: Clinica não encontrada!
+ *         description: Clinic not found
  *         content:
  *           application/json:
  *             schema:
@@ -124,9 +124,9 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Clinica não encontrada!"
+ *                   example: "Clinic not found!"
  *       500:
- *         description: Erro interno ao criar serviço
+ *         description: Internal error while creating service
  *         content:
  *           application/json:
  *             schema:
@@ -134,5 +134,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Erro ao criar serviço."
+ *                   example: "Error creating service."
  */
