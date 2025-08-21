@@ -9,30 +9,30 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      nome: {
+      name: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      raca: {
+      breed: {
         type: Sequelize.STRING(25),
         allowNull: true,
       },
-      idade: {
+      age: {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
-      porte: {
-        type: Sequelize.ENUM('pequeno', 'medio', 'grande'),
+      size: {
+        type: Sequelize.ENUM('small', 'medium', 'large'),
         allowNull: false,
         validate: {
-          isIn: [['pequeno', 'medio', 'grande']],
+          isIn: [['small', 'medium', 'large']],
         },
       },
-      foto: {
+      photo: {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      caracteristicas: {
+      characteristics: {
         type: Sequelize.STRING,
         allowNull: true,
       },

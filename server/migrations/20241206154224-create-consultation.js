@@ -3,8 +3,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('atendimentos', {
-      profissionalId: {
+    await queryInterface.createTable('consultations', {
+      professionalId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: { 
@@ -31,12 +31,12 @@ module.exports = {
         },
         primaryKey: true,
       },
-      dataAtendimento: {
+      consultationDate: {
         type: Sequelize.DATE,
         allowNull: false,
         primaryKey: true,
       },
-      observacao: {
+      notes: {
         type: Sequelize.TEXT,
         allowNull: true,
       },
@@ -46,7 +46,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('atendimentos');
+    await queryInterface.dropTable('consultations');
   },
 };
 

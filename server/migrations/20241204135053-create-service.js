@@ -9,23 +9,23 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      tipo: {
-        type: Sequelize.ENUM('Consulta', 'Vacinação', 'Exame', 'Outros'),
+      type: {
+        type: Sequelize.ENUM('Consultation', 'Vaccination', 'Exam', 'Other'),
         allowNull: false,
       },
       data: {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      observacoes: {
+      notes: {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      clinicaId: {
+      clinicId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'clinicas',
+          model: 'clinics',
           key: 'id',
         }
       }
