@@ -27,8 +27,8 @@ class ReviewService {
         const review = await Review.create({
             userId: userID,
             serviceId: serviceID,
-            nota: data.rating,
-            comentario: data.comment,
+            rating: data.rating,
+            comment: data.comment,
         });
 
         return review;
