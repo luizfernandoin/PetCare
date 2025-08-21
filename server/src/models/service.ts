@@ -1,22 +1,22 @@
 import { DataTypes, Model, CreationOptional, ForeignKey, InferAttributes, InferCreationAttributes } from "sequelize";
 import db from "../config/sequelize";
-import Clinica from "./clinic";
-import Vacina from "./vaccine";
-import Atendimento from "./atendimento";
+import Clinic from "./clinic";
+import Vaccine from "./vaccine";
+import Consultation from "./consultation";
 
 
 class Service extends Model<InferAttributes<Service>, InferCreationAttributes<Service>> {
     declare id: CreationOptional<string>;
-    declare tipo: 'Consulta' | 'Vacinação' | 'Exame' | 'Outros';
-    declare observacoes: CreationOptional<string>;
-    declare clinicaId: ForeignKey<string>;
+    declare type: 'Consultation' | 'Vaccination' | 'Exam' | 'Other';
+    declare notes: CreationOptional<string>;
+    declare clinicId: ForeignKey<string>;
 
     async getOwnerId(id: string): Promise<string | null> {
         const service = await Service.findByPk(id, {
-            include: Clinica,
+            include: Clinic,
         });
 
-        return service ? service.clinicaId : null;
+        return service ? service.clinicId : null;
     }
 }
 
@@ -26,19 +26,19 @@ Service.init({
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
     },
-    tipo: {
-        type: DataTypes.ENUM('Consulta', 'Vacinação', 'Exame', 'Outros'),
+    type: {
+        type: DataTypes.ENUM('Consultation', 'Vaccination', 'Exam', 'Other'),
         allowNull: false,
     },
-    observacoes: {
+    notes: {
         type: DataTypes.TEXT,
         allowNull: true,
     },
-    clinicaId: {
+    clinicId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-            model: 'clinicas',
+            model: 'clinics',
             key: 'id',
         },
     },
@@ -48,25 +48,25 @@ Service.init({
     timestamps: false
 });
 
-Service.hasMany(Vacina, {
+Service.hasMany(Vaccine, {
     foreignKey: 'serviceId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
   
-Vacina.belongsTo(Service, {
+Vaccine.belongsTo(Service, {
 foreignKey: 'serviceId',
 onDelete: 'CASCADE',
 onUpdate: 'CASCADE',
 });
 
-Service.hasMany(Atendimento, {
+Service.hasMany(Consultation, {
     foreignKey: 'serviceId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
 
-Atendimento.belongsTo(Service, {
+Consultation.belongsTo(Service, {
     foreignKey: 'serviceId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

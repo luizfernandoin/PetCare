@@ -5,16 +5,16 @@ import Pet from "./pet";
 import Service from "./service";
 
 
-class Atendimento extends Model {
-    declare profissionalId: ForeignKey<string>;
+class Consultation extends Model {
+    declare professionalId: ForeignKey<string>;
     declare petId: ForeignKey<string>;
     declare serviceId: ForeignKey<string>;
-    declare dataAtendimento: Date;
-    declare observacao: CreationOptional<string>;
+    declare consultationDate: Date;
+    declare notes: CreationOptional<string>;
 }
 
-Atendimento.init({
-    profissionalId: {
+Consultation.init({
+    professionalId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
@@ -41,20 +41,20 @@ Atendimento.init({
         },
         primaryKey: true
     },
-    dataAtendimento: {
+    consultationDate: {
         type: DataTypes.DATE,
         allowNull: false,
         primaryKey: true,
     },
-    observacao: {
+    notes: {
         type: DataTypes.TEXT,
         allowNull: true,
     },
 }, {
     sequelize: db,
-    tableName: 'atendimentos',
+    tableName: 'consultations',
     timestamps: false
 });
 
 
-export default Atendimento;
+export default Consultation;

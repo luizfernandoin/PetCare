@@ -2,18 +2,18 @@ import { DataTypes, Model, CreationOptional, InferAttributes, InferCreationAttri
 import db from "../config/sequelize";
 import User from './user';
 import DonoPet from './owner-pet';
-import Atendimento from './atendimento';
+import Consultation from './consultation';
 import Agendamento from './appointment';
 
 
 class Pet extends Model<InferAttributes<Pet>, InferCreationAttributes<Pet>> {
     declare id: CreationOptional<string>;
-    declare nome: string;
-    declare raca: CreationOptional<string>;
-    declare idade: CreationOptional<number>;
-    declare porte: 'pequeno' | 'medio' | 'grande';
-    declare foto: CreationOptional<string>;
-    declare caracteristicas: CreationOptional<string>;
+    declare name: string;
+    declare breed: CreationOptional<string>;
+    declare age: CreationOptional<number>;
+    declare size: 'small' | 'medium' | 'large';
+    declare photo: CreationOptional<string>;
+    declare characteristics: CreationOptional<string>;
     declare image: CreationOptional<string>;
 
     public getPets!: () => Promise<Pet[]>;
@@ -25,36 +25,36 @@ Pet.init({
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
     },
-    nome: {
+    name: {
         type: DataTypes.STRING(100),
         allowNull: false,
         validate: {
             notEmpty: true,
         },
     },
-    raca: {
+    breed: {
         type: DataTypes.STRING(25),
         allowNull: true,
     },
-    idade: {
+    age: {
         type: DataTypes.INTEGER,
         allowNull: true,
         validate: {
             min: 0,
         },
     },
-    porte: {
-        type: DataTypes.ENUM('pequeno', 'medio', 'grande'),
+    size: {
+        type: DataTypes.ENUM('small', 'medium', 'large'),
         allowNull: false,
         validate: {
-            isIn: [['pequeno', 'medio', 'grande']],
+            isIn: [['small', 'medium', 'large']],
         },
     },
-    foto: {
+    photo: {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    caracteristicas: {
+    characteristics: {
         type: DataTypes.STRING,
         allowNull: true
     },
@@ -68,13 +68,13 @@ Pet.init({
     tableName: 'pets',
 });
 
-Pet.hasMany(Atendimento, {
+Pet.hasMany(Consultation, {
     foreignKey: 'petId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
 
-Atendimento.belongsTo(Pet, {
+Consultation.belongsTo(Pet, {
     foreignKey: 'petId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
