@@ -1,9 +1,8 @@
 import api from "@/config/api";
-import { User, UserCreate, UserRole } from "@/types/User";
+import { User, UserCreate } from "@/types/User";
 import { ApiResponse } from "@/types/api";
 import { Login, LoginResult } from "@/types/auth";
 import { getProfile } from "./user";
-
 
 export const registerUser = async (userDTO: UserCreate): Promise<User | undefined> => {
     try {
@@ -27,7 +26,7 @@ export const loginUser = async (loginDTO: Login): Promise<LoginResult> => {
 
         const user = {
             ...profile,
-            tipo: profile.tipo as UserRole
+            tipo: profile.role
         }
 
         return {

@@ -1,6 +1,5 @@
 import { getProfile } from '@/services/user';
-import { useAuthStore } from '@/stores/authStore'
-import { userRoleBackendMapper } from '@/types/User';                                 
+import { useAuthStore } from '@/stores/authStore'                               
 import { ReactNode, useEffect } from 'react'
 
 interface props {
@@ -13,9 +12,9 @@ export default function AuthenticationManagerWrapper({children}: props) {
   const refreshUser = async () => {
     const profile = await getProfile();
     if (profile) {
-      const role = userRoleBackendMapper[profile.tipo];
+      const role = profile.role
       const token = localStorage.getItem('token');
-      login({ ...profile, tipo:role }, token!); 
+      login({ ...profile, role:role }, token!); 
     }
     else {
       logout();

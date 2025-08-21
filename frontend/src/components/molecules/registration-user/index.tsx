@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Link } from "react-router";
 import { registerUser } from "@/services/auth"
-import { UserCreate, userRoleBackendMapper, userRoleMapper } from "@/types/User";
+import { UserCreate } from "@/types/User";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useNavigate } from "react-router";
@@ -11,6 +11,7 @@ import { userSchema } from "@petcare/shared";
 import { useFormValidation } from "@/hooks/useFormValidation";
 
 import { defaultUser } from "./data";
+import { USER_ROLE } from "@petcare/shared/enums";
 
 export function RegistrationUser() {
     const navigate = useNavigate();
@@ -56,10 +57,10 @@ export function RegistrationUser() {
                                 <InputField
                                     type="name"
                                     placeholder="Nome"
-                                    value={user.nome}
-                                    onChange={(e) => handleChange("nome", e.target.value)}
+                                    value={user.name}
+                                    onChange={(e) => handleChange("name", e.target.value)}
                                 />
-                                {errors.nome && <p className="text-red-500 text-xs mt-1 ml-3">{errors.nome}</p>}
+                                {errors.name && <p className="text-red-500 text-xs mt-1 ml-3">{errors.name}</p>}
                             </div>
                             <div>
                                 <InputField
@@ -74,32 +75,32 @@ export function RegistrationUser() {
                                 <InputField
                                     type="phone"
                                     placeholder="Telefone"
-                                    value={user.telefone}
-                                    onChange={(e) => handleChange("telefone", e.target.value)}
+                                    value={user.phone}
+                                    onChange={(e) => handleChange("phone", e.target.value)}
                                 />
-                                {errors.telefone && <p className="text-red-500 text-xs mt-1 ml-3">{errors.telefone}</p>}
+                                {errors.phone && <p className="text-red-500 text-xs mt-1 ml-3">{errors.phone}</p>}
                             </div>
                             <div>
                                 <InputField
                                     type="password"
                                     placeholder="Senha"
-                                    value={user.senha}
-                                    onChange={(e) => handleChange("senha", e.target.value)}
+                                    value={user.password}
+                                    onChange={(e) => handleChange("password", e.target.value)}
                                 />
-                                {errors.senha && <p className="text-red-500 text-xs mt-1 ml-3">{errors.senha}</p>}
+                                {errors.password && <p className="text-red-500 text-xs mt-1 ml-3">{errors.password}</p>}
                             </div>
                             <div>
                                 <RadioGroup
-                                    defaultValue={userRoleMapper["CLIENTE"]}
+                                    defaultValue={USER_ROLE.CLIENT}
                                     className="flex gap-8"
-                                    onValueChange={(value) => handleChange("tipo", userRoleBackendMapper[value as keyof typeof userRoleBackendMapper])}
+                                    onValueChange={(value) => handleChange("role", value as USER_ROLE)}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <RadioGroupItem value="Cliente" id="r1" />
+                                        <RadioGroupItem value={USER_ROLE.CLIENT} id="r1" />
                                         <Label htmlFor="r1">Cliente</Label>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <RadioGroupItem value="Profissional" id="r2" />
+                                        <RadioGroupItem value={USER_ROLE.PROFESSIONAL} id="r2" />
                                         <Label htmlFor="r2">Profissional</Label>
                                     </div>
                                 </RadioGroup>

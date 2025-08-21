@@ -1,11 +1,11 @@
-import { User, UserRole } from "./User";
-
+import { User } from "./User";
+import { USER_ROLE } from "@petcare/shared/enums";
 type Login = {
     email: string;
-    senha: string;
+    password: string;
 };
 
-type AuthRole = UserRole | "NAO_LOGADO";
+type AuthRole =  `${USER_ROLE}` | "NOT_LOGGED";
 
 type LoginResult = {
   token: string;

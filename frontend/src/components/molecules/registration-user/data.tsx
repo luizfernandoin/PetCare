@@ -1,15 +1,16 @@
 import { UserCreate } from "@/types/User";
+import { USER_ROLE } from "@petcare/shared/enums";
 
 export const defaultUser: UserCreate = {
-  nome: "",
+  name: "",
   email: "",
-  telefone: "",
-  senha: "",
-  tipo: "CLIENTE",
+  phone: "",
+  password: "",
+  role: USER_ROLE.CLIENT,
   location: {
     street: "",
     number: "",
-    city: " ",
+    city: "",
     state: "",
     country: "",
     postalcode: ""

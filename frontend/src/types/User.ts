@@ -1,15 +1,4 @@
-type UserRole = "CLIENTE" | "PROFISSIONAL";
-type UserRoleBackend = "Cliente" | "Profissional";
-
-const userRoleMapper: Record<UserRole, UserRoleBackend> = {
-    "CLIENTE": "Cliente",
-    "PROFISSIONAL": "Profissional"
-}
-
-const userRoleBackendMapper: Record<UserRoleBackend, UserRole> = {
-    "Cliente": "CLIENTE",
-    "Profissional": "PROFISSIONAL"
-}
+import { USER_ROLE } from "@petcare/shared/enums";
 
 type AddressInput = {
     street: string,
@@ -23,11 +12,11 @@ type AddressInput = {
 type User = {
     id: string;
     email: string;
-    nome: string;
-    senha: string;
-    telefone: string;
+    name: string;
+    password: string;
+    phone: string;
     location: AddressInput;
-    tipo: UserRole;
+    role: USER_ROLE;
     image?: string;
 }
 
@@ -35,18 +24,13 @@ type UserCreate = Omit<User, 'id'>
 
 type UserUpdate = Partial<UserCreate>;
 
-type Profile = Omit<User, "tipo"> & {
-    tipo: UserRoleBackend
-}
+type Profile = User;
 
 
 export {
-    UserRole,
     User,
     UserCreate,
     UserUpdate,
     AddressInput,
-    userRoleMapper,
-    userRoleBackendMapper,
     Profile
 };

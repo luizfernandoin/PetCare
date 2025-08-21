@@ -3,20 +3,18 @@ import { Button } from "@/components/ui/button";
 import { loginUser } from "@/services/auth";
 import { useAuthStore } from "@/stores/authStore";
 import { Login as LoginType } from "@/types/auth";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { loginSchema } from "@petcare/shared";
 import { useFormValidation } from "@/hooks/useFormValidation";
 
 
 const userDefault: LoginType = {
   email: "",
-  senha: ""
+  password: ""
 }
 
 export function Login() {
   const { login } = useAuthStore();
-  const navigate = useNavigate();
 
   const {
     values: user,
@@ -56,13 +54,13 @@ export function Login() {
           </div>
           <div>
             <InputField
-              value={user.senha}
-              onChange={(e) => handleChange("senha", e.target.value)}
+              value={user.password}
+              onChange={(e) => handleChange("password", e.target.value)}
               type="password"
               placeholder="Senha"
-              error={errors.senha}
+              error={errors.password}
             />
-            {errors.senha && <p className="text-red-500 text-xs mt-1 ml-3">{errors.senha}</p>}
+            {errors.password && <p className="text-red-500 text-xs mt-1 ml-3">{errors.password}</p>}
           </div>
           <Button
             onClick={handleLogin}

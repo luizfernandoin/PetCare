@@ -17,21 +17,21 @@ export default function Router() {
     <Routes>
       <Route path="/" element={<Presentation />} />
 
-      <Route element={<PrivateRouteWrapper roles={['NAO_LOGADO']} />}>
+      <Route element={<PrivateRouteWrapper roles={['NOT_LOGGED']} />}>
         <Route path="/auth/signin" element={<Signin />} />
         <Route path="/auth/signup" element={<Signup />} />
       </Route>
 
       <Route element={<SidebarLayoutWrapper />}>
-        <Route element={<PrivateRouteWrapper roles={['CLIENTE']} />}>
+        <Route element={<PrivateRouteWrapper roles={['CLIENT']} />}>
           <Route path='/pets' element={<Pets />} />
         </Route>
-        <Route element={<PrivateRouteWrapper roles={['PROFISSIONAL']} />}>
+        <Route element={<PrivateRouteWrapper roles={['PROFESSIONAL']} />}>
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/services' element={<Services />} />
           <Route path='/calendar' element={<Calendar />} />
         </Route>
-        <Route element={<PrivateRouteWrapper roles={['CLIENTE','PROFISSIONAL']} />}>
+        <Route element={<PrivateRouteWrapper roles={['CLIENT','PROFESSIONAL']} />}>
           <Route path='/home' element={<Home />} />
           <Route path='/appointments' element={<Appointments />} />
         </Route>

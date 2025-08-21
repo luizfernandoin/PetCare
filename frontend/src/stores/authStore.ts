@@ -20,7 +20,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   token: null,
   isAuthenticated: false,
-  role: "NAO_LOGADO",
+  role: "NOT_LOGGED",
   isLoading: true,
 
   setUser: (user) =>
@@ -36,8 +36,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: loading }),
 
   login: (user, token) =>
-    set({ user, token, isAuthenticated: true, role: user.tipo, isLoading: false }),
+    set({ user, token, isAuthenticated: true, role: user.role, isLoading: false }),
 
   logout: () =>
-    set({ user: null, token: null, isAuthenticated: false, role: "NAO_LOGADO", isLoading: false }),
+  set({ user: null, token: null, isAuthenticated: false, role: "NOT_LOGGED", isLoading: false }),
 }))
