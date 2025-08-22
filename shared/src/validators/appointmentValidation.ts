@@ -10,5 +10,10 @@ const appointmentSchema = z.object({
     status: z.enum(["PENDING", "CONFIRMED", "CANCELED"], { message: "Status inválido. Os valores permitidos são: pendente, confirmado ou cancelado." })
 });
 
+type AppointmentCreate = z.infer<typeof appointmentSchema>
 
-export { appointmentSchema };
+
+export { 
+    appointmentSchema, 
+    AppointmentCreate 
+};

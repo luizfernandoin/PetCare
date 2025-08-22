@@ -1,11 +1,16 @@
-export type Appointment = {
+import { AppointmentCreate } from "@petcare/shared";
+
+
+type Appointment = AppointmentCreate & {
     id: string;
-    tutor: string;
-    pet: string;
-    servico: string;
-    clinica: string;
-    status: "pendente" | "concluído" | "cancelado";
-    data: string;
-    horarioInicio: string;
-    horarioFim: string;
+    userId: string;
+    clinicId: string;
+}
+
+type AppointmentUpdate = Partial<AppointmentCreate>
+
+
+export {
+    Appointment,
+    AppointmentUpdate
 };
