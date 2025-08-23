@@ -10,15 +10,18 @@ import { Input } from "@/components/ui/input"
 import { useEffect, type Dispatch, type SetStateAction } from "react"
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { petCreateSchema } from "@petcare/shared";
-import { PetCreate, PortePet } from "@/types/pet";
+import { PetCreate } from "@/types/pet";
+import { createPet } from "@/services/pet";
+import { PET_SIZE } from "@petcare/shared/enums";
+import { usePetStore } from "@/stores/petStore";
 
 interface props {
   open: boolean,
-  setOpen: Dispatch<SetStateAction<boolean>>,
-  setPets: Dispatch<SetStateAction<PetCreate[]>>
+  setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-export default function ModalAddPet({ open, setOpen, setPets }: props) {
+export default function ModalAddPet({ open, setOpen }: props) {
+  const { add } = usePetStore();
   const {
     values: pet,
     errors,
@@ -31,8 +34,8 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
     name: "",
     breed: "",
     age: 0,
-    size: "MÉDIO" as PortePet,
-    features: "",
+    size: PET_SIZE.SMALL,
+    characteristics: "",
     image: ""
   }, petCreateSchema);
 
@@ -42,8 +45,8 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
       name: "",
       breed: "",
       age: 0,
-      size: "MÉDIO" as PortePet,
-      features: "",
+      size: PET_SIZE.SMALL,
+      characteristics: "",
       image: ""
     });
 
@@ -57,11 +60,11 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
   }, [open, setValues]);
 
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateForm()) return;
-
-    setPets(prevPets => [...prevPets, pet]);
-
+    const newPet = await createPet(pet);
+    add(newPet);
+    
     clearValues();
   }
 
@@ -90,13 +93,13 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
           </div>
           <div>
             <select
-              value={pet.size}
-              onChange={(e) => handleChange("size", e.target.value as PortePet)}
+              defaultValue={PET_SIZE.SMALL}
+              onChange={(e) => handleChange("size", e.target.value as PET_SIZE)}
               className="w-full p-2 border rounded"
             >
-              <option value="PEQUENO">Pequeno</option>
-              <option value="MÉDIO">Médio</option>
-              <option value="GRANDE">Grande</option>
+              <option value={PET_SIZE.SMALL}>Pequeno</option>
+              <option value={PET_SIZE.MEDIUM}>Médio</option>
+              <option value={PET_SIZE.LARGE}>Grande</option>
             </select>
             {errors.size && <p className="text-red-500 text-xs mt-1">{errors.size}</p>}
           </div>
@@ -116,10 +119,10 @@ export default function ModalAddPet({ open, setOpen, setPets }: props) {
           <div>
             <Input
               placeholder="Características"
-              value={pet.features}
-              onChange={(e) => handleChange("features", e.target.value)}
+              value={pet.characteristics}
+              onChange={(e) => handleChange("characteristics", e.target.value)}
             />
-            {errors.features && <p className="text-red-500 text-xs mt-1">{errors.features}</p>}
+            {errors.characteristics && <p className="text-red-500 text-xs mt-1">{errors.characteristics}</p>}
           </div>
           <div>
             <Input
