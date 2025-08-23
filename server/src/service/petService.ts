@@ -16,6 +16,8 @@ class PetService {
             const newPet = await this.petModel.create(petDTO);
 
             await user.addPet(newPet);
+
+            return newPet;
         } catch (error) {
             if (error instanceof ValidationError) {
                 const errors = error.errors.map((err: ValidationErrorItem) => err.message);
