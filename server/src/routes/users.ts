@@ -11,11 +11,16 @@ import {
     userUpdateSchema, 
     urlParamsSchema 
 } from "@petcare/shared";
+import typeUser from "src/utils/middlewares/typeUser";
+import { USER_ROLE } from "@petcare/shared/src/enums";
+import AppointmentService from "src/service/appointmentService";
+import Appointment from "src/models/appointment";
 
 
 const router = Router();
 const userService = new UserService(User);
 const petService = new PetService(Pet);
+const appointmentService = new AppointmentService(Appointment);
 
 router.get("/", async (request: Request, response: Response) => {
     try {
@@ -55,6 +60,42 @@ router.get("/profile", authenticateToken, async (request: Request, response: Res
         response.status(500).json({ message: 'Error retrieving users.', error: 'Unknown error occurred' });
     }
 })
+
+router.get("/appointments", authenticateToken, typeUser(USER_ROLE.CLIENT), async (request: Request, response: Response) => {
+    try {
+        const user = await userService.getUserByEmail(request.user.email);
+
+        const appointments = await appointmentService.getAppointmentsByUserId(user.id);
+
+        response.status(200).json({
+            message: "Appointments retrieved successfully.",
+            data: appointments,
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            response.status(500).json({ message: '.', error: error.message });
+        }
+
+        response.status(500).json({ message: 'Error retrieving users.', error: 'Unknown error occurred' });
+    }
+})
+
+router.get("/pets", authenticateToken, typeUser(USER_ROLE.CLIENT), async (request: Request, response: Response, next: NextFunction) => {
+    console.log('AQUI NOS PETS');
+    try {
+        const user = await userService.getUserByEmail(request.user.email);
+        const pets = await petService.getPetsByUserId(user.id);
+
+        console.log(pets);
+
+        response.status(200).json({
+            message: "Pets retrieved successfully.",
+            data: pets,
+        });
+    } catch (error) {
+        next(error)
+    }
+});
 
 router.get("/:id", validateParams(urlParamsSchema), async(request: Request, response: Response) => {
     try {

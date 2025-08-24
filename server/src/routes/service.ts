@@ -22,6 +22,16 @@ const serviceService = new ServiceService(Service);
 const clinicService = new ClinicService(Clinic);
 
 
+router.get("/", async (request, response, next: NextFunction) => {
+    try {
+        const services = await serviceService.get();
+        
+        response.status(200).json({ message: "Services retrieved successfully.", data: services });
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get("/:clinicId/services", 
     validateParams(urlParamsSchema),
     async(request, response, next: NextFunction) => {

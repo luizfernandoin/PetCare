@@ -43,15 +43,10 @@ router.post("/:clinicId/appointments",
         userId: user.id
     };
 
-    if (!appointmentData.petId || !appointmentData.serviceId || !appointmentData.appointmentDate ||
-        !appointmentData.startTime || !appointmentData.endTime || !appointmentData.status) {
-        next(new HttpError("All required fields must be provided.", 400));
-    }
-
     try {
         const available = await appointmentService.checkAvailability(appointmentData);
         if (!available) {
-            return next(new HttpError("Time slot unavailable for appointment.", 400));
+            throw new HttpError("Time slot unavailable for appointment.", 400);
         }
 
         const appointment = await appointmentService.createAppointment(appointmentData);

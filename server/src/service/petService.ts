@@ -20,19 +20,19 @@ class PetService {
             if (error instanceof ValidationError) {
                 const errors = error.errors.map((err: ValidationErrorItem) => err.message);
                 throw new HttpError(
-                    `Validation error: ${errors.join(", ")}`, 
+                    `Validation error: ${errors.join(", ")}`,
                     400
                 );
             }
-    
+
             throw new HttpError("Internal error while creating pet.", 500);
         }
     }
-    
+
     async getAllPets() {
         try {
             const pets = await this.petModel.findAll();
-            
+
             return pets;
         } catch (error) {
             if (error instanceof Error) {
@@ -42,23 +42,48 @@ class PetService {
             throw new HttpError("Unknown error.", 500);
         }
     }
-    
+
     async getPetById(petId: string) {
         try {
-            const pet = await this.petModel.findOne({ 
+            const pet = await this.petModel.findOne({
                 where: { id: petId }
             })
 
             if (!pet) {
                 throw new HttpError("Pet not found.", 404);
             }
-    
+
             return pet;
         } catch (error) {
             if (error instanceof Error) {
                 throw new HttpError("Internal error while fetching pet.", 500, error);
             }
 
+            throw new HttpError("Unknown error.", 500);
+        }
+    }
+
+    async getPetsByUserId(userId: string) {
+        try {
+            console.log('userId', userId);
+
+            const userWithPets = await User.findByPk(userId, {
+                include: [{
+                    model: Pet,
+                    through: { attributes: [] }
+                }]
+            });
+
+            if (!userWithPets) {
+                throw new HttpError("User not found", 404);
+            }
+
+            const pets = await userWithPets.getPets();
+            return pets;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new HttpError("Internal error while fetching pets.", 500, error);
+            }
             throw new HttpError("Unknown error.", 500);
         }
     }
@@ -72,7 +97,7 @@ class PetService {
         });
         return !!ownerPet;
     }
-    
+
     async updatePet(petId: string, user: User, updates: Pet) {
         try {
             const pet = await this.petModel.findOne({ where: { id: petId } });
@@ -96,21 +121,21 @@ class PetService {
             throw new HttpError("Internal error while updating pet.", 500);
         }
     }
-    
+
     async deletePet(petId: string, user: User) {
-        try {  
+        try {
             const isOwner = await this.isOwner(petId, user.id);
-            
+
             if (!isOwner) {
                 throw new HttpError("You do not have permission to delete this pet.", 403);
             }
-    
+
             const pet = await this.petModel.findOne({ where: { id: petId } });
-            
+
             if (!pet) {
                 throw new HttpError("Pet not found.", 404);
             }
-    
+
             await pet.destroy();
         } catch (error) {
             if (error instanceof Error) {
@@ -124,13 +149,13 @@ class PetService {
     async deletePets(user: User) {
         try {
             const pets = await user.getPets();
-    
+
             if (pets.length === 0) {
                 return { status: 404, message: "Pets not found." };
             }
-    
+
             await user.removePets(pets);
-    
+
             await this.petModel.destroy({
                 where: {
                     id: pets.map(pet => pet.id)
@@ -142,9 +167,9 @@ class PetService {
             if (error instanceof HttpError) {
                 throw new HttpError(error.message, error.statusCode);
             }
-            
+
             throw new HttpError("Internal error while deleting pets.", 500);
-        }    
+        }
     }
 }
 

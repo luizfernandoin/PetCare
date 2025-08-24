@@ -10,6 +10,20 @@ class ServiceService {
         this.serviceModel = serviceModel;
     }
 
+    async get() {
+        try {
+            const services = await this.serviceModel.findAll();
+
+            return services;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new HttpError("Internal error while fetching services.", 500, error);
+            }
+
+            throw new HttpError("Unknown error.", 500);
+        }
+    }
+
     async createService(serviceDTO: Service, clinic: Clinic) {
         const { type, notes } = serviceDTO;
         const clinicId = clinic.id;

@@ -9,12 +9,14 @@ import User from "../models/user";
 import HttpError from "../utils/errors/HttpError";
 import { STATUS_CODES } from "http";
 import { validate, validateParams } from "../utils/middlewares/validate";
-import { 
-    clinicCreateSchema, 
-    urlParamsSchema 
+import {
+    clinicCreateSchema,
+    clinicFilterSchema,
+    urlParamsSchema
 } from "@petcare/shared";
 import GeocodingService from "../service/GeocodingService";
 import { USER_ROLE } from "@petcare/shared/src/enums";
+import { ZodError } from "zod";
 
 
 const router = Router();
@@ -26,7 +28,7 @@ const geocodingService = new GeocodingService();
 router.get("/", async (request: Request, response: Response, next: NextFunction) => {
     try {
         const clinics = await clinicService.getAllClinics();
-        
+
         response.status(200).json({
             message: "Clinics retrieved successfully!",
             data: clinics
@@ -35,6 +37,37 @@ router.get("/", async (request: Request, response: Response, next: NextFunction)
         next(error);
     }
 })
+
+router.get("/filter", validate(clinicFilterSchema), async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const validatedQuery = clinicFilterSchema.parse({
+            services: request.query.services
+                ? Array.isArray(request.query.services)
+                    ? request.query.services
+                    : [request.query.services]
+                : undefined,
+            name: request.query.name as string | undefined,
+            radius: request.query.radius ? Number(request.query.radius) : undefined,
+            latitude: request.query.latitude ? Number(request.query.latitude) : undefined,
+            longitude: request.query.longitude ? Number(request.query.longitude) : undefined,
+        });
+
+        const clinics = await clinicService.filterClinics(validatedQuery);
+
+        response.status(200).json({
+            message: "Clinics filtered successfully!",
+            data: clinics,
+        });
+    } catch (error) {
+        if (error instanceof ZodError) {
+            return response.status(400).json({
+                message: "Invalid filter parameters",
+                errors: error.errors
+            });
+        }
+        next(error);
+    }
+});
 
 router.get("/nearby-clinics", authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
     try {
@@ -54,7 +87,7 @@ router.get("/nearby-clinics", authenticateToken, async (request: Request, respon
     }
 })
 
-router.get('/:id/schedules', validateParams(urlParamsSchema), async(request: Request, response: Response, next: NextFunction) => {
+router.get('/:id/schedules', validateParams(urlParamsSchema), async (request: Request, response: Response, next: NextFunction) => {
     try {
         const { id: clinicId } = request.params;
 
@@ -72,7 +105,7 @@ router.get('/:id/schedules', validateParams(urlParamsSchema), async(request: Req
 router.post("/:id/link-professional/:professionalId",
     validateParams(urlParamsSchema),
     authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), verifyOwnership(clinicService),
-    async(request: Request, response: Response, next: NextFunction) => {
+    async (request: Request, response: Response, next: NextFunction) => {
         try {
             const { id: clinicId, professionalId } = request.params;
 
@@ -85,11 +118,11 @@ router.post("/:id/link-professional/:professionalId",
         } catch (error) {
             next(error);
         }
-})
+    })
 
 router.delete("/:id/unlink-professional/:professionalId",
-    validateParams(urlParamsSchema), 
-    authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), verifyOwnership(clinicService), 
+    validateParams(urlParamsSchema),
+    authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), verifyOwnership(clinicService),
     async (request: Request, response: Response, next: NextFunction) => {
         try {
             const { id: clinicId, professionalId } = request.params;
@@ -105,53 +138,53 @@ router.delete("/:id/unlink-professional/:professionalId",
 
 router.post('/',
     validate(clinicCreateSchema),
-    authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), async(request: Request, response: Response, next: NextFunction) => {
-    try {
-        const { name, phone, location } = request.body;
-        const { lat, lon } = await geocodingService.getCoordinates(location);
-        
-        const clinicToSave = {
-            name,
-            phone,
-            location: {
-                type: "Point",
-                coordinates: [lon, lat] as [number, number],
-            },
+    authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), async (request: Request, response: Response, next: NextFunction) => {
+        try {
+            const { name, phone, location } = request.body;
+            const { lat, lon } = await geocodingService.getCoordinates(location);
+
+            const clinicToSave = {
+                name,
+                phone,
+                location: {
+                    type: "Point",
+                    coordinates: [lon, lat] as [number, number],
+                },
+            };
+
+            const user = await userService.getUserByEmail(request.user.email);
+            const clinic = await clinicService.createClinic(clinicToSave, user);
+
+            response.status(201).json({
+                message: `Clinic ${clinic.name} created and associated with user ${user.name} successfully!`,
+                data: clinic
+            });
+        } catch (error) {
+            next(error);
         };
-
-        const user = await userService.getUserByEmail(request.user.email);
-        const clinic = await clinicService.createClinic(clinicToSave, user);
-
-        response.status(201).json({ 
-            message: `Clinic ${clinic.name} created and associated with user ${user.name} successfully!`, 
-            data: clinic 
-        });
-    } catch (error) {
-        next(error);
-    };
-});
+    });
 
 router.post('/:id/schedules',
     validateParams(urlParamsSchema),
-    authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), async(request: Request, response: Response, next: NextFunction) => {
-    try {
-        const { id: clinicId } = request.params;
-        const { email } = request.user;
-        const schedulesData = { ...request.body, clinicId };
+    authenticateToken, typeUser(USER_ROLE.PROFESSIONAL), async (request: Request, response: Response, next: NextFunction) => {
+        try {
+            const { id: clinicId } = request.params;
+            const { email } = request.user;
+            const schedulesData = { ...request.body, clinicId };
 
-        const user = await userService.getUserByEmail(email);
-        const schedules = await clinicService.addSchedules(schedulesData, user);
+            const user = await userService.getUserByEmail(email);
+            const schedules = await clinicService.addSchedules(schedulesData, user);
 
-        response.status(201).json({
-            message: "Schedules added successfully!",
-            data: schedules,
-        });
-    } catch (error) {
-        next(error);
-    }
-})
+            response.status(201).json({
+                message: "Schedules added successfully!",
+                data: schedules,
+            });
+        } catch (error) {
+            next(error);
+        }
+    })
 
-router.delete("/:id", authenticateToken, validateParams(urlParamsSchema), typeUser(USER_ROLE.PROFESSIONAL), verifyOwnership(clinicService), async(request: Request, response: Response, next: NextFunction) => {
+router.delete("/:id", authenticateToken, validateParams(urlParamsSchema), typeUser(USER_ROLE.PROFESSIONAL), verifyOwnership(clinicService), async (request: Request, response: Response, next: NextFunction) => {
     const clinicId = request.params.id;
     const { email } = request.user;
 

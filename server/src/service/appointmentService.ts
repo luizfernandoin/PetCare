@@ -1,6 +1,9 @@
 import { ModelStatic, ValidationError, ValidationErrorItem } from "sequelize";
 import Appointment from "../models/appointment";
 import HttpError from "../utils/errors/HttpError";
+import Pet from "src/models/pet";
+import Service from "src/models/service";
+import Clinic from "src/models/clinic";
 
 
 class AppointmentService {
@@ -39,6 +42,38 @@ class AppointmentService {
             }
 
             throw new HttpError("Erro interno ao buscar agendamentos", 500)
+        }
+    }
+
+    async getAppointmentsByUserId(userId: string) {
+        console.log("Fetching appointments for user:", userId);
+        try {
+            const appointments = await this.appointmentModel.findAll({
+                where: { userId },
+                order: [['appointmentDate', 'DESC'], ['startTime', 'DESC']],
+                include: [
+                    {
+                        model: Pet,
+                        as: 'pet'
+                    },
+                    {
+                        model: Service,
+                        as: 'service'
+                    },
+                    {
+                        model: Clinic,
+                        as: 'clinic'
+                    }
+                ]
+            })
+
+            return appointments;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new HttpError("Erro ao buscar agendamentos.", 500, new Error(error.message));
+            }
+
+            throw new HttpError("Erro interno ao buscar agendamentos", 500);
         }
     }
 
