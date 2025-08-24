@@ -9,6 +9,11 @@ export const createPet = async (petDTO: PetCreate): Promise<Pet> => {
     return response.data.data!;
 }
 
+export const getPetsByUser = async (): Promise<Pet[]> => {
+    const response = await api.get<ApiResponse<Pet[]>>('/users/pets');
+    return response.data.data!;
+}
+
 export const getAllPets = async (): Promise<Pet[]> => {
     const response = await api.get<ApiResponse<Pet[]>>('/pets/');
 
