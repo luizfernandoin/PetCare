@@ -10,7 +10,20 @@ module.exports = {
         primaryKey: true,
       },
       type: {
-        type: Sequelize.ENUM('Consultation', 'Vaccination', 'Exam', 'Other'),
+        type: Sequelize.ENUM(
+          'CONSULTATION',
+          'VACCINATION',
+          'EXAM',
+          'GROOMING',
+          'TRAINING',
+          'BOARDING',
+          'MICROCHIPPING',
+          'NUTRITION',
+          'SURGERY',
+          'DENTAL_CARE',
+          'BEHAVIORAL_THERAPY',
+          'OTHER'
+        ),
         allowNull: false,
       },
       data: {

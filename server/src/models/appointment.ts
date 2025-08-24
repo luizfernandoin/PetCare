@@ -78,10 +78,10 @@ Appointment.init({
     timestamps: false,
 });
 
-Appointment.belongsTo(User, { foreignKey: 'userId' });
-Appointment.belongsTo(Pet, { foreignKey: 'petId' });
-Appointment.belongsTo(Service, { foreignKey: 'serviceId' });
-Appointment.belongsTo(Clinic, { foreignKey: 'clinicId' });
+Appointment.belongsTo(User, { foreignKey: 'userId', as : 'user' });
+Appointment.belongsTo(Pet, { foreignKey: 'petId', as: 'pet' });
+Appointment.belongsTo(Service, { foreignKey: 'serviceId', as: 'service' });
+Appointment.belongsTo(Clinic, { foreignKey: 'clinicId', as: 'clinic' });
 
 User.hasMany(Appointment, { foreignKey: 'userId' });
 Pet.hasMany(Appointment, { foreignKey: 'petId' });

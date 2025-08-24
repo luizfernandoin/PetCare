@@ -67,7 +67,7 @@ module.exports = {
                 allowNull: false,
             },
             status: {
-                type: Sequelize.STRING,
+                type: Sequelize.ENUM('PENDING', 'CONFIRMED', 'CANCELED', 'COMPLETED'),
                 allowNull: false,
             },
         }, {

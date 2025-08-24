@@ -32,5 +32,28 @@ const clinicUpdateSchema = z.object({
     }).optional(),
 })
 
+const clinicFilterSchema = z.object({
+    services: z.array(z.string().uuid()).optional(),
+    name: z.string().optional(),
+    radius: z.number().optional(),
+    latitude: z.number().optional(),
+    longitude: z.number().optional(),
+}).refine(data => {
+    if (data.radius && (!data.latitude || !data.longitude)) {
+        return false;
+    }
+    return true;
+}, {
+    message: "Latitude and longitude are required when radius is provided"
+});
 
-export { clinicCreateSchema, clinicUpdateSchema };
+
+type ClinicCreate = z.infer<typeof clinicCreateSchema>;
+
+
+export {
+    clinicCreateSchema,
+    clinicUpdateSchema,
+    clinicFilterSchema,
+    ClinicCreate
+};

@@ -1,4 +1,4 @@
-import { CreationOptional, DataTypes, Model } from 'sequelize';
+import { Association, CreationOptional, DataTypes, Model } from 'sequelize';
 import db from "../config/sequelize";
 import Service from './service';
 import Schedule from './schedule';
@@ -13,6 +13,12 @@ class Clinic extends Model {
     coordinates: [number, number];
   };
   declare image: CreationOptional<string>;
+
+  declare services?: Service[];
+  declare static associations: {
+    services: Association<Clinic, Service>;
+  };
+
 };
 
 Clinic.init({
@@ -42,16 +48,18 @@ Clinic.init({
   sequelize: db
 });
 
-Clinic.hasMany(Service, {
+Clinic.belongsToMany(Service, {
+  through: 'clinic_services',
   foreignKey: 'clinicId',
-  onDelete: 'CASCADE',
-  onUpdate: 'CASCADE',
+  otherKey: 'serviceId',
+  as: 'services'
 });
 
-Service.belongsTo(Clinic, {
-  foreignKey: 'clinicId',
-  onDelete: 'CASCADE',
-  onUpdate: 'CASCADE',
+Service.belongsToMany(Clinic, {
+  through: 'clinic_services',
+  foreignKey: 'serviceId',
+  otherKey: 'clinicId',
+  as: 'clinics'
 });
 
 Clinic.hasMany(Schedule, {

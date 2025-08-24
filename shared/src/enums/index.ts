@@ -7,6 +7,7 @@ enum APPOINTMENT_STATUS {
   PENDING = "PENDING",
   CONFIRMED = "CONFIRMED",
   CANCELED = "CANCELED",
+  COMPLETED = "COMPLETED",
 }
 
 enum PET_SIZE {
@@ -16,10 +17,18 @@ enum PET_SIZE {
 }
 
 enum SERVICE_TYPE {
-  CONSULTATION = "CONSULTATION",
-  VACCINATION = "VACCINATION",
-  EXAM = "EXAM",
-  OTHER = "OTHER",
+  CONSULTATION = "CONSULTATION",       // Consulta veterinária
+  VACCINATION = "VACCINATION",         // Aplicação de vacinas
+  EXAM = "EXAM",                       // Exames laboratoriais ou clínicos
+  GROOMING = "GROOMING",               // Banho e tosa
+  TRAINING = "TRAINING",               // Adestramento
+  BOARDING = "BOARDING",               // Hospedagem
+  MICROCHIPPING = "MICROCHIPPING",     // Implantação de microchip
+  NUTRITION = "NUTRITION",             // Consulta nutricional
+  SURGERY = "SURGERY",                 // Procedimentos cirúrgicos
+  DENTAL_CARE = "DENTAL_CARE",         // Limpeza e cuidados dentários
+  BEHAVIORAL_THERAPY = "BEHAVIORAL_THERAPY", // Terapia comportamental
+  OTHER = "OTHER",                     // Outro tipo de serviço
 }
 
 export {

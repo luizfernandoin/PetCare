@@ -1,19 +1,18 @@
-type ServiceRole = 'CONSULTA' | 'VACINAÇÃO' | 'EXAME' | 'OUTROS';
+import { ServiceCreate } from "@petcare/shared";
+import { SERVICE_TYPE } from "@petcare/shared/enums";
+
 
 type Service = {
     id: string;
-    tipo: ServiceRole;
-    observacoes?: string;
-    clinicaId: string;
+    type: SERVICE_TYPE;
+    name: string;
+    description?: string;
 }
-
-type ServiceCreate = Omit<Service, 'id'>;
 
 type ServiceUpdate = Partial<ServiceCreate>;
 
 
 export {
-    ServiceRole,
     Service,
     ServiceCreate,
     ServiceUpdate,

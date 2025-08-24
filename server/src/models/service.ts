@@ -1,6 +1,5 @@
 import { DataTypes, Model, CreationOptional, ForeignKey, InferAttributes, InferCreationAttributes } from "sequelize";
 import db from "../config/sequelize";
-import Clinic from "./clinic";
 import Vaccine from "./vaccine";
 import Consultation from "./consultation";
 import { SERVICE_TYPE } from "@petcare/shared/src/enums";
@@ -9,16 +8,16 @@ import { SERVICE_TYPE } from "@petcare/shared/src/enums";
 class Service extends Model<InferAttributes<Service>, InferCreationAttributes<Service>> {
     declare id: CreationOptional<string>;
     declare type: SERVICE_TYPE;
-    declare notes: CreationOptional<string>;
-    declare clinicId: ForeignKey<string>;
+    declare name: string;
+    declare description: CreationOptional<string>;
 
-    async getOwnerId(id: string): Promise<string | null> {
-        const service = await Service.findByPk(id, {
-            include: Clinic,
-        });
+    // async getOwnerId(id: string): Promise<string | null> {
+    //     const service = await Service.findByPk(id, {
+    //         include: Clinic,
+    //     });
 
-        return service ? service.clinicId : null;
-    }
+    //     return service ? service.clinicId : null;
+    // }
 }
 
 Service.init({
@@ -31,18 +30,14 @@ Service.init({
         type: DataTypes.ENUM(...Object.values(SERVICE_TYPE)),
         allowNull: false,
     },
-    notes: {
+    name: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+    },
+    description: {
         type: DataTypes.TEXT,
         allowNull: true,
-    },
-    clinicId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: 'clinics',
-            key: 'id',
-        },
-    },
+    }
 }, {
     sequelize: db,
     tableName: 'services',
@@ -72,6 +67,23 @@ Consultation.belongsTo(Service, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
 });
+
+// Service.belongsToMany(Clinic, {
+//     through: 'clinic_services',
+//     foreignKey: 'serviceId',
+//     otherKey: 'clinicId',
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE'
+// });
+
+// Clinic.belongsToMany(Service, {
+//     through: 'clinic_services',
+//     foreignKey: 'clinicId',
+//     otherKey: 'serviceId',
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE'
+// });
+
 
 
 export default Service;
