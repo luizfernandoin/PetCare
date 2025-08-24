@@ -10,6 +10,7 @@ const validate = (schema: AnyZodObject | ZodEffects<AnyZodObject>) => (request: 
     } catch (error) {
         if (error instanceof ZodError) {
             response.status(400).json({ errors: error.format() });
+            return;
         }
         next(error);
     }
@@ -22,6 +23,7 @@ const validateParams = (schema: typeof urlParamsSchema) => (request: Request, re
     } catch (error) {
         if (error instanceof ZodError) {
             response.status(400).json({ errors: error.errors.map(err => err.message) });
+            return;
         }
         next(error);
     }
