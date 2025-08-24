@@ -1,4 +1,5 @@
 import { CardService } from "@/components/molecules/card-service";
+import ModalAddService from "@/components/molecules/modal-add-service";
 import { PageHeader } from "@/components/molecules/page-header";
 import { createService, getAllServices } from "@/services/service";
 import { Service } from "@/types/service";
@@ -7,6 +8,7 @@ import { useEffect, useState } from "react";
 
 export default function Services() {
   const [services, setServices] = useState<Service[]>([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(()=>{
     getAllServices()
@@ -15,11 +17,7 @@ export default function Services() {
   }, []) 
 
   const handleAddService = () => {
-    const newService = createService({
-      name: "Banho Higienico",
-      type: SERVICE_TYPE.GROOMING,
-      description: "Banho completo com shampoo neutro e secagem"
-    })
+    setOpen(true);
   }
   
     return (
@@ -39,6 +37,8 @@ export default function Services() {
                     />
                 ))}
             </div>
+
+            <ModalAddService open={open} setOpen={setOpen} />
         </>
     );
 
