@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PET_SIZE } from "../enums";
 
 
 const petCreateSchema = z.object({
@@ -9,7 +10,7 @@ const petCreateSchema = z.object({
     age: z.number()
         .int("A idade deve ser um número inteiro.")
         .min(0, "A idade não pode ser negativa."),
-    size: z.enum(["PEQUENO", "MÉDIO", "GRANDE"], {
+    size: z.nativeEnum(PET_SIZE, {
         errorMap: () => ({ message: "O porte deve ser 'PEQUENO', 'MÉDIO' ou 'GRANDE'." }),
     }),
     features: z.string()
@@ -31,10 +32,10 @@ const petUpdateSchema = z.object({
         .int("A idade deve ser um número inteiro.")
         .min(0, "A idade não pode ser negativa.")
         .optional(),
-    size: z.enum(["PEQUENO", "MÉDIO", "GRANDE"], {
+    size: z.nativeEnum(PET_SIZE, {
         errorMap: () => ({ message: "O porte deve ser 'PEQUENO', 'MÉDIO' ou 'GRANDE'." }),
     }).optional(),
-    features: z.string()
+    characteristics: z.string()
         .max(255, "As características podem ter no máximo 255 caracteres.")
         .optional(),
     image: z.string()

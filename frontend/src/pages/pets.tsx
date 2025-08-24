@@ -2,41 +2,22 @@ import CardPet from "@/components/molecules/card-pet";
 import ModalAddPet from "@/components/molecules/modal-add-pet";
 import { PageHeader } from "@/components/molecules/page-header";
 import { useEffect, useState } from "react";
-import { PetCreate } from "@/types/pet";
+import { getAllPets } from "@/services/pet";
+import { usePetStore } from "@/stores/petStore";
 
-const petsMock: PetCreate[] = [
-  {
-    name: "Thor",
-    breed: "Labrador",
-    size: "GRANDE",
-    age: 3,
-    features: "Brincalhão,どcil, adora água",
-    image:"https://i.pinimg.com/736x/eb/a8/e8/eba8e8a51e9692156cadc66446672a49.jpg"
-  },
-  {
-    name: "Luna",
-    breed: "Poodle",
-    size: "PEQUENO",
-    age: 5,
-    features: "Muito inteligente, gosta de colo",
-    image:"https://hips.hearstapps.com/clv.h-cdn.co/assets/16/18/gettyimages-586890581.jpg?crop=0.668xw:1.00xh;0.219xw,0&resize=980:*"
-  },
-  {
-    name: "Max",
-    breed: "Bulldog",
-    size: "MÉDIO",
-    age: 2,
-    features: "Tranquilo, dorminhoco, leal",
-    image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqRcQH4JIuXXAcg8EDCq42WBYpv_EQiwAKrA&s"
-  }
-];
 
 export function Pets() {
   const [open, setOpen] = useState(false);
-  const [pets, setPets] = useState<PetCreate[]>([])
+  const {pets, clear, addListPet} = usePetStore()
 
+  const handleGetPets = async () => {
+    getAllPets().then((myPets) => {
+      clear();
+      addListPet(myPets)
+    })
+  }
   useEffect(() => {
-    setPets(petsMock)
+    handleGetPets()
   }, [])
 
   return (
@@ -52,19 +33,13 @@ export function Pets() {
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 justify-items-center">
         {pets.map((pet) => (
           <CardPet
-            setPets={setPets}
-            key={pet.name}
-            name={pet.name}
-            breed={pet.breed}
-            size={pet.size}
-            age={pet.age}
-            features={pet.features}
-            image={pet.image}
+            key={pet.id}
+            pet={pet}
           />
         ))}
         {pets.length === 0 && <p className="col-span-4">Nenhum pet registrado!  </p>}
       </div>
-      <ModalAddPet open={open} setOpen={setOpen} setPets={setPets} />
+      <ModalAddPet open={open} setOpen={setOpen} />
     </>
   )
 }

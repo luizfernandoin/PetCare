@@ -1,12 +1,12 @@
-type PortePet = 'PEQUENO' | 'MÉDIO' | 'GRANDE';
+import { PET_SIZE } from "@petcare/shared/enums";
 
 type Pet = {
     id: string;
     name: string;
     breed: string;
     age: number;
-    size: PortePet;
-    features?: string;
+    size: PET_SIZE;
+    characteristics?: string;
     image?: string;
 };
 
@@ -16,7 +16,6 @@ type PetUpdate = Partial<PetCreate>;
 
 
 export {
-    PortePet,
     Pet,
     PetCreate,
     PetUpdate,
