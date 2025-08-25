@@ -24,6 +24,20 @@ class ServiceService {
         }
     }
 
+    async getServiceById(serviceId: string) {
+        try {
+            const service = await this.serviceModel.findByPk(serviceId);
+
+            return service || null;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new HttpError("Error fetching service by ID.", 500, new Error(error.message));
+            };
+
+            throw new HttpError("Internal error fetching service by ID.", 500);
+        }
+    }
+
     async createService(serviceDTO: Service, clinic: Clinic) {
         const { type, notes } = serviceDTO;
         const clinicId = clinic.id;
