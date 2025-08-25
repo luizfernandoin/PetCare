@@ -10,7 +10,7 @@ import appointmentRouter from "./appointment";
 
 const router = Router();
 
-router.use("/users", userRouter);
+router.use("/users", userRouter, appointmentRouter);
 router.use("/pets", petRouter);
 router.use("/clinics", clinicRouter, appointmentRouter);
 router.use("/services", serviceRouter, reviewRouter);
