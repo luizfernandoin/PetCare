@@ -211,7 +211,6 @@ class ClinicService {
     }
 
     async getNearbyClinics(longitude: number, latitude: number, distance: number) {
-        console.log(longitude, latitude);
         return await Clinic.findAll({
             where: Sequelize.where(
                 Sequelize.fn(
@@ -317,8 +316,6 @@ class ClinicService {
 
     async addSchedules(schedulesDTO: schedulesDTO, user: User) {
         const { clinicId, schedules } = schedulesDTO;
-        console.log(schedulesDTO);
-        console.log(schedules);
 
         if (!clinicId || !schedules || !Array.isArray(schedules)) {
             throw new HttpError("Clinic ID and schedules are required", 400);
@@ -336,7 +333,6 @@ class ClinicService {
         try {
             const createdSchedules = await Promise.all(
                 schedules.map(async (schedule) => {
-                    console.log("Finish of the map");
                     const { day, startTime, endTime } = schedule;
 
                     if (!day || !startTime || !endTime) {

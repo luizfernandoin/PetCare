@@ -33,7 +33,6 @@ export function Login() {
       return;
     }
 
-    console.log("Result: " + JSON.stringify(result, null, 2));
     login(result.user, result.token);
   }
 

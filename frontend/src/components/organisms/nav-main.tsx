@@ -22,7 +22,6 @@ import { type NavItem } from "@/types/NavItem";
 
 
 export function NavMain({ items }: { items: NavItem[] }) {
-    //console.log("NavMain items:", items);
     return (
         <SidebarGroup>
             <SidebarGroupLabel>Navigation</SidebarGroupLabel>

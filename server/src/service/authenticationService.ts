@@ -25,7 +25,6 @@ class AuthenticationService {
         try {
             const salt = await bcrypt.genSalt();
             const hashedPassword = await bcrypt.hash(password!, salt);
-            console.log("Hashed password:", hashedPassword);
 
             const newUser = await this.userModel.create({
                 email: email!,

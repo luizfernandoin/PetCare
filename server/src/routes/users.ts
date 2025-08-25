@@ -81,12 +81,9 @@ router.get("/appointments", authenticateToken, typeUser(USER_ROLE.CLIENT), async
 })
 
 router.get("/pets", authenticateToken, typeUser(USER_ROLE.CLIENT), async (request: Request, response: Response, next: NextFunction) => {
-    console.log('AQUI NOS PETS');
     try {
         const user = await userService.getUserByEmail(request.user.email);
         const pets = await petService.getPetsByUserId(user.id);
-
-        console.log(pets);
 
         response.status(200).json({
             message: "Pets retrieved successfully.",

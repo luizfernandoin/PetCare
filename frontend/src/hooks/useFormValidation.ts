@@ -26,14 +26,12 @@ export function useFormValidation<T extends Record<string, unknown>>(
     };
 
     const handleChange = <K extends keyof T>(field: K, value: T[K]) => {
-        console.log(field, value);
         setValues(prev => ({ ...prev, [field]: value }));
         validateField(field, value);
     };
 
     const validateForm = () => {
         try {
-            console.log(values);
             schema.parse(values);
             return true;
         } catch (error) {
@@ -51,12 +49,7 @@ export function useFormValidation<T extends Record<string, unknown>>(
         }
     };
 
-    const isFormValid = () => {
-      console.log(JSON.stringify(errors, null, 2));
-      
-      console.log("Values\n", JSON.stringify(values, null, 2), "\n");
-      
-      
+    const isFormValid = () => {      
         return Object.values(errors).every(error => !error);
     };
 

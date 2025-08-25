@@ -34,7 +34,6 @@ export function RegistrationUser() {
 
     const handleRegistration = async () => {
         if (!validateForm()) return;
-        console.log("Passou!");
 
         const newUser = await registerUser(user);
 

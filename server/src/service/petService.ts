@@ -67,8 +67,6 @@ class PetService {
 
     async getPetsByUserId(userId: string) {
         try {
-            console.log('userId', userId);
-
             const userWithPets = await User.findByPk(userId, {
                 include: [{
                     model: Pet,

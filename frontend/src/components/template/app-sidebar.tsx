@@ -23,7 +23,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { role } = useAuthStore()
     useEffect(()=>{
       const permittedRoutes = data.navMain.filter(link=>link.roles.includes(role))  
-      console.log("->", permittedRoutes);
       setNavMain(permittedRoutes)
     },[role])
 

@@ -208,7 +208,6 @@ export function DataTable<TData extends { id: string | number }>({
     withPagination = false,
     onDataReorder,
 }: DataTableProps<TData>) {
-    console.log("DataTable rendered with data:", data);
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);

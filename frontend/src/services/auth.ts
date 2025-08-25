@@ -22,7 +22,6 @@ export const loginUser = async (loginDTO: Login): Promise<LoginResult> => {
         localStorage.setItem("token", token);
         const profile = await getProfile();
         if (!profile) return undefined;
-        console.log(profile);
 
         const user = {
             ...profile,

@@ -17,18 +17,18 @@ enum PET_SIZE {
 }
 
 enum SERVICE_TYPE {
-  CONSULTATION = "CONSULTATION",       // Consulta veterinária
-  VACCINATION = "VACCINATION",         // Aplicação de vacinas
-  EXAM = "EXAM",                       // Exames laboratoriais ou clínicos
-  GROOMING = "GROOMING",               // Banho e tosa
-  TRAINING = "TRAINING",               // Adestramento
-  BOARDING = "BOARDING",               // Hospedagem
-  MICROCHIPPING = "MICROCHIPPING",     // Implantação de microchip
-  NUTRITION = "NUTRITION",             // Consulta nutricional
-  SURGERY = "SURGERY",                 // Procedimentos cirúrgicos
-  DENTAL_CARE = "DENTAL_CARE",         // Limpeza e cuidados dentários
-  BEHAVIORAL_THERAPY = "BEHAVIORAL_THERAPY", // Terapia comportamental
-  OTHER = "OTHER",                     // Outro tipo de serviço
+  CONSULTATION = "CONSULTATION",
+  VACCINATION = "VACCINATION",
+  EXAM = "EXAM",
+  GROOMING = "GROOMING",
+  TRAINING = "TRAINING",
+  BOARDING = "BOARDING",
+  MICROCHIPPING = "MICROCHIPPING",
+  NUTRITION = "NUTRITION",
+  SURGERY = "SURGERY",
+  DENTAL_CARE = "DENTAL_CARE",
+  BEHAVIORAL_THERAPY = "BEHAVIORAL_THERAPY",
+  OTHER = "OTHER",
 }
 
 export {
