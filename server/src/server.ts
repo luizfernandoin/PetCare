@@ -5,12 +5,14 @@ import router from './routes/routes';
 import errorMiddleware from './utils/middlewares/error';
 //import { injectDb } from './middlewares/injectDb.mjs';
 import swaggerDocsSetup from './config/swagger';
+import { requestLogger } from './utils/middlewares/chegouAqui';
 
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+// app.use(requestLogger);
 app.use("/api", router);
 app.use(errorMiddleware);
 
