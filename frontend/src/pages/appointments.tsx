@@ -1,31 +1,52 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/organisms/data-table";
-import type { Appointment, AppointmentDisplay, AppointmentFull } from "@/types/Appointment";
+import type { AppointmentDisplay, AppointmentFull } from "@/types/Appointment";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ActionsTable } from "@/components/molecules/table/actions-table";
 import { PageHeader } from "@/components/molecules/page-header";
-import { getAppointmentsByUserId } from "@/services/appointments";
-import { getPetsByUser } from "@/services/pet";
-import { Pet } from "@/types/pet";
-import { Service } from "@/types/service";
-import { Clinic } from "@/types/clinic";
-import { getAllServices } from "@/services/service";
-import { filterClinics } from "@/services/clinic";
 import ModalAddAppointment from "@/components/molecules/modal-add-appointment";
 import { RefreshCw } from "lucide-react";
-// import ModalAddAppointment from "@/components/molecules/modal-add-appointment";
+import { useAppointment } from "@/hooks/useAppointment";
+import { useClinics } from "@/hooks/useClinics";
+import { useServices } from "@/hooks/useService";
+import { usePets } from "@/hooks/usePets";
 
 
 export default function Appointments() {
-    const [appointments, setAppointments] = useState<AppointmentDisplay[]>([]);
-    const [pets, setPets] = useState<Pet[]>([]);
-    const [services, setServices] = useState<Service[]>([]);
-    const [clinics, setClinics] = useState<Clinic[]>([]);
-    const [filteredClinics, setFilteredClinics] = useState<Clinic[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const {
+        appointments,
+        isLoading: isLoadingAppointments,
+        error: appointmentError,
+        loadAppointments,
+        deleteAppointment,
+        clearError: clearAppointmentError
+    } = useAppointment();
+
+    const {
+        pets,
+        isLoading: isLoadingPets,
+        error: petsError,
+        loadPets
+    } = usePets();
+
+    const {
+        services,
+        isLoading: isLoadingServices,
+        error: servicesError,
+        loadServices
+    } = useServices();
+
+    const {
+        clinics,
+        error: clinicsError,
+        loadClinicsByService
+    } = useClinics();
+
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [openModal, setOpenModal] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+
+    const isLoading = isLoadingAppointments || isLoadingPets || isLoadingServices;
+    const error = appointmentError || petsError || servicesError || clinicsError;
 
 
     useEffect(() => {
@@ -34,87 +55,22 @@ export default function Appointments() {
 
     const loadData = async () => {
         try {
-            setIsLoading(true);
+            setIsRefreshing(true);
             await Promise.all([
                 loadAppointments(),
                 loadPets(),
                 loadServices()
             ]);
+
+            console.log(appointments);
         } catch (error) {
-            setError("Erro ao carregar dados.");
-            console.error(error);
+            console.error("Erro ao carregar dados:", error);
         } finally {
-            setIsLoading(false);
             setIsRefreshing(false);
         }
     };
 
-    const loadAppointments = async () => {
-        try {
-            const response = await getAppointmentsByUserId();
-            if (Array.isArray(response?.data)) {
-                const formattedAppointments: AppointmentDisplay[] = response.data.map((item: AppointmentFull) => ({
-                    id: item.id,
-                    pet: item.pet.name,
-                    service: item.service.type,
-                    clinic: item.clinic.name,
-                    date: item.appointmentDate,
-                    startTime: item.startTime,
-                    endTime: item.endTime,
-                    status: item.status.toLowerCase(),
-                }));
-                setAppointments(formattedAppointments);
-            }
-        } catch (error) {
-            console.error("Erro ao carregar agendamentos:", error);
-            throw error;
-        }
-    };
-
-    const loadPets = async () => {
-        try {
-            const pets = await getPetsByUser();
-
-            if (Array.isArray(pets)) {
-                setPets(pets);
-            }
-        } catch (error) {
-            console.error("Erro ao carregar pets:", error);
-            throw error;
-        }
-    };
-
-    const loadServices = async () => {
-        try {
-            const services = await getAllServices();
-
-            if (Array.isArray(services)) {
-                setServices(services);
-            }
-        } catch (error) {
-            console.error("Erro ao carregar serviços:", error);
-            throw error;
-        }
-    };
-
-    const loadClinicsByService = async (serviceId: string) => {
-        try {
-            const clinics = await filterClinics({ services: [serviceId] });
-            
-            console.log("CLinicas: ", clinics);
-            if (Array.isArray(clinics)) {
-                setClinics(clinics);
-                return clinics;
-            }
-            return [];
-        } catch (error) {
-            console.error("Erro ao carregar clínicas:", error);
-            return [];
-        }
-    };
-
     const handleRefresh = () => {
-        setIsRefreshing(true);
         loadData();
     };
 
@@ -122,13 +78,11 @@ export default function Appointments() {
         console.log("Editar agendamento:", item);
     };
 
-    const handleDelete = (id: string) => {
+    const handleDelete = async (id: string) => {
         const confirmed = window.confirm("Tem certeza que deseja excluir este agendamento?");
         if (confirmed) {
             try {
-                // Aqui você deve chamar a API para deletar o agendamento
-                // await deleteAppointment(id);
-                setAppointments((prev) => prev.filter((item) => item.id !== id));
+                await deleteAppointment(id);
             } catch (error) {
                 console.error("Erro ao deletar agendamento:", error);
                 alert("Erro ao deletar agendamento.");
@@ -136,22 +90,29 @@ export default function Appointments() {
         }
     };
 
-    const handleAppointmentCreated = (newAppointment: AppointmentFull) => {
-        console.log("New Appointment: ", newAppointment);
-        const formattedAppointment: AppointmentDisplay = {
-            id: newAppointment.id,
-            pet: newAppointment.pet.name,
-            service: newAppointment.service.type,
-            clinic: newAppointment.clinic.name,
-            date: newAppointment.appointmentDate,
-            startTime: newAppointment.startTime,
-            endTime: newAppointment.endTime,
-            status: newAppointment.status.toLowerCase(),
-        };
-
-        setAppointments(prev => [...prev, formattedAppointment]);
-        setOpenModal(false);
+    const handleAppointmentCreated = async () => {
+        try {
+            setOpenModal(false);
+            await loadAppointments();
+        } catch (error) {
+            console.error("Erro após criar agendamento:", error);
+        }
     };
+
+    const clearAllErrors = () => {
+        clearAppointmentError();
+    };
+
+    const formattedAppointments: AppointmentDisplay[] = appointments.map((item: AppointmentFull) => ({
+        id: item.id,
+        pet: item.pet.name,
+        service: item.service.type,
+        clinic: item.clinic.name,
+        date: item.appointmentDate,
+        startTime: item.startTime,
+        endTime: item.endTime,
+        status: item.status.toLowerCase(),
+    }));
 
     const columns: ColumnDef<AppointmentDisplay>[] = [
         { accessorKey: "pet", header: "Pet" },
@@ -160,7 +121,11 @@ export default function Appointments() {
         {
             accessorKey: "date",
             header: "Data",
-            cell: ({ row }) => new Date(row.original.date).toLocaleDateString("pt-BR"),
+            cell: ({ row }) => {
+                const date = new Date(row.original.date);
+                return `${date.getUTCDate().toString().padStart(2, '0')}/${(date.getUTCMonth() + 1).toString().padStart(2, '0')}/${date.getUTCFullYear()}`;
+            },
+
         },
         { accessorKey: "startTime", header: "Início" },
         { accessorKey: "endTime", header: "Fim" },
@@ -183,7 +148,6 @@ export default function Appointments() {
                         {status}
                     </span>
                 );
-
             },
         },
         {
@@ -217,20 +181,24 @@ export default function Appointments() {
                 title="Meus Agendamentos"
                 description="Todos os seus agendamentos registrados"
                 buttonLabel="Agendar Serviço"
-                onButtonClick={() => {
-                    setOpenModal(true)
-                }}
+                onButtonClick={() => setOpenModal(true)}
             />
 
             {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                     {error}
+                    <button
+                        onClick={clearAllErrors}
+                        className="ml-4 text-red-800 hover:text-red-900"
+                    >
+                        ×
+                    </button>
                 </div>
             )}
 
-            <DataTable<AppointmentDisplay> 
-                columns={columns} 
-                data={appointments}
+            <DataTable<AppointmentDisplay>
+                columns={columns}
+                data={formattedAppointments}
             />
 
             <ModalAddAppointment

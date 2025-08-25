@@ -15,6 +15,8 @@ import { Service } from '@/types/service';
 import { Pet } from '@/types/pet';
 import { Clinic } from '@/types/clinic';
 import { AppointmentCreate, appointmentSchema } from '@petcare/shared';
+import { CreateAppointmentResponse } from '@/types/Appointment';
+import { APPOINTMENT_STATUS } from '@petcare/shared/enums';
 
 interface ModalAddAppointmentProps {
     open: boolean;
@@ -23,8 +25,9 @@ interface ModalAddAppointmentProps {
     services: Service[];
     clinics: Clinic[];
     onClinicsRequest: (serviceId: string) => Promise<Clinic[]>;
-    onAppointmentCreated: (appointment: any) => void;
+    onAppointmentCreated: () => void;
 }
+
 
 export default function ModalAddAppointment({
     open,
@@ -45,7 +48,7 @@ export default function ModalAddAppointment({
         appointmentDate: new Date(),
         startTime: '09:00',
         endTime: '10:00',
-        status: 'PENDING' as const,
+        status: APPOINTMENT_STATUS.PENDING,
     };
 
     const {
@@ -77,35 +80,14 @@ export default function ModalAddAppointment({
         }
     };
 
-    const validateTimeRange = () => {
-        if (values.startTime && values.endTime) {
-            const [startHours, startMinutes] = values.startTime.split(':').map(Number);
-            const [endHours, endMinutes] = values.endTime.split(':').map(Number);
-
-            if (startHours > endHours || (startHours === endHours && startMinutes >= endMinutes)) {
-                return "O horário de término deve ser após o horário de início";
-            }
-        }
-        return null;
-    };
-
-    const validateFormWithClinic = () => {
-        if (!selectedClinicId) {
-            return "Selecione uma clínica";
-        }
-        return validateForm();
-    };
-
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const timeError = validateTimeRange();
-        if (timeError) {
-            alert(timeError);
+        if (!validateForm()) return;
+        if (!selectedClinicId) {
+            alert("Selecione uma clínica");
             return;
         }
-
-        if (!validateForm()) return;
 
         setIsLoading(true);
 
@@ -120,13 +102,13 @@ export default function ModalAddAppointment({
             };
 
 
-            const response = await createAppointment(appointmentData, selectedClinicId);
+            const response: CreateAppointmentResponse = await createAppointment(appointmentData, selectedClinicId);
 
-            if (!response?.data) {
+            if (!response || !response.data) {
                 throw new Error("Falha ao criar agendamento");
             }
 
-            onAppointmentCreated(response.data);
+            onAppointmentCreated();
             onOpenChange(false);
             setValues(initialValues);
             setSelectedClinicId('');
@@ -155,7 +137,6 @@ export default function ModalAddAppointment({
                 </DialogHeader>
 
                 <form onSubmit={onSubmit} className="space-y-4">
-                    {/* Campo Pet */}
                     <div className="space-y-2">
                         <label htmlFor="petId" className="text-sm font-medium">
                             Pet
@@ -180,7 +161,6 @@ export default function ModalAddAppointment({
                         )}
                     </div>
 
-                    {/* Campo Serviço */}
                     <div className="space-y-2">
                         <label htmlFor="serviceId" className="text-sm font-medium">
                             Serviço
@@ -205,7 +185,6 @@ export default function ModalAddAppointment({
                         )}
                     </div>
 
-                    {/* Campo Clínica (separado do form validation) */}
                     <div className="space-y-2">
                         <label htmlFor="clinicId" className="text-sm font-medium">
                             Clínica
@@ -235,7 +214,6 @@ export default function ModalAddAppointment({
                         )}
                     </div>
 
-                    {/* Campo Data */}
                     <div className="space-y-2">
                         <label htmlFor="appointmentDate" className="text-sm font-medium">
                             Data do Agendamento
@@ -272,7 +250,6 @@ export default function ModalAddAppointment({
                         )}
                     </div>
 
-                    {/* Campos Horário */}
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <label htmlFor="startTime" className="text-sm font-medium">
@@ -303,28 +280,27 @@ export default function ModalAddAppointment({
                         </div>
                     </div>
 
-                    {/* Campo Status */}
-                    <div className="space-y-2">
+                    {/* <div className="space-y-2">
                         <label htmlFor="status" className="text-sm font-medium">
                             Status
                         </label>
                         <Select
                             value={values.status}
-                            onValueChange={(value) => handleChange('status', value as any)}
+                            onValueChange={(value) => handleChange('status', value as APPOINTMENT_STATUS)}
                         >
                             <SelectTrigger>
                                 <SelectValue placeholder="Selecione o status" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="PENDING">Pendente</SelectItem>
-                                <SelectItem value="CONFIRMED">Confirmado</SelectItem>
-                                <SelectItem value="CANCELED">Cancelado</SelectItem>
+                                <SelectItem value={APPOINTMENT_STATUS.PENDING}>Pendente</SelectItem>
+                                <SelectItem value={APPOINTMENT_STATUS.CONFIRMED}>Confirmado</SelectItem>
+                                <SelectItem value={APPOINTMENT_STATUS.CANCELED}>Cancelado</SelectItem>
                             </SelectContent>
                         </Select>
                         {errors.status && (
                             <p className="text-sm text-red-500">{errors.status}</p>
                         )}
-                    </div>
+                    </div> */}
 
                     <DialogFooter>
                         <Button
