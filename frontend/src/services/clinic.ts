@@ -12,22 +12,45 @@ export type ClinicFilterOptions = {
     longitude?: number;
 };
 
-const getClinicByServiceId = async (serviceId: string): Promise<Clinic | null> => {
+// const getClinicByServiceId = async (serviceId: string): Promise<Clinic | null> => {
+//     try {
+//         const response = await api.get<ApiResponse<Clinic>>(`/services/${serviceId}/clinic`);
+//         return response.data.data || null;
+//     } catch (error) {
+//         console.error(error);
+//         return null;
+//     }
+// }
+
+export const getClinicById = async (clinicId: string): Promise<ApiResponse<Clinic>> => {
     try {
-        const response = await api.get<ApiResponse<Clinic>>(`/services/${serviceId}/clinic`);
-        return response.data.data || null;
+        const response = await api.get<ApiResponse<Clinic>>(`/clinics/${clinicId}`);
+        return response.data;
     } catch (error) {
-        console.error(error);
-        return null;
+        console.error("❌ Error fetching clinic by ID:", error);
+        throw error;
     }
-}
+};
 
 export const filterClinics = async (
     filters: ClinicFilterOptions
 ): Promise<Clinic[]> => {
     try {
+        const params = new URLSearchParams();
+
+        if (filters.services) {
+            filters.services.forEach(service => {
+                params.append('services', service);
+            });
+        }
+
+        if (filters.name) params.append('name', filters.name);
+        if (filters.radius) params.append('radius', filters.radius.toString());
+        if (filters.latitude) params.append('latitude', filters.latitude.toString());
+        if (filters.longitude) params.append('longitude', filters.longitude.toString());
+
         const response = await api.get<ApiResponse<Clinic[]>>("/clinics/filter", {
-            params: filters,
+            params: params,
         });
 
         return response.data.data || [];
