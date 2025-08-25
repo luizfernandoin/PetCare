@@ -13,6 +13,23 @@ class AppointmentService {
         this.appointmentModel = appointmentModel;
     }
 
+    async getAppointmentById(appointmentId: string) {
+        try {
+            const appointment = await this.appointmentModel.findOne({
+                where: { id: appointmentId }
+            });
+            if (!appointment) {
+                throw new HttpError("Agendamento não encontrado.", 404);
+            }
+            return appointment;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new HttpError("Erro ao buscar agendamento.", 500, new Error(error.message))
+            }
+            throw new HttpError("Erro interno ao buscar agendamento", 500)
+        }
+    }
+
     async getAppointmentsForClinicId(clinicId: string) {
         try {
             return await this.appointmentModel.findAll({
@@ -28,7 +45,6 @@ class AppointmentService {
     }
 
     async getAppoimentsForDay(clinicId: string, date: Date) {
-        console.log(clinicId, date);
         try {
             return await this.appointmentModel.findAll({
                 where: {
@@ -46,7 +62,6 @@ class AppointmentService {
     }
 
     async getAppointmentsByUserId(userId: string) {
-        console.log("Fetching appointments for user:", userId);
         try {
             const appointments = await this.appointmentModel.findAll({
                 where: { userId },
@@ -93,7 +108,6 @@ class AppointmentService {
 
     async createAppointment(appointmentData: Appointment) {
         try {
-            console.log(appointmentData);
             const { userId, petId, serviceId, clinicId, appointmentDate, startTime, endTime, status } = appointmentData;
 
             if (!userId || !petId || !serviceId || !clinicId || !appointmentDate || !startTime || !endTime || !status) {
@@ -143,7 +157,7 @@ class AppointmentService {
 
     async deleteAppointment(appointmentId: string) {
         const appointment = await Appointment.findOne({
-            where: { appointmentId }
+            where: { id: appointmentId }
         });
 
         if (!appointment) {
