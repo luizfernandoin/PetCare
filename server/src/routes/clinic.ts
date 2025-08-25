@@ -38,7 +38,7 @@ router.get("/", async (request: Request, response: Response, next: NextFunction)
     }
 })
 
-router.get("/filter", validate(clinicFilterSchema), async (request: Request, response: Response, next: NextFunction) => {
+router.get("/filter", async (request: Request, response: Response, next: NextFunction) => {
     try {
         const validatedQuery = clinicFilterSchema.parse({
             services: request.query.services
@@ -68,6 +68,25 @@ router.get("/filter", validate(clinicFilterSchema), async (request: Request, res
         next(error);
     }
 });
+
+router.get("/:id",
+    validateParams(urlParamsSchema),
+    async (request: Request, response: Response, next: NextFunction) => {
+        const { id } = request.params;
+        try {
+            const clinic = await clinicService.getClinicById(id);
+
+            if (!clinic) {
+                response.status(404).json({ message: "Clinic not found." });
+
+                return;
+            }
+
+            response.status(200).json({ message: "Clinic retrieved successfully.", data: clinic });
+        } catch (error) {
+            next(error);
+        }
+    });
 
 router.get("/nearby-clinics", authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
     try {
