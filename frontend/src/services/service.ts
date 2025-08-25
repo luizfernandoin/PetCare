@@ -25,8 +25,14 @@ export const getServiceById = async (serviceId: string): Promise<ApiResponse<Ser
     }
 }
 
-export const createService = async (clinicaId: string, serviceDTO: ServiceCreate): Promise<Service> => {
-    const response = await api.post<ApiResponse<Service>>(`/services/${clinicaId}/services`, serviceDTO);
+export const createService = async (serviceDTO: ServiceCreate): Promise<Service | undefined> => {
+    try {
+        const response = await api.post<ApiResponse<Service>>('/services/', serviceDTO);
+        console.log(response.data);
 
-    return response.data.data!;
+        return response.data.data!;
+    } catch (error) {
+        console.log("error ao criar servico");
+        return undefined;
+    }
 }
