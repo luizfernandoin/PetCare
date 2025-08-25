@@ -15,6 +15,16 @@ export const getServicesByClinicaId = async (clinicaId: string): Promise<Service
     return response.data.data!
 }
 
+export const getServiceById = async (serviceId: string): Promise<ApiResponse<Service>> => {
+    try {
+        const response = await api.get<ApiResponse<Service>>(`/services/service/${serviceId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar serviço por ID:", error);
+        throw error;
+    }
+}
+
 export const createService = async (clinicaId: string, serviceDTO: ServiceCreate): Promise<Service> => {
     const response = await api.post<ApiResponse<Service>>(`/services/${clinicaId}/services`, serviceDTO);
 
