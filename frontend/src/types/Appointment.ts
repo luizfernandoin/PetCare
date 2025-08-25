@@ -11,9 +11,7 @@ type Appointment = AppointmentCreate & {
     clinicId: string;
 }
 
-type AppointmentFull = AppointmentCreate & {
-    id: string;
-    userId: string;
+type AppointmentFull = Appointment & {
     pet: Pet;
     service: Service;
     clinic: Clinic;
@@ -28,7 +26,7 @@ type AppointmentDisplay = {
     pet: string;
     service: string;
     clinic: string;
-    date: string;
+    date: string | Date;
     startTime: string;
     endTime: string;
     status: string;
