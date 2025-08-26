@@ -41,6 +41,8 @@ export default function ModalAddAppointment({
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingClinics, setIsLoadingClinics] = useState(false);
     const [selectedClinicId, setSelectedClinicId] = useState('');
+    console.log("MODAL CLINIC", clinics);
+    
 
     const initialValues = {
         petId: '',
@@ -64,14 +66,14 @@ export default function ModalAddAppointment({
         handleChange('serviceId', serviceId);
         setSelectedClinicId('');
 
-        setIsLoadingClinics(true);
+        /* setIsLoadingClinics(true);
         try {
             await onClinicsRequest(serviceId);
         } catch (error) {
             console.error('Erro ao carregar clínicas:', error);
         } finally {
             setIsLoadingClinics(false);
-        }
+        } */
     };
 
     const handleDateChange = (date: Date | undefined) => {

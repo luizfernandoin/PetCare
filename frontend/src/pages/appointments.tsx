@@ -10,6 +10,7 @@ import { useAppointment } from "@/hooks/useAppointment";
 import { useClinics } from "@/hooks/useClinics";
 import { useServices } from "@/hooks/useService";
 import { usePets } from "@/hooks/usePets";
+import { useAuthStore } from "@/stores/authStore";
 
 
 export default function Appointments() {
@@ -18,6 +19,7 @@ export default function Appointments() {
         isLoading: isLoadingAppointments,
         error: appointmentError,
         loadAppointments,
+        loadAllAppointments,
         deleteAppointment,
         clearError: clearAppointmentError
     } = useAppointment();
@@ -26,7 +28,8 @@ export default function Appointments() {
         pets,
         isLoading: isLoadingPets,
         error: petsError,
-        loadPets
+        loadPets,
+        loadAllPets
     } = usePets();
 
     const {
@@ -39,7 +42,8 @@ export default function Appointments() {
     const {
         clinics,
         error: clinicsError,
-        loadClinicsByService
+        loadClinicsByService,
+        loadAllClinics
     } = useClinics();
 
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -53,13 +57,23 @@ export default function Appointments() {
         loadData();
     }, []);
 
+    const {role} = useAuthStore()
+
     const loadData = async () => {
         try {
             setIsRefreshing(true);
-            await Promise.all([
+            role === "CLIENT" && await Promise.all([
                 loadAppointments(),
                 loadPets(),
-                loadServices()
+                loadServices(),
+                loadAllClinics()
+            ]);
+
+            role === "PROFESSIONAL" && await Promise.all([
+                loadAllAppointments(),
+                loadAllPets(),
+                loadServices(),
+                loadAllClinics()
             ]);
 
             console.log(appointments);

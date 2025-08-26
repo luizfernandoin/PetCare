@@ -1,5 +1,5 @@
 // hooks/useAppointment.ts
-import { getAppointmentsByUserId, createAppointment, deleteAppointmentById } from "@/services/appointments";
+import { getAppointmentsByUserId, createAppointment, deleteAppointmentById, getAllAppointments } from "@/services/appointments";
 import { getClinicById } from "@/services/clinic";
 import { getPetById } from "@/services/pet";
 import { getServiceById } from "@/services/service";
@@ -69,6 +69,31 @@ export const useAppointment = () => {
         }
     }, [setAppointments, setIsLoading, setError]);
 
+    const loadAllAppointments = useCallback(async () => {
+        try {
+            setIsLoading(true);
+            const response = await getAllAppointments();
+
+            if (Array.isArray(response?.data)) {
+                const enrichedAppointments = await Promise.all(
+                    response.data.map(appointment => enrichAppointment(appointment))
+                );
+
+                console.log("Enriched Appointments:", enrichedAppointments);
+                setAppointments(enrichedAppointments);
+                console.log("Appointments loaded:", appointments);
+            }
+        } catch (error) {
+            console.error("Erro ao carregar agendamentos:", error);
+            setError("Erro ao carregar agendamentos");
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    }, [setAppointments, setIsLoading, setError]);
+
+
+
     const createNewAppointment = useCallback(async (
         appointmentData: AppointmentCreate,
         clinicId: string
@@ -122,6 +147,7 @@ export const useAppointment = () => {
         isLoading,
         error,
         loadAppointments,
+        loadAllAppointments,
         createNewAppointment,
         deleteAppointment,
         clearError

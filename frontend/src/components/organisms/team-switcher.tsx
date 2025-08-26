@@ -16,6 +16,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { useAuthStore } from "@/stores/authStore"
+import { Link } from "react-router"
 
 export function TeamSwitcher({
   teams,
@@ -27,6 +29,7 @@ export function TeamSwitcher({
   }[]
 }) {
   const { isMobile } = useSidebar()
+  const { clinic } = useAuthStore()
   const [activeTeam, setActiveTeam] = React.useState(teams[0])
 
   if (!activeTeam) {
@@ -46,8 +49,8 @@ export function TeamSwitcher({
                 <activeTeam.logo className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{activeTeam.name}</span>
-                <span className="truncate text-xs">{activeTeam.plan}</span>
+                <span className="truncate font-medium">{clinic?.name || "Clinica"}</span>
+                <span className="truncate text-xs">{clinic?.phone}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -61,7 +64,7 @@ export function TeamSwitcher({
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Teams
             </DropdownMenuLabel>
-            {teams.map((team, index) => (
+           {/*  {teams.map((team, index) => (
               <DropdownMenuItem
                 key={team.name}
                 onClick={() => setActiveTeam(team)}
@@ -73,13 +76,13 @@ export function TeamSwitcher({
                 {team.name}
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
               </DropdownMenuItem>
-            ))}
+            ))} */}
             <DropdownMenuSeparator />
             <DropdownMenuItem className="gap-2 p-2">
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Plus className="size-4" />
               </div>
-              <div className="text-muted-foreground font-medium">Add team</div>
+              <Link className="text-muted-foreground font-medium" to="/clinic">Nova clinica</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

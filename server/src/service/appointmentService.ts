@@ -44,6 +44,18 @@ class AppointmentService {
         }
     }
 
+    async getAllAppointments() {
+        try {
+            return await this.appointmentModel.findAll()
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new HttpError("Erro ao buscar agendamentos.", 500, new Error(error.message))
+            }
+
+            throw new HttpError("Erro interno ao buscar agendamentos", 500)
+        }
+    }
+
     async getAppoimentsForDay(clinicId: string, date: Date) {
         try {
             return await this.appointmentModel.findAll({

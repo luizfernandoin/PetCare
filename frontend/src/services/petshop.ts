@@ -5,7 +5,7 @@ import { Schedule } from "@/types/schedule";
 
 
 export const getAllClinicas = async (): Promise<PetShop[]> => {
-    const response = await api.get<ApiResponse<PetShop[]>>('/clinicas/');
+    const response = await api.get<ApiResponse<PetShop[]>>('/clinics'); 
 
     return response.data.data!;
 }
@@ -34,10 +34,18 @@ export const desvincularProfissional = async (clinicaId: string, profissionalId:
     return response.data.message;
 }
 
-export const createClinica = async (clinicaDTO: PetShopCreate): Promise<PetShop> => {
-    const response = await api.post<ApiResponse<PetShop>>('/clinicas/', clinicaDTO);
+export const createClinica = async (clinicaDTO: PetShopCreate): Promise<PetShop|undefined> => {
+    try {
+      const response = await api.post<ApiResponse<PetShop>>('/clinics', clinicaDTO);
 
     return response.data.data!;
+    } catch (error) {
+      console.log(error);
+      
+      console.log("erro ao criar clinica");
+      return undefined
+      
+    }
 }
 
 export const addHorarios = async (petshopId: string): Promise<Schedule> => {

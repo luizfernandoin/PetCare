@@ -29,9 +29,11 @@ interface ClinicFilterOptions {
 
 class ClinicService {
     private clinicModel: ModelStatic<Clinic>;
+    private employeeModel: ModelStatic<Employee>;
 
-    constructor(clinicModel: ModelStatic<Clinic>) {
+    constructor(clinicModel: ModelStatic<Clinic>, employeeModel: ModelStatic<Employee>) {
         this.clinicModel = clinicModel;
+        this.employeeModel = employeeModel;
     }
 
     private buildNameFilter(name?: string): WhereOptions | undefined {
@@ -183,6 +185,25 @@ class ClinicService {
             }
 
             return clinic;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new HttpError("Error while fetching clinic.", 500, new Error(error.message))
+            }
+
+            throw new HttpError("Internal error while fetching clinics.", 500)
+        }
+    }
+
+    async getClinicsByProfessionalId(professionalId: string) {
+        try {
+            const clinics = await this.employeeModel.findAll({
+              where: { 
+                userId: professionalId
+              }
+            });
+
+
+            return clinics;
         } catch (error) {
             if (error instanceof Error) {
                 throw new HttpError("Error while fetching clinic.", 500, new Error(error.message))

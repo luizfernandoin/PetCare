@@ -17,10 +17,11 @@ import {
 import GeocodingService from "../service/GeocodingService";
 import { USER_ROLE } from "@petcare/shared/src/enums";
 import { ZodError } from "zod";
+import Employee from "src/models/employee";
 
 
 const router = Router();
-const clinicService = new ClinicService(Clinic);
+const clinicService = new ClinicService(Clinic, Employee);
 const userService = new UserService(User);
 const geocodingService = new GeocodingService();
 

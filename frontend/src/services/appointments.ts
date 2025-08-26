@@ -27,6 +27,17 @@ const getAppointmentsByUserId = async (): Promise<ApiResponse<Appointment[]> | u
     }
 }
 
+const getAllAppointments = async (): Promise<ApiResponse<Appointment[]> | undefined> => {
+    try {
+        const response = await api.get(`/users/appointments/public`);
+
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return undefined;
+    }
+}
+
 const deleteAppointmentById = async (appointmentId: string): Promise<void> => {
     await api.delete(`/users/appointments/${appointmentId}`);
 }
@@ -34,5 +45,6 @@ const deleteAppointmentById = async (appointmentId: string): Promise<void> => {
 export {
     createAppointment,
     getAppointmentsByUserId,
-    deleteAppointmentById
+    deleteAppointmentById,
+    getAllAppointments
 }

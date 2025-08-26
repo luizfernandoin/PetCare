@@ -1,11 +1,16 @@
-import { GeoLocation } from "@/types/User"
-
 
 type PetShop = {
     id: string;
-    nome: string;
-    telefone: string;
-    location: GeoLocation;
+    name: string;
+    phone: string;
+    location: {
+        street: string;
+        number: string;
+        city: string;
+        state: string;
+        country: string;
+        postalcode: string
+    };
     image?: string;
 }
 

@@ -15,12 +15,16 @@ import typeUser from "src/utils/middlewares/typeUser";
 import { USER_ROLE } from "@petcare/shared/src/enums";
 import AppointmentService from "src/service/appointmentService";
 import Appointment from "src/models/appointment";
+import ClinicService from "src/service/clinicService";
+import Clinic from "src/models/clinic";
+import Employee from "src/models/employee";
 
 
 const router = Router();
 const userService = new UserService(User);
 const petService = new PetService(Pet);
 const appointmentService = new AppointmentService(Appointment);
+const clinicService = new ClinicService(Clinic, Employee)
 
 router.get("/", async (request: Request, response: Response) => {
     try {
@@ -28,6 +32,27 @@ router.get("/", async (request: Request, response: Response) => {
         response.status(200).json({
             message: "Users retrieved successfully.",
             data: users,
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            response.status(500).json({ message: 'Error retrieving users.', error: error.message });
+        }
+
+        response.status(500).json({ message: 'Error retrieving users.', error: 'Unknown error occurred' });
+    }
+});
+
+router.get("/myclinics/:id", 
+  authenticateToken,
+  validateParams(urlParamsSchema),
+  typeUser(USER_ROLE.PROFESSIONAL),
+  async (request: Request, response: Response) => {
+    try {
+      const {id} = request.params
+      const clinics = await clinicService.getClinicsByProfessionalId(id);
+      response.status(200).json({
+            message: "Users retrieved successfully.",
+            data: clinics,
         });
     } catch (error) {
         if (error instanceof Error) {
@@ -66,6 +91,24 @@ router.get("/appointments", authenticateToken, typeUser(USER_ROLE.CLIENT), async
         const user = await userService.getUserByEmail(request.user.email);
 
         const appointments = await appointmentService.getAppointmentsByUserId(user.id);
+
+        response.status(200).json({
+            message: "Appointments retrieved successfully.",
+            data: appointments,
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            response.status(500).json({ message: '.', error: error.message });
+        }
+
+        response.status(500).json({ message: 'Error retrieving users.', error: 'Unknown error occurred' });
+    }
+})
+
+router.get("/appointments/public", async (request: Request, response: Response) => {
+    try {
+
+        const appointments = await appointmentService.getAllAppointments();
 
         response.status(200).json({
             message: "Appointments retrieved successfully.",

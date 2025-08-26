@@ -11,6 +11,7 @@ import Calendar from './pages/calendar'
 import { PrivateRouteWrapper } from './components/template/private-route-wrapper'
 import { Home } from './pages/home'
 import { Presentation } from './pages/presentation'
+import { AddClinicPage } from './pages/add-clinic'
 
 export default function Router() {
   return (
@@ -30,6 +31,7 @@ export default function Router() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/services' element={<Services />} />
           <Route path='/calendar' element={<Calendar />} />
+          <Route path='/clinic' element={<AddClinicPage />} />
         </Route>
         <Route element={<PrivateRouteWrapper roles={['CLIENT','PROFESSIONAL']} />}>
           <Route path='/home' element={<Home />} />

@@ -16,12 +16,13 @@ import {
     ServiceCreate
 } from "@petcare/shared";
 import { USER_ROLE } from "@petcare/shared/src/enums";
+import Employee from "src/models/employee";
 
 
 const router = Router();
 const userService = new UserService(User);
 const serviceService = new ServiceService(Service, ClinicServiceModel);
-const clinicService = new ClinicService(Clinic);
+const clinicService = new ClinicService(Clinic, Employee);
 
 
 router.get("/", async (request, response, next: NextFunction) => {
