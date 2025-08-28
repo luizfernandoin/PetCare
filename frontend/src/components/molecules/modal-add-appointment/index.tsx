@@ -35,11 +35,10 @@ export default function ModalAddAppointment({
     pets,
     services,
     clinics,
-    onClinicsRequest,
     onAppointmentCreated
 }: ModalAddAppointmentProps) {
     const [isLoading, setIsLoading] = useState(false);
-    const [isLoadingClinics, setIsLoadingClinics] = useState(false);
+    const [isLoadingClinics] = useState(false);
     const [selectedClinicId, setSelectedClinicId] = useState('');
     console.log("MODAL CLINIC", clinics);
     

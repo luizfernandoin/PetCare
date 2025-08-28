@@ -4,7 +4,6 @@ import { StatCard } from "@/components/molecules/stat-card";
 import {
   AreaChartComponent,
   BarChartComponent,
-  BarChartReviews,
   LineChartComponent,
   PieChartComponent
 } from "@/components/organisms/Chart";

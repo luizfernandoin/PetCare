@@ -82,7 +82,7 @@ export function PieChartComponent({ data, nameKey, dataKey, isDonut = false }: {
                     nameKey={nameKey}
                     label
                 >
-                    {data.map((entry, index) => (
+                    {data.map((_, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                 </Pie>

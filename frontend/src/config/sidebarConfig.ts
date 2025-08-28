@@ -4,8 +4,8 @@ import {
     LayoutDashboard,
     PawPrint,
     Stethoscope,
-    Users2,
-    CalendarDays,
+    // Users2,
+    // CalendarDays,
     CalendarCheck2,
     Settings,
     Building2,
@@ -42,7 +42,7 @@ export const sidebarConfig: SideBarConfigType = {
     navMain: [
         {
             title: "Home",
-            url: "/home",
+            url: "/",
             icon: Home,
             roles: ["CLIENT", "PROFESSIONAL"],
         },
@@ -69,24 +69,24 @@ export const sidebarConfig: SideBarConfigType = {
             // ],
             roles: ["CLIENT"],
         },
-        {
-            title: "Profissionais",
-            url: "/profissionais",
-            icon: Users2,
-            items: [
-                { title: "Veterinários", url: "/profissionais/veterinarios" },
-                { title: "Banho & Tosa", url: "/profissionais/banho-tosa" },
-                { title: "Atendentes", url: "/profissionais/atendentes" },
-            ],
-            roles: ["PROFESSIONAL"],
-        },
-        {
-            title: "Calendario",
-            url: "/calendar",
-            icon: CalendarDays,
-            isActive: true,
-            roles: ["PROFESSIONAL"],
-        },
+        // {
+        //     title: "Profissionais",
+        //     url: "/profissionais",
+        //     icon: Users2,
+        //     items: [
+        //         { title: "Veterinários", url: "/profissionais/veterinarios" },
+        //         { title: "Banho & Tosa", url: "/profissionais/banho-tosa" },
+        //         { title: "Atendentes", url: "/profissionais/atendentes" },
+        //     ],
+        //     roles: ["PROFESSIONAL"],
+        // },
+        // {
+        //     title: "Calendario",
+        //     url: "/calendar",
+        //     icon: CalendarDays,
+        //     isActive: true,
+        //     roles: ["PROFESSIONAL"],
+        // },
         {
             title: "Agendamentos",
             url: "/appointments",

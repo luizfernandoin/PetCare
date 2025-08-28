@@ -1,9 +1,8 @@
 import { CardService } from "@/components/molecules/card-service";
 import ModalAddService from "@/components/molecules/modal-add-service";
 import { PageHeader } from "@/components/molecules/page-header";
-import { createService, getAllServices } from "@/services/service";
+import { getAllServices } from "@/services/service";
 import { Service } from "@/types/service";
-import { SERVICE_TYPE } from "@petcare/shared/enums";
 import { useEffect, useState } from "react";
 
 export default function Services() {
@@ -14,7 +13,7 @@ export default function Services() {
     getAllServices()
     .then((myServices: Service[]) => {
       setServices(myServices)});
-  }, []) 
+  }, [open]) 
 
   const handleAddService = () => {
     setOpen(true);

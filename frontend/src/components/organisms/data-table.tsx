@@ -204,8 +204,6 @@ type DataTableProps<TData extends { id: string | number }> = {
 export function DataTable<TData extends { id: string | number }>({
     data,
     columns,
-    withRowSelection = false,
-    withPagination = false,
     onDataReorder,
 }: DataTableProps<TData>) {
     const [rowSelection, setRowSelection] = useState({});

@@ -55,6 +55,7 @@ export default function Appointments() {
 
     useEffect(() => {
         loadData();
+        console.log(isRefreshing);
     }, []);
 
     const {role} = useAuthStore()
@@ -82,10 +83,6 @@ export default function Appointments() {
         } finally {
             setIsRefreshing(false);
         }
-    };
-
-    const handleRefresh = () => {
-        loadData();
     };
 
     const handleEditClick = (item: AppointmentDisplay) => {
