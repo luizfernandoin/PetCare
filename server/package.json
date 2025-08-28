@@ -4,26 +4,44 @@
   "main": "./src/server.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon ./src/server.mjs",
-    "start": "node ./scr/server.mjs"
+    "build": "tsc --build",
+    "start:dev": "nodemon --exec tsx ./src/server.ts",
+    "start": "node ./dist/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "![DER](petcare.png)",
   "dependencies": {
+    "@petcare/shared": "^1.0.0",
+    "@prisma/client": "^6.0.1",
+    "@types/multer": "^1.4.12",
+    "axios": "^1.8.3",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "pg": "^8.13.1",
-    "sequelize": "^6.37.5"
+    "sequelize": "^6.37.5",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "zod-openapi": "^4.2.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/sequelize": "^4.28.20",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
     "nodemon": "^3.1.7",
-    "sequelize-cli": "^6.6.2"
+    "prisma": "^6.0.1",
+    "sequelize-cli": "^6.6.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2"
   },
-  "type": "module"
+  "type": "commonjs"
 }

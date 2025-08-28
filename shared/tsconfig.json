@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "composite": true,
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "module": "commonjs",
+        "target": "es2016",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "declaration": true
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

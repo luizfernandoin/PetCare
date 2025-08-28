@@ -1,0 +1,14 @@
+{
+  "name": "@petcare/shared",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./src/validators/index.ts",
+  "types": "./src/validators/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "zod-openapi": "^4.2.4"
+  }
+}
